@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#E2E2E2</color>
+
+    <!-- Window/splash background (see ui/theme/Color.kt). -->
+    <color name="paper">#FFFFFF</color>
+
+    <!-- The logo mark: bubble, eye, highlight. -->
+    <color name="mark_bubble">#0F2E2E</color>
+    <color name="mark_eye">#2FBF8A</color>
+    <color name="mark_pupil">#EAF8F3</color>
 </resources>

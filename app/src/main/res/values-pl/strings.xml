@@ -1,0 +1,186 @@
+<resources>
+    <string name="language_tag">pl</string>
+
+    <string name="action_continue">Dalej</string>
+    <string name="action_back">Wstecz</string>
+    <string name="step_progress">Krok %1$d z %2$d</string>
+
+    <string name="welcome_title">Zanim otworzysz, zerknij.</string>
+    <string name="welcome_body">Wizjer to nowoczesna aplikacja chroniąca Ciebie i twój telefon przed oszustwami online.</string>
+    <string name="welcome_cta">Zaczynajmy</string>
+
+    <!-- Log in to an existing account -->
+    <string name="welcome_login">Mam już konto</string>
+    <string name="login_title_lead">Witaj ponownie.</string>
+    <string name="login_title_rest">Zaloguj się do swojego konta.</string>
+    <string name="login_identifier">E-mail lub numer telefonu</string>
+    <string name="login_identifier_invalid">Podaj poprawny e-mail lub numer telefonu.</string>
+    <string name="login_submit">Zaloguj się</string>
+    <string name="login_error_credentials">Nieprawidłowy e-mail, numer telefonu lub hasło.</string>
+
+    <string name="name_title_lead">Poznajmy się.</string>
+    <string name="name_title_rest">Jak masz na imię?</string>
+    <string name="name_first">Imię</string>
+    <string name="name_last">Nazwisko (opcjonalnie)</string>
+
+    <string name="birth_greeting">Witaj, %1$s.</string>
+    <string name="birth_prompt">Wprowadź swoją datę urodzenia.</string>
+    <string name="date_day">DD</string>
+    <string name="date_month">MM</string>
+    <string name="date_year">RRRR</string>
+    <string name="date_separator">.</string>
+    <string name="date_error_invalid">Taka data nie istnieje.</string>
+    <string name="date_error_future">Data urodzenia nie może być z przyszłości.</string>
+    <string name="date_error_year">Sprawdź rok urodzenia.</string>
+    <string name="date_error_too_young">Wizjer jest dostępny od %1$d. roku życia.</string>
+    <plurals name="age_years">
+        <item quantity="one">Masz %d rok</item>
+        <item quantity="few">Masz %d lata</item>
+        <item quantity="many">Masz %d lat</item>
+        <item quantity="other">Masz %d roku</item>
+    </plurals>
+
+    <string name="why_link">Dlaczego o to pytamy?</string>
+    <string name="why_title">Dlaczego o to pytamy?</string>
+    <string name="why_body">Imię pozwala Wizjerowi zwracać się do ciebie osobiście. Data urodzenia pomaga nam dopasować ostrzeżenia do oszustw, które najczęściej dotykają osoby w twoim wieku.</string>
+    <string name="why_ok">Rozumiem</string>
+
+    <string name="permissions_title">Kilka uprawnień</string>
+    <string name="permissions_body">Wizjer potrzebuje ich, by chronić cię w tle.</string>
+    <string name="permission_alerts_title">Alerty</string>
+    <string name="permission_alerts_body">Ostrzeżemy cię, gdy wykryjemy oszustwo.</string>
+    <string name="permission_access_title">Dostęp do powiadomień</string>
+    <string name="permission_access_body">Sprawdzanie powiadomień z innych aplikacji, np. komunikatorów i poczty.</string>
+    <string name="permission_sms_title">Wiadomości SMS</string>
+    <string name="permission_sms_body">Sprawdzanie SMS-ów pod kątem fałszywych linków i próśb o płatność.</string>
+    <string name="permission_allow">Zezwól</string>
+    <string name="permission_granted">Przyznano</string>
+    <string name="permissions_skip">Nie teraz</string>
+    <string name="privacy_note">Skanowanie odbywa się na twoim telefonie. Treść twoich wiadomości i powiadomień nigdy go nie opuszcza.</string>
+
+    <string name="skip_title">Twoje urządzenie nie będzie chronione w tle</string>
+    <string name="skip_body">Bez tych uprawnień Wizjer nie sprawdzi twoich wiadomości ani nie ostrzeże cię przed oszustwem. Możesz je przyznać później w Ustawieniach.</string>
+    <string name="skip_grant">Przyznaj uprawnienia</string>
+    <string name="skip_confirm">Pomiń mimo to</string>
+
+    <string name="account_title_lead">Ostatni krok.</string>
+    <string name="account_title_rest">Utwórz konto, by korzystać z asystenta AI.</string>
+    <string name="account_caption">Konto Wizjer</string>
+    <string name="account_email">Kontynuuj e-mailem</string>
+    <string name="account_legal">Kontynuując, akceptujesz %1$s i %2$s.</string>
+    <string name="account_terms">Regulamin</string>
+    <string name="account_privacy">Politykę prywatności</string>
+
+    <string name="signup_title_lead">Utwórz konto.</string>
+    <string name="signup_title_rest">Podaj e-mail i wymyśl hasło.</string>
+    <string name="signup_email">E-mail</string>
+    <string name="signup_password">Hasło</string>
+    <string name="signup_show">Pokaż</string>
+    <string name="signup_hide">Ukryj</string>
+    <string name="signup_email_invalid">Podaj poprawny adres e-mail.</string>
+    <string name="rule_length">Co najmniej 8 znaków</string>
+    <string name="rule_case">Wielka i mała litera</string>
+    <string name="rule_digit">Cyfra lub znak specjalny</string>
+    <string name="rule_met">spełnione</string>
+    <string name="rule_unmet">niespełnione</string>
+    <string name="signup_submit">Utwórz konto</string>
+    <string name="signup_error_taken">Konto z tym adresem e-mail już istnieje.</string>
+    <string name="signup_error_rejected">Sprawdź e-mail i hasło, a potem spróbuj ponownie.</string>
+    <string name="signup_error_network">Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.</string>
+    <string name="signup_error_failed">Coś poszło nie tak. Spróbuj ponownie.</string>
+
+    <string name="code_title_lead">Sprawdź skrzynkę.</string>
+    <string name="code_title_rest">Wysłaliśmy 6-cyfrowy kod na adres %1$s.</string>
+    <string name="code_submit">Potwierdź</string>
+    <string name="code_spam_hint">Nie widzisz wiadomości? Sprawdź folder spam.</string>
+    <string name="code_resend">Wyślij nowy kod</string>
+    <string name="code_resend_wait">Nowy kod za %1$d s</string>
+    <string name="code_resent">Wysłaliśmy nowy kod.</string>
+    <string name="code_error_wrong">Nieprawidłowy kod. Spróbuj ponownie.</string>
+    <string name="code_error_expired">Kod wygasł. Wyślij nowy poniżej.</string>
+    <string name="code_error_attempts">Zbyt wiele prób. Wyślij nowy kod poniżej.</string>
+
+    <!-- Home: chat with the assistant -->
+    <string name="home_menu">Menu</string>
+    <string name="home_new_chat">Nowa rozmowa</string>
+    <string name="home_protection_off">Ochrona wyłączona</string>
+    <string name="home_greeting">Cześć, %1$s.</string>
+    <string name="home_greeting_plain">Cześć.</string>
+    <string name="home_prompt">W czym mogę pomóc?</string>
+    <string name="suggest_message_title">Sprawdź wiadomość</string>
+    <string name="suggest_message_body">SMS lub e-mail, który budzi wątpliwości</string>
+    <string name="suggest_message_prefill">Sprawdź tę wiadomość:</string>
+    <string name="suggest_link_title">Sprawdź link</string>
+    <string name="suggest_link_body">Upewnij się, że strona jest bezpieczna</string>
+    <string name="suggest_link_prefill">Czy ten link jest bezpieczny?</string>
+    <string name="suggest_call_title">Sprawdź numer</string>
+    <string name="suggest_call_body">Zweryfikuj bezpieczeństwo numeru telefonu</string>
+    <string name="suggest_call_prompt">Sprawdź ten numer telefonu:</string>
+    <string name="suggest_help_title">Pomoc po oszustwie</string>
+    <string name="suggest_help_body">Co zrobić, gdy coś poszło nie tak</string>
+    <string name="suggest_help_prompt">Chyba ktoś mnie oszukał. Co mam teraz zrobić?</string>
+    <string name="composer_hint">Zapytaj Wizjera…</string>
+    <string name="composer_send">Wyślij</string>
+    <string name="composer_call">Rozmowa głosowa</string>
+    <string name="assistant_thinking">Wizjer analizuje…</string>
+    <string name="message_copy">Kopiuj</string>
+    <string name="message_copied">Skopiowano</string>
+    <string name="message_read">Odczytaj na głos</string>
+    <string name="verdict_safe">Wygląda bezpiecznie</string>
+    <string name="verdict_suspicious">Podejrzane</string>
+    <string name="verdict_dangerous">Wysokie ryzyko</string>
+
+    <string name="protection_off_body">Przyznaj uprawnienia, żeby Wizjer mógł chronić cię w tle.</string>
+    <string name="protection_fix">Włącz</string>
+
+    <!-- Side menu -->
+    <string name="drawer_today">Dziś</string>
+    <string name="drawer_yesterday">Wczoraj</string>
+    <string name="drawer_week">Ostatnie 7 dni</string>
+    <string name="drawer_older">Wcześniej</string>
+    <string name="drawer_empty">Twoje rozmowy pojawią się tutaj.</string>
+    <string name="drawer_protection">Ochrona w tle</string>
+    <string name="drawer_protection_on">Aktywna</string>
+    <string name="drawer_protection_off">Wymaga uwagi</string>
+    <string name="drawer_settings">Ustawienia</string>
+    <string name="chat_deleted">Rozmowa usunięta</string>
+    <string name="action_undo">Cofnij</string>
+    <string name="action_cancel">Anuluj</string>
+
+    <!-- Voice call -->
+    <string name="call_listening">Słucham…</string>
+    <string name="call_muted">Mikrofon wyciszony</string>
+    <string name="call_mute">Wycisz</string>
+    <string name="call_unmute">Włącz</string>
+    <string name="call_end">Zakończ</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_protection">Ochrona</string>
+    <string name="settings_appearance">Wygląd</string>
+    <string name="settings_text_size">Rozmiar tekstu</string>
+    <string name="text_size_normal">Standardowy</string>
+    <string name="text_size_large">Duży</string>
+    <string name="text_size_xlarge">Bardzo duży</string>
+    <string name="settings_about">Informacje</string>
+    <string name="settings_terms">Regulamin</string>
+    <string name="settings_privacy">Polityka prywatności</string>
+    <string name="settings_version">Wersja %1$s</string>
+    <string name="settings_logout">Wyloguj się</string>
+    <string name="logout_title">Wylogować się?</string>
+    <string name="logout_body">Rozmowy zapisane na tym telefonie zostaną usunięte.</string>
+
+    <!-- Sample conversations shown until the assistant is connected -->
+    <string name="sample_parcel_title">SMS o dopłacie do paczki</string>
+    <string name="sample_parcel_user">Sprawdź tę wiadomość:\nInPost: Twoja paczka została wstrzymana. Dopłać 1,99 zł w ciągu 24h: inpost-dostawa.top/pl</string>
+    <string name="sample_parcel_reply">Uważaj – to wygląda na oszustwo. Nie klikaj w link i nie podawaj danych karty. InPost nie prosi o dopłaty przez SMS z linkiem. Jeśli czekasz na paczkę, sprawdź jej status w oficjalnej aplikacji. Podejrzany SMS możesz przekazać na numer 8080 (CERT Polska).</string>
+    <string name="sample_parcel_reason_link">Link prowadzi do strony, która nie należy do InPost.</string>
+    <string name="sample_parcel_reason_payment">Prośba o dopłatę to częsty trik oszustów.</string>
+    <string name="sample_parcel_reason_urgency">Wiadomość wywiera presję czasu.</string>
+    <string name="sample_bank_title">Telefon „z banku”</string>
+    <string name="sample_bank_user">Ktoś do mnie dzwoni i podaje się za pracownika banku. Co mam zrobić?</string>
+    <string name="sample_bank_reply">Najlepiej od razu się rozłącz. Bank nigdy nie poprosi cię o przelew na „bezpieczne konto”, kod BLIK ani instalację aplikacji. Jeśli masz wątpliwości, zadzwoń do banku samodzielnie – na numer z odwrotu karty.</string>
+
+    <string name="language_title">Język</string>
+
+</resources>

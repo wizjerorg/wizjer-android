@@ -1,0 +1,186 @@
+<resources>
+    <string name="language_tag">uk</string>
+
+    <string name="action_continue">Далі</string>
+    <string name="action_back">Назад</string>
+    <string name="step_progress">Крок %1$d з %2$d</string>
+
+    <string name="welcome_title">Перш ніж відкрити — зазирни.</string>
+    <string name="welcome_body">Wizjer — сучасний застосунок, що захищає тебе і твій телефон від онлайн-шахрайства.</string>
+    <string name="welcome_cta">Почнімо</string>
+
+    <!-- Log in to an existing account -->
+    <string name="welcome_login">У мене вже є акаунт</string>
+    <string name="login_title_lead">З поверненням.</string>
+    <string name="login_title_rest">Увійди у свій акаунт.</string>
+    <string name="login_identifier">E-mail або номер телефону</string>
+    <string name="login_identifier_invalid">Введи правильний e-mail або номер телефону.</string>
+    <string name="login_submit">Увійти</string>
+    <string name="login_error_credentials">Неправильний e-mail, номер телефону або пароль.</string>
+
+    <string name="name_title_lead">Давай знайомитися.</string>
+    <string name="name_title_rest">Як тебе звати?</string>
+    <string name="name_first">Ім’я</string>
+    <string name="name_last">Прізвище (необов’язково)</string>
+
+    <string name="birth_greeting">Вітаю, %1$s.</string>
+    <string name="birth_prompt">Введи свою дату народження.</string>
+    <string name="date_day">ДД</string>
+    <string name="date_month">ММ</string>
+    <string name="date_year">РРРР</string>
+    <string name="date_separator">.</string>
+    <string name="date_error_invalid">Такої дати не існує.</string>
+    <string name="date_error_future">Дата народження не може бути в майбутньому.</string>
+    <string name="date_error_year">Перевір рік народження.</string>
+    <string name="date_error_too_young">Wizjer доступний для осіб від %1$d років.</string>
+    <plurals name="age_years">
+        <item quantity="one">Тобі %d рік</item>
+        <item quantity="few">Тобі %d роки</item>
+        <item quantity="many">Тобі %d років</item>
+        <item quantity="other">Тобі %d року</item>
+    </plurals>
+
+    <string name="why_link">Навіщо ми про це питаємо?</string>
+    <string name="why_title">Навіщо ми про це питаємо?</string>
+    <string name="why_body">Ім’я дозволяє Wizjer звертатися до тебе особисто. Дата народження допомагає нам налаштувати попередження під шахрайства, з якими найчастіше стикаються люди твого віку.</string>
+    <string name="why_ok">Зрозуміло</string>
+
+    <string name="permissions_title">Кілька дозволів</string>
+    <string name="permissions_body">Wizjer потребує їх, щоб захищати тебе у фоновому режимі.</string>
+    <string name="permission_alerts_title">Попередження</string>
+    <string name="permission_alerts_body">Ми попередимо тебе, щойно помітимо шахрайство.</string>
+    <string name="permission_access_title">Доступ до сповіщень</string>
+    <string name="permission_access_body">Перевірка сповіщень з інших застосунків, як-от месенджерів і пошти.</string>
+    <string name="permission_sms_title">SMS-повідомлення</string>
+    <string name="permission_sms_body">Перевірка SMS на шахрайські посилання та фальшиві запити на оплату.</string>
+    <string name="permission_allow">Дозволити</string>
+    <string name="permission_granted">Надано</string>
+    <string name="permissions_skip">Не зараз</string>
+    <string name="privacy_note">Сканування відбувається на твоєму телефоні. Вміст твоїх повідомлень і сповіщень ніколи його не залишає.</string>
+
+    <string name="skip_title">Твій пристрій не буде захищено у фоновому режимі</string>
+    <string name="skip_body">Без цих дозволів Wizjer не зможе перевіряти твої повідомлення чи попереджати про шахрайство. Їх можна надати пізніше в налаштуваннях.</string>
+    <string name="skip_grant">Надати дозволи</string>
+    <string name="skip_confirm">Все одно пропустити</string>
+
+    <string name="account_title_lead">Останній крок.</string>
+    <string name="account_title_rest">Створи акаунт, щоб користуватися ШІ-асистентом.</string>
+    <string name="account_caption">Акаунт Wizjer</string>
+    <string name="account_email">Через ел. пошту</string>
+    <string name="account_legal">Продовжуючи, ти приймаєш %1$s і %2$s.</string>
+    <string name="account_terms">Умови використання</string>
+    <string name="account_privacy">Політику конфіденційності</string>
+
+    <string name="signup_title_lead">Створи акаунт.</string>
+    <string name="signup_title_rest">Введи e-mail і придумай пароль.</string>
+    <string name="signup_email">E-mail</string>
+    <string name="signup_password">Пароль</string>
+    <string name="signup_show">Показати</string>
+    <string name="signup_hide">Сховати</string>
+    <string name="signup_email_invalid">Введи правильну адресу e-mail.</string>
+    <string name="rule_length">Щонайменше 8 символів</string>
+    <string name="rule_case">Велика й мала літера</string>
+    <string name="rule_digit">Цифра або спецсимвол</string>
+    <string name="rule_met">виконано</string>
+    <string name="rule_unmet">не виконано</string>
+    <string name="signup_submit">Створити акаунт</string>
+    <string name="signup_error_taken">Акаунт із цією адресою вже існує.</string>
+    <string name="signup_error_rejected">Перевір e-mail і пароль та спробуй ще раз.</string>
+    <string name="signup_error_network">Немає з’єднання із сервером. Перевір інтернет і спробуй ще раз.</string>
+    <string name="signup_error_failed">Щось пішло не так. Спробуй ще раз.</string>
+
+    <string name="code_title_lead">Перевір пошту.</string>
+    <string name="code_title_rest">Ми надіслали 6-значний код на %1$s.</string>
+    <string name="code_submit">Підтвердити</string>
+    <string name="code_spam_hint">Не бачиш листа? Перевір папку «Спам».</string>
+    <string name="code_resend">Надіслати новий код</string>
+    <string name="code_resend_wait">Новий код через %1$d с</string>
+    <string name="code_resent">Ми надіслали новий код.</string>
+    <string name="code_error_wrong">Неправильний код. Спробуй ще раз.</string>
+    <string name="code_error_expired">Код більше не дійсний. Надішли новий нижче.</string>
+    <string name="code_error_attempts">Забагато спроб. Надішли новий код нижче.</string>
+
+    <!-- Home: chat with the assistant -->
+    <string name="home_menu">Меню</string>
+    <string name="home_new_chat">Нова розмова</string>
+    <string name="home_protection_off">Захист вимкнено</string>
+    <string name="home_greeting">Привіт, %1$s.</string>
+    <string name="home_greeting_plain">Привіт.</string>
+    <string name="home_prompt">Чим можу допомогти?</string>
+    <string name="suggest_message_title">Перевір повідомлення</string>
+    <string name="suggest_message_body">SMS чи лист, що викликає сумніви</string>
+    <string name="suggest_message_prefill">Перевір це повідомлення:</string>
+    <string name="suggest_link_title">Перевір посилання</string>
+    <string name="suggest_link_body">Переконайся, що сайт безпечний</string>
+    <string name="suggest_link_prefill">Чи безпечне це посилання?</string>
+    <string name="suggest_call_title">Перевір номер</string>
+    <string name="suggest_call_body">Перевір безпечність номера телефону</string>
+    <string name="suggest_call_prompt">Перевір цей номер телефону:</string>
+    <string name="suggest_help_title">Допомога після шахрайства</string>
+    <string name="suggest_help_body">Що робити, якщо щось пішло не так</string>
+    <string name="suggest_help_prompt">Здається, мене ошукали. Що мені тепер робити?</string>
+    <string name="composer_hint">Запитай Wizjer…</string>
+    <string name="composer_send">Надіслати</string>
+    <string name="composer_call">Голосова розмова</string>
+    <string name="assistant_thinking">Wizjer аналізує…</string>
+    <string name="message_copy">Копіювати</string>
+    <string name="message_copied">Скопійовано</string>
+    <string name="message_read">Прочитати вголос</string>
+    <string name="verdict_safe">Виглядає безпечно</string>
+    <string name="verdict_suspicious">Підозріло</string>
+    <string name="verdict_dangerous">Високий ризик</string>
+
+    <string name="protection_off_body">Надай дозволи, щоб Wizjer міг захищати тебе у фоні.</string>
+    <string name="protection_fix">Увімкнути</string>
+
+    <!-- Side menu -->
+    <string name="drawer_today">Сьогодні</string>
+    <string name="drawer_yesterday">Учора</string>
+    <string name="drawer_week">Останні 7 днів</string>
+    <string name="drawer_older">Раніше</string>
+    <string name="drawer_empty">Тут з’являться твої розмови.</string>
+    <string name="drawer_protection">Захист у фоні</string>
+    <string name="drawer_protection_on">Увімкнено</string>
+    <string name="drawer_protection_off">Потребує уваги</string>
+    <string name="drawer_settings">Налаштування</string>
+    <string name="chat_deleted">Розмову видалено</string>
+    <string name="action_undo">Повернути</string>
+    <string name="action_cancel">Скасувати</string>
+
+    <!-- Voice call -->
+    <string name="call_listening">Слухаю…</string>
+    <string name="call_muted">Мікрофон вимкнено</string>
+    <string name="call_mute">Вимкнути</string>
+    <string name="call_unmute">Увімкнути</string>
+    <string name="call_end">Завершити</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Налаштування</string>
+    <string name="settings_protection">Захист</string>
+    <string name="settings_appearance">Вигляд</string>
+    <string name="settings_text_size">Розмір тексту</string>
+    <string name="text_size_normal">Стандартний</string>
+    <string name="text_size_large">Великий</string>
+    <string name="text_size_xlarge">Дуже великий</string>
+    <string name="settings_about">Інформація</string>
+    <string name="settings_terms">Умови використання</string>
+    <string name="settings_privacy">Політика конфіденційності</string>
+    <string name="settings_version">Версія %1$s</string>
+    <string name="settings_logout">Вийти</string>
+    <string name="logout_title">Вийти з акаунта?</string>
+    <string name="logout_body">Розмови, збережені на цьому телефоні, буде видалено.</string>
+
+    <!-- Sample conversations shown until the assistant is connected -->
+    <string name="sample_parcel_title">SMS про доплату за посилку</string>
+    <string name="sample_parcel_user">Перевір це повідомлення:\nInPost: Вашу посилку затримано. Доплатіть 1,99 зл протягом 24 год: inpost-dostawa.top/pl</string>
+    <string name="sample_parcel_reply">Обережно — це схоже на шахрайство. Не натискай на посилання й не вводь дані картки. InPost не просить доплат через SMS із посиланням. Якщо чекаєш на посилку, перевір її статус в офіційному застосунку. Підозрілий SMS можна переслати на номер 8080 (CERT Polska).</string>
+    <string name="sample_parcel_reason_link">Посилання веде на сайт, що не належить InPost.</string>
+    <string name="sample_parcel_reason_payment">Прохання про доплату — поширений трюк шахраїв.</string>
+    <string name="sample_parcel_reason_urgency">Повідомлення змушує поспішати.</string>
+    <string name="sample_bank_title">Дзвінок «з банку»</string>
+    <string name="sample_bank_user">Мені дзвонить людина й каже, що вона з банку. Що робити?</string>
+    <string name="sample_bank_reply">Найкраще одразу завершити дзвінок. Банк ніколи не попросить переказати гроші на «безпечний рахунок», повідомити код чи встановити застосунок. Якщо маєш сумніви, зателефонуй до банку самостійно — за номером на звороті картки.</string>
+
+    <string name="language_title">Мова</string>
+
+</resources>

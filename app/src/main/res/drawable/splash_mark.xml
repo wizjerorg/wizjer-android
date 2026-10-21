@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Logo mark for the system splash screen, in the brand colours. Splash icons without a
+    background are 288dp and must fit a 192dp circle; the mark is 96dp wide here, the same
+    size and position WelcomeScreen starts its intro from, so the hand-off is seamless.
+    Paths are in logo units (see ui/components/WizjerMark.kt).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="288dp"
+    android:height="288dp"
+    tools:ignore="VectorRaster"
+    android:viewportWidth="1866"
+    android:viewportHeight="1866">
+    <group
+        android:translateX="437"
+        android:translateY="429">
+        <!-- Bubble with the eye cut out -->
+        <path
+            android:fillColor="@color/mark_bubble"
+            android:fillType="evenOdd"
+            android:pathData="M262.13,666.04 A307,307 0 1,1 408.79,765.14 L195.12,838.85 Q185.67,842.11 189.65,832.93 Z M354.7,472 a145.3,145.3 0 1,0 290.6,0 a145.3,145.3 0 1,0 -290.6,0 Z" />
+        <!-- Eye -->
+        <path
+            android:fillColor="@color/mark_eye"
+            android:pathData="M354.7,472 a145.3,145.3 0 1,0 290.6,0 a145.3,145.3 0 1,0 -290.6,0 Z" />
+        <!-- Highlight -->
+        <path
+            android:fillColor="@color/mark_pupil"
+            android:pathData="M411.07,419.5 a36.43,36.43 0 1,0 72.86,0 a36.43,36.43 0 1,0 -72.86,0 Z" />
+    </group>
+</vector>

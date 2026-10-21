@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Wizjer" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Light only for now; a dark-mode toggle may come later in Settings. -->
+    <style name="Theme.Wizjer" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper</item>
+    </style>
+
+    <!-- Shown while the app starts; the mark sits where WelcomeScreen's intro begins. -->
+    <style name="Theme.Wizjer.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/paper</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_mark</item>
+        <item name="postSplashScreenTheme">@style/Theme.Wizjer</item>
+    </style>
 </resources>

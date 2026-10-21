@@ -1,4 +1,187 @@
-<resources>
-    <string name="app_name">Wizjer</string>
-    <string name="hello_world">Witaj, świecie!</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">Wizjer</string>
+    <!-- Tag of the language these strings are in; used to show the active language. -->
+    <string name="language_tag">en</string>
+
+    <string name="action_continue">Continue</string>
+    <string name="action_back">Back</string>
+    <string name="step_progress">Step %1$d of %2$d</string>
+
+    <string name="welcome_title">Look before you open.</string>
+    <string name="welcome_body">Wizjer is a modern app that protects you and your phone from online scams.</string>
+    <string name="welcome_cta">Get started</string>
+
+    <!-- Log in to an existing account -->
+    <string name="welcome_login">I already have an account</string>
+    <string name="login_title_lead">Welcome back.</string>
+    <string name="login_title_rest">Log in to your account.</string>
+    <string name="login_identifier">Email or phone number</string>
+    <string name="login_identifier_invalid">Enter a valid email or phone number.</string>
+    <string name="login_submit">Log in</string>
+    <string name="login_error_credentials">Wrong email, phone number or password.</string>
+
+    <string name="name_title_lead">Let’s meet.</string>
+    <string name="name_title_rest">What’s your name?</string>
+    <string name="name_first">First name</string>
+    <string name="name_last">Last name (optional)</string>
+
+    <string name="birth_greeting">Hi, %1$s.</string>
+    <string name="birth_prompt">Enter your date of birth.</string>
+    <string name="date_day">DD</string>
+    <string name="date_month">MM</string>
+    <string name="date_year">YYYY</string>
+    <string name="date_separator">/</string>
+    <string name="date_error_invalid">This date doesn’t exist.</string>
+    <string name="date_error_future">Your date of birth can’t be in the future.</string>
+    <string name="date_error_year">Please check the year.</string>
+    <!-- The minimum age is a fixed constant (16), so no plural forms are needed. -->
+    <string name="date_error_too_young" tools:ignore="PluralsCandidate">Wizjer is for people aged %1$d and over.</string>
+    <plurals name="age_years">
+        <item quantity="one">You’re %d year old</item>
+        <item quantity="other">You’re %d years old</item>
+    </plurals>
+
+    <string name="why_link">Why do we ask?</string>
+    <string name="why_title">Why do we ask?</string>
+    <string name="why_body">Your name lets Wizjer speak to you personally. Your date of birth helps us tailor warnings to the scams that most often target people your age.</string>
+    <string name="why_ok">Got it</string>
+
+    <string name="permissions_title">A few permissions</string>
+    <string name="permissions_body">Wizjer needs these to protect you in the background.</string>
+    <string name="permission_alerts_title">Alerts</string>
+    <string name="permission_alerts_body">So we can warn you the moment we spot a scam.</string>
+    <string name="permission_access_title">Notification access</string>
+    <string name="permission_access_body">Checks notifications from other apps, like messengers and email.</string>
+    <string name="permission_sms_title">SMS messages</string>
+    <string name="permission_sms_body">Checks texts for scam links and fake payment requests.</string>
+    <string name="permission_allow">Allow</string>
+    <string name="permission_granted">Allowed</string>
+    <string name="permissions_skip">Not now</string>
+    <string name="privacy_note">Scanning happens on your phone. The content of your messages and notifications never leaves it.</string>
+
+    <string name="skip_title">You won’t be protected in the background</string>
+    <string name="skip_body">Without these permissions Wizjer can’t check your messages or warn you about scams. You can allow them later in Settings.</string>
+    <string name="skip_grant">Allow permissions</string>
+    <string name="skip_confirm">Skip anyway</string>
+
+    <string name="account_title_lead">One last step.</string>
+    <string name="account_title_rest">Create an account to use the AI assistant.</string>
+    <string name="account_caption">Wizjer account</string>
+    <string name="account_email">Continue with email</string>
+    <string name="account_legal">By continuing, you accept the %1$s and %2$s.</string>
+    <string name="account_terms">Terms of Service</string>
+    <string name="account_privacy">Privacy Policy</string>
+
+    <string name="signup_title_lead">Create your account.</string>
+    <string name="signup_title_rest">Enter your email and choose a password.</string>
+    <string name="signup_email">Email</string>
+    <string name="signup_password">Password</string>
+    <string name="signup_show">Show</string>
+    <string name="signup_hide">Hide</string>
+    <string name="signup_email_invalid">Enter a valid email address.</string>
+    <string name="rule_length">At least 8 characters</string>
+    <string name="rule_case">Uppercase and lowercase letters</string>
+    <string name="rule_digit">A number or a symbol</string>
+    <string name="rule_met">met</string>
+    <string name="rule_unmet">not met</string>
+    <string name="signup_submit">Create account</string>
+    <string name="signup_error_taken">An account with this email already exists.</string>
+    <string name="signup_error_rejected">Check your email and password and try again.</string>
+    <string name="signup_error_network">Can’t reach the server. Check your connection and try again.</string>
+    <string name="signup_error_failed">Something went wrong. Try again.</string>
+
+    <string name="code_title_lead">Check your inbox.</string>
+    <string name="code_title_rest">We sent a 6-digit code to %1$s.</string>
+    <string name="code_submit">Confirm</string>
+    <string name="code_spam_hint">Can’t see the email? Check your spam folder.</string>
+    <string name="code_resend">Send a new code</string>
+    <string name="code_resend_wait">New code in %1$d s</string>
+    <string name="code_resent">We sent you a new code.</string>
+    <string name="code_error_wrong">That code isn’t right. Try again.</string>
+    <string name="code_error_expired">This code has expired. Send a new one below.</string>
+    <string name="code_error_attempts">Too many attempts. Send a new code below.</string>
+
+    <!-- Home: chat with the assistant -->
+    <string name="home_menu">Menu</string>
+    <string name="home_new_chat">New chat</string>
+    <string name="home_protection_off">Protection off</string>
+    <string name="home_greeting">Hi, %1$s.</string>
+    <string name="home_greeting_plain">Hi.</string>
+    <string name="home_prompt">How can I help?</string>
+    <string name="suggest_message_title">Check a message</string>
+    <string name="suggest_message_body">A text or email that seems off</string>
+    <string name="suggest_message_prefill">Check this message:</string>
+    <string name="suggest_link_title">Check a link</string>
+    <string name="suggest_link_body">Make sure a website is safe</string>
+    <string name="suggest_link_prefill">Is this link safe?</string>
+    <string name="suggest_call_title">Check a number</string>
+    <string name="suggest_call_body">Verify whether a phone number is safe</string>
+    <string name="suggest_call_prompt">Check this phone number:</string>
+    <string name="suggest_help_title">Help after a scam</string>
+    <string name="suggest_help_body">What to do if something went wrong</string>
+    <string name="suggest_help_prompt">I think I’ve been scammed. What should I do now?</string>
+    <string name="composer_hint">Ask Wizjer…</string>
+    <string name="composer_send">Send</string>
+    <string name="composer_call">Voice call</string>
+    <string name="assistant_thinking">Wizjer is looking into it…</string>
+    <string name="message_copy">Copy</string>
+    <string name="message_copied">Copied</string>
+    <string name="message_read">Read aloud</string>
+    <string name="verdict_safe">Looks safe</string>
+    <string name="verdict_suspicious">Suspicious</string>
+    <string name="verdict_dangerous">High risk</string>
+
+    <string name="protection_off_body">Turn on the permissions so Wizjer can protect you in the background.</string>
+    <string name="protection_fix">Turn on</string>
+
+    <!-- Side menu -->
+    <string name="drawer_today">Today</string>
+    <string name="drawer_yesterday">Yesterday</string>
+    <string name="drawer_week">Previous 7 days</string>
+    <string name="drawer_older">Older</string>
+    <string name="drawer_empty">Your chats will appear here.</string>
+    <string name="drawer_protection">Background protection</string>
+    <string name="drawer_protection_on">On</string>
+    <string name="drawer_protection_off">Needs attention</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="chat_deleted">Chat deleted</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Voice call -->
+    <string name="call_listening">Listening…</string>
+    <string name="call_muted">Microphone muted</string>
+    <string name="call_mute">Mute</string>
+    <string name="call_unmute">Unmute</string>
+    <string name="call_end">End</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_protection">Protection</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_text_size">Text size</string>
+    <string name="text_size_normal">Standard</string>
+    <string name="text_size_large">Large</string>
+    <string name="text_size_xlarge">Extra large</string>
+    <string name="settings_about">About</string>
+    <string name="settings_terms">Terms of Service</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_logout">Log out</string>
+    <string name="logout_title">Log out?</string>
+    <string name="logout_body">Chats saved on this phone will be deleted.</string>
+
+    <!-- Sample conversations shown until the assistant is connected -->
+    <string name="sample_parcel_title">Parcel fee text</string>
+    <string name="sample_parcel_user">Check this message:\nInPost: Your parcel is on hold. Pay 1.99 PLN within 24h: inpost-dostawa.top/pl</string>
+    <string name="sample_parcel_reply">Be careful — this looks like a scam. Don’t tap the link and don’t enter your card details. InPost doesn’t ask for extra fees by text with a link. If you’re expecting a parcel, check its status in the official app. In Poland you can forward suspicious texts to 8080 (CERT Polska).</string>
+    <string name="sample_parcel_reason_link">The link leads to a site that doesn’t belong to InPost.</string>
+    <string name="sample_parcel_reason_payment">Asking for an extra fee is a common scam trick.</string>
+    <string name="sample_parcel_reason_urgency">The message pressures you to act fast.</string>
+    <string name="sample_bank_title">Call “from the bank”</string>
+    <string name="sample_bank_user">Someone is calling me and says they’re from my bank. What should I do?</string>
+    <string name="sample_bank_reply">The safest thing is to hang up now. Your bank will never ask you to move money to a “safe account”, share a code or install an app. If you’re unsure, call your bank yourself using the number on the back of your card.</string>
+
+    <string name="language_title">Language</string>
+
 </resources>
