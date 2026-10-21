@@ -20,8 +20,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import org.wizjer.android.BuildConfig
 import org.wizjer.android.data.account.AccountSession
 import org.wizjer.android.data.account.RefreshResult
+import org.wizjer.android.data.lists.ThreatListsWorker
 import org.wizjer.android.ui.account.AccountScreen
 import org.wizjer.android.ui.account.EmailCodeScreen
 import org.wizjer.android.ui.account.EmailSignupScreen
@@ -33,7 +35,9 @@ import org.wizjer.android.ui.home.rememberHomeUiState
 import org.wizjer.android.ui.onboarding.WelcomeScreen
 import org.wizjer.android.ui.permissions.PermissionsScreen
 import org.wizjer.android.ui.profile.BirthDateScreen
+import org.wizjer.android.ui.protection.ProtectionScreen
 import org.wizjer.android.ui.profile.NameScreen
+import org.wizjer.android.ui.sandbox.SandboxScreen
 import org.wizjer.android.ui.settings.SettingsScreen
 
 /**
@@ -128,9 +132,9 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
     }
 }
 
-private enum class MainScreen { Chat, Call, Settings }
+private enum class MainScreen { Chat, Call, Protection, Sandbox, Settings }
 
-/** The app after onboarding: the chat, a voice call over it, and settings. */
+/** The app after onboarding: the chat, a voice call over it, protection, settings and (debug) the sandbox. */
 @Composable
 private fun MainShell(
     session: AccountSession,
@@ -141,6 +145,10 @@ private fun MainShell(
     var screen by rememberSaveable { mutableStateOf(MainScreen.Chat) }
     val homeState = rememberHomeUiState()
     val screens = rememberSaveableStateHolder()
+    val context = LocalContext.current
+
+    // Threat lists start downloading once onboarding is done, then refresh in the background.
+    LaunchedEffect(Unit) { ThreatListsWorker.schedule(context) }
 
     BackHandler(enabled = screen != MainScreen.Chat) { screen = MainScreen.Chat }
 
@@ -163,9 +171,14 @@ private fun MainShell(
                     profile = session.profile,
                     state = homeState,
                     onOpenSettings = { screen = MainScreen.Settings },
+                    onOpenProtection = { screen = MainScreen.Protection },
                     onStartCall = { screen = MainScreen.Call },
+                    // A developer tool for testing the detector; not shown in release builds.
+                    onOpenSandbox = if (BuildConfig.DEBUG) ({ screen = MainScreen.Sandbox }) else null,
                 )
                 MainScreen.Call -> CallScreen(onEnd = { screen = MainScreen.Chat })
+                MainScreen.Protection -> ProtectionScreen(onBack = { screen = MainScreen.Chat })
+                MainScreen.Sandbox -> SandboxScreen(onBack = { screen = MainScreen.Chat })
                 MainScreen.Settings -> SettingsScreen(
                     profile = session.profile,
                     textScale = textScale,

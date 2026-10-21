@@ -236,6 +236,20 @@ fun ShieldIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
         moveTo(w * 0.38f, h * 0.5f); lineTo(w * 0.47f, h * 0.59f); lineTo(w * 0.63f, h * 0.42f)
     }
 
+/** Sandbox: a lab flask. */
+@Composable
+fun FlaskIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.36f, h * 0.14f); lineTo(w * 0.64f, h * 0.14f)
+        moveTo(w * 0.42f, h * 0.14f); lineTo(w * 0.42f, h * 0.4f)
+        lineTo(w * 0.2f, h * 0.78f)
+        quadraticTo(w * 0.16f, h * 0.86f, w * 0.26f, h * 0.86f)
+        lineTo(w * 0.74f, h * 0.86f)
+        quadraticTo(w * 0.84f, h * 0.86f, w * 0.8f, h * 0.78f)
+        lineTo(w * 0.58f, h * 0.4f); lineTo(w * 0.58f, h * 0.14f)
+        moveTo(w * 0.3f, h * 0.62f); lineTo(w * 0.7f, h * 0.62f)
+    }
+
 @Composable
 private fun LineIcon(color: Color, modifier: Modifier, build: Path.(Float, Float) -> Unit) {
     Canvas(modifier) {

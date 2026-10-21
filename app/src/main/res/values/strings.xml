@@ -104,7 +104,6 @@
     <!-- Home: chat with the assistant -->
     <string name="home_menu">Menu</string>
     <string name="home_new_chat">New chat</string>
-    <string name="home_protection_off">Protection off</string>
     <string name="home_greeting">Hi, %1$s.</string>
     <string name="home_greeting_plain">Hi.</string>
     <string name="home_prompt">How can I help?</string>
@@ -131,8 +130,142 @@
     <string name="verdict_suspicious">Suspicious</string>
     <string name="verdict_dangerous">High risk</string>
 
-    <string name="protection_off_body">Turn on the permissions so Wizjer can protect you in the background.</string>
     <string name="protection_fix">Turn on</string>
+
+    <!-- Background protection -->
+    <string name="protection_status_on">Protection is on</string>
+    <string name="protection_status_on_body">Wizjer checks new texts and notifications as they arrive.</string>
+    <string name="protection_status_starting">Starting protection…</string>
+    <string name="protection_status_starting_body">This only takes a moment.</string>
+    <string name="protection_status_missing">Protection is incomplete</string>
+    <string name="protection_status_missing_body">Some permissions are missing. Allow them to finish setting up.</string>
+    <string name="protection_status_paused">Protection is paused</string>
+    <string name="protection_status_paused_body">Turn it on so Wizjer checks your messages again.</string>
+    <string name="protection_stats">Statistics</string>
+    <string name="stat_today">Checked today</string>
+    <string name="stat_threats">Threats found</string>
+    <string name="stat_total">Checked in total</string>
+    <string name="stat_last">Last check</string>
+    <string name="stat_never">Nothing yet</string>
+    <string name="protection_sources">What Wizjer checks</string>
+    <string name="source_sms_body">Incoming texts</string>
+    <string name="source_notifications">Notifications</string>
+    <string name="source_notifications_body">Messengers, email and other apps</string>
+
+    <!-- Relative times ("5 minutes ago") -->
+    <string name="time_just_now">Just now</string>
+    <string name="time_yesterday">Yesterday</string>
+    <plurals name="time_minutes_ago">
+        <item quantity="one">%d minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
+    <plurals name="time_hours_ago">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+    <plurals name="time_days_ago">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+    <!-- Scam detection -->
+    <string name="type_parcel_fee">Fake parcel fee</string>
+    <string name="type_bank">Bank impersonation</string>
+    <string name="type_code_theft">Code or password theft</string>
+    <string name="type_family">“Family in trouble” scam</string>
+    <string name="type_marketplace">Marketplace scam (OLX, Vinted)</string>
+    <string name="type_investment">Fake investment</string>
+    <string name="type_job">Fake job or paid tasks</string>
+    <string name="type_utility">Electricity or gas shut-off threat</string>
+    <string name="type_government">Government or police impersonation</string>
+    <string name="type_prize">Fake prize</string>
+    <string name="type_remote_access">Remote access to your phone</string>
+    <string name="type_phishing">Login phishing</string>
+    <string name="sig_link">Contains a link</string>
+    <string name="sig_click_prompt">Urges you to tap the link</string>
+    <string name="sig_short_link">A shortened link hides the real address</string>
+    <string name="sig_ip_host">The link points to a bare IP address</string>
+    <string name="sig_punycode">The address uses look-alike letters</string>
+    <string name="sig_risky_tld">Unusual domain ending (e.g. .top, .xyz)</string>
+    <string name="sig_brand_lookalike">The address imitates %1$s</string>
+    <string name="sig_no_https">The site isn’t encrypted (http)</string>
+    <string name="sig_official_domain">The link leads to the official %1$s site</string>
+    <string name="sig_urgency">Puts you under time pressure</string>
+    <string name="sig_payment">Asks for a payment</string>
+    <string name="sig_credentials">Asks for a code, password or card details</string>
+    <string name="sig_threat">Threatens a block or consequences</string>
+    <string name="sig_authority">Claims to be a bank, office or the police</string>
+    <string name="sig_safe_account">Mentions a “safe account”</string>
+    <string name="sig_prize">Promises a prize or a win</string>
+    <string name="sig_family">Poses as a family member in need</string>
+    <string name="sig_investment">Promises easy profit</string>
+    <string name="sig_job">Offers easy work or income</string>
+    <string name="sig_marketplace">About getting paid for an online sale</string>
+    <string name="sig_remote_app">Asks you to install an app</string>
+    <string name="sig_parcel">About a parcel or courier</string>
+    <string name="sig_utility">About an electricity or gas bill</string>
+    <string name="sig_money">Mentions an amount of money</string>
+    <string name="sig_bank_account">Contains a bank account number</string>
+    <string name="sig_premium_number">Contains a premium-rate number</string>
+    <string name="sig_obfuscation">The text is deliberately disguised</string>
+    <string name="sig_safety_warning">Contains a typical “never share this” warning</string>
+    <string name="sig_cert_list">The site is on CERT Polska’s warning list</string>
+    <string name="sig_gambling_site">Links to a gambling site</string>
+    <string name="sig_adult_site">Links to an adult site</string>
+    <string name="sig_piracy_site">Links to a piracy site</string>
+    <string name="entity_link">Link</string>
+    <string name="entity_phone">Phone number</string>
+    <string name="entity_account">Account number</string>
+    <string name="entity_amount">Amount</string>
+    <string name="entity_brand">Brand</string>
+    <string name="note_short_link">shortened link</string>
+    <string name="note_ip">IP address</string>
+    <string name="note_punycode">look-alike letters</string>
+    <string name="note_risky_tld">suspicious ending</string>
+    <string name="note_lookalike">imitates %1$s</string>
+    <string name="note_official">official %1$s site</string>
+    <string name="note_http">not encrypted</string>
+    <string name="note_premium">premium-rate</string>
+    <string name="note_foreign">foreign number</string>
+    <string name="note_cert_list">on CERT Polska’s warning list</string>
+    <string name="note_gambling">gambling</string>
+    <string name="note_adult">adult content</string>
+    <string name="note_piracy">piracy</string>
+    <string name="stage_normalize">Clean-up</string>
+    <string name="stage_extract">Extraction</string>
+    <string name="stage_lists">Threat lists</string>
+    <string name="stage_rules">Rules</string>
+    <string name="stage_fusion">Scoring</string>
+    <string name="drawer_sandbox">Sandbox</string>
+    <string name="sandbox_hint">Paste or type a message to check…</string>
+    <string name="sandbox_sender">Sender (optional)</string>
+    <string name="sandbox_source_notification">Notification</string>
+    <string name="sandbox_examples">Examples</string>
+    <string name="sandbox_check">Check</string>
+    <string name="sandbox_risk">Risk</string>
+    <string name="sandbox_confidence">Confidence</string>
+    <string name="sandbox_main_type">Most likely</string>
+    <string name="sandbox_types">Scam types</string>
+    <string name="sandbox_reasons">Why</string>
+    <string name="sandbox_no_reasons">No signals found.</string>
+    <string name="sandbox_entities">Found in the message</string>
+    <string name="sandbox_technical">Technical details</string>
+    <string name="sandbox_normalized">Cleaned-up text</string>
+    <string name="sandbox_language">Language</string>
+    <string name="sandbox_timing">Analysis time</string>
+    <string name="sandbox_detector">Detector</string>
+    <string name="sandbox_model">AI model</string>
+    <string name="sandbox_lists">Threat lists</string>
+    <string name="sandbox_not_yet">Not available yet</string>
+    <string name="sandbox_lists_none">Not downloaded yet</string>
+    <string name="sandbox_lists_update">Update now</string>
+    <string name="sandbox_lists_updating">Updating…</string>
+    <string name="sandbox_lists_failed">Couldn’t update. Check the connection.</string>
+    <string name="list_cert">CERT Polska warnings</string>
+    <string name="list_shortener">Link shorteners</string>
+    <string name="list_gambling">Gambling</string>
+    <string name="list_adult">Adult content</string>
+    <string name="list_piracy">Piracy</string>
+    <string name="sandbox_source_sms" translatable="false">SMS</string>
 
     <!-- Side menu -->
     <string name="drawer_today">Today</string>
@@ -143,6 +276,7 @@
     <string name="drawer_protection">Background protection</string>
     <string name="drawer_protection_on">On</string>
     <string name="drawer_protection_off">Needs attention</string>
+    <string name="drawer_protection_paused">Paused</string>
     <string name="drawer_settings">Settings</string>
     <string name="chat_deleted">Chat deleted</string>
     <string name="action_undo">Undo</string>

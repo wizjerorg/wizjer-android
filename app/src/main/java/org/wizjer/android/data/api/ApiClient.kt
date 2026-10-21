@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wizjer.android.BuildConfig
 import java.io.IOException
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -12,6 +13,11 @@ import java.net.URL
 data class ApiResponse(val status: Int, val body: String) {
     val isSuccess: Boolean get() = status in 200..299
     fun json(): JSONObject = JSONObject(body)
+}
+
+/** A large response, read as a stream. [etag] identifies this version of the content. */
+class StreamedResponse(val status: Int, val etag: String?, val body: InputStream?) {
+    val isSuccess: Boolean get() = status in 200..299
 }
 
 /**
@@ -26,14 +32,36 @@ class ApiClient(private val baseUrl: String = BuildConfig.API_BASE_URL) {
     @Throws(IOException::class)
     suspend fun post(path: String, body: JSONObject, token: String? = null): ApiResponse = send("POST", path, body, token)
 
+    /**
+     * GET for large downloads: [read] consumes the body as it arrives (gzip is decoded
+     * transparently). With [etag], an unchanged resource answers 304 and no body.
+     */
+    @Throws(IOException::class)
+    suspend fun <T> stream(path: String, etag: String? = null, read: (StreamedResponse) -> T): T =
+        withContext(Dispatchers.IO) {
+            val connection = open(path)
+            try {
+                if (etag != null) connection.setRequestProperty("If-None-Match", etag)
+                val status = connection.responseCode
+                val body = if (status in 200..299) connection.inputStream else null
+                body.use { read(StreamedResponse(status, connection.getHeaderField("ETag"), it)) }
+            } finally {
+                connection.disconnect()
+            }
+        }
+
+    private fun open(path: String): HttpURLConnection =
+        (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
+            connectTimeout = TIMEOUT_MILLIS
+            readTimeout = TIMEOUT_MILLIS
+            setRequestProperty("Accept", "application/json")
+        }
+
     private suspend fun send(method: String, path: String, body: JSONObject?, token: String?): ApiResponse =
         withContext(Dispatchers.IO) {
-            val connection = URL(baseUrl + path).openConnection() as HttpURLConnection
+            val connection = open(path)
             try {
                 connection.requestMethod = method
-                connection.connectTimeout = TIMEOUT_MILLIS
-                connection.readTimeout = TIMEOUT_MILLIS
-                connection.setRequestProperty("Accept", "application/json")
                 if (token != null) connection.setRequestProperty("Authorization", "Bearer $token")
                 if (body != null) {
                     connection.doOutput = true

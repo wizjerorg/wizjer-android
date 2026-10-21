@@ -42,6 +42,7 @@ import org.wizjer.android.ui.components.ShieldIcon
 import org.wizjer.android.ui.components.TwoToneHeading
 import org.wizjer.android.ui.components.rememberWizjerMarkState
 import org.wizjer.android.ui.components.staggered
+import org.wizjer.android.ui.protection.ProtectionStatus
 
 /**
  * Starting points for people who don't know what to ask. Some fill the message box
@@ -64,7 +65,7 @@ enum class Suggestion(
 @Composable
 fun EmptyState(
     firstName: String,
-    protectionActive: Boolean,
+    protectionStatus: ProtectionStatus,
     onFixProtection: () -> Unit,
     onSuggestion: (Suggestion, String) -> Unit,
     modifier: Modifier = Modifier,
@@ -97,8 +98,8 @@ fun EmptyState(
         )
         Spacer(Modifier.height(28.dp))
         // Only shown when something is wrong; when protection works, nothing nags.
-        if (!protectionActive) {
-            ProtectionOffCard(onFixProtection, Modifier.staggered(reveal, 1, count))
+        if (protectionStatus == ProtectionStatus.Paused || protectionStatus == ProtectionStatus.MissingPermissions) {
+            ProtectionOffCard(protectionStatus, onFixProtection, Modifier.staggered(reveal, 1, count))
             Spacer(Modifier.height(16.dp))
         }
         Suggestion.entries.forEachIndexed { index, suggestion ->
@@ -110,9 +111,9 @@ fun EmptyState(
     }
 }
 
-/** Background protection is off: say so plainly and offer the fix right there. */
+/** Background protection isn't working: say why plainly and offer the fix right there. */
 @Composable
-private fun ProtectionOffCard(onFix: () -> Unit, modifier: Modifier = Modifier) {
+private fun ProtectionOffCard(status: ProtectionStatus, onFix: () -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     Row(
         modifier
@@ -125,9 +126,9 @@ private fun ProtectionOffCard(onFix: () -> Unit, modifier: Modifier = Modifier) 
         ShieldIcon(colors.onBackground)
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
-            Text(stringResource(R.string.home_protection_off), style = MaterialTheme.typography.titleSmall, color = colors.onBackground)
+            Text(stringResource(status.title), style = MaterialTheme.typography.titleSmall, color = colors.onBackground)
             Spacer(Modifier.height(2.dp))
-            Text(stringResource(R.string.protection_off_body), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            Text(stringResource(status.body), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
         }
         Spacer(Modifier.width(12.dp))
         Text(

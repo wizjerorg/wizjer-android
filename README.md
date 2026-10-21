@@ -13,6 +13,8 @@ The app is available in **Polish**, **English** and **Ukrainian**.
 
 - Scanning of messages and notifications is designed to run **on the device**; the content of
   your messages and notifications does not leave the phone.
+- Lists of dangerous sites (including CERT Polska's warning list) are downloaded whole and
+  checked on the phone, so the server never learns which links you received.
 - The AI assistant runs in the cloud and needs an account. What you send to it is processed on
   Wizjer's servers.
 - The session token is stored encrypted with a key from the Android Keystore, and app data is
@@ -22,8 +24,10 @@ The app is available in **Polish**, **English** and **Ukrainian**.
 ## Status
 
 Early development. Done so far: onboarding (profile, permissions, account with email
-confirmation, sign-in), the chat home screen, voice-call and settings screens. Scam detection
-and the assistant's replies are not connected yet; the home screen shows sample conversations.
+confirmation, sign-in), the chat home screen, voice-call and settings screens, background
+protection (receiving SMS and notifications), and the first on-device detector: text clean-up,
+extraction of links and numbers, threat lists and rules, testable in a debug-only sandbox.
+Warnings and the assistant's replies are not connected yet.
 
 ## Building
 
@@ -53,8 +57,11 @@ app/src/main/java/org/wizjer/android/
 ├── MainActivity.kt          Entry point: theme, edge-to-edge, splash
 ├── data/
 │   ├── api/                 Small HTTPS/JSON client
-│   └── account/             AccountSession (sign-up, sign-in, profile sync), stores
-├── protection/              Permissions and the notification listener
+│   ├── account/             AccountSession (sign-up, sign-in, profile sync), stores
+│   └── lists/               Threat-list download and background refresh
+├── detection/               On-device scam detector (clean-up, extraction, rules, scoring)
+│   └── lists/               Compact on-disk index of flagged domains
+├── protection/              Permissions, SMS receiver and the notification listener
 └── ui/
     ├── WizjerApp.kt         Navigation: onboarding → main app
     ├── onboarding/          Welcome screen
@@ -63,6 +70,8 @@ app/src/main/java/org/wizjer/android/
     ├── account/             Account creation, email code, sign-in
     ├── home/                Chat with the assistant, side menu
     ├── call/                Voice call with the assistant
+    ├── protection/          Background protection status
+    ├── sandbox/             Detector sandbox (debug builds only)
     ├── settings/            Settings
     ├── language/            In-app language picker
     ├── components/          Shared UI: buttons, fields, icons, the animated logo

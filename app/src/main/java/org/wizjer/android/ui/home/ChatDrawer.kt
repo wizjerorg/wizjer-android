@@ -40,9 +40,11 @@ import androidx.compose.ui.unit.dp
 import org.wizjer.android.R
 import org.wizjer.android.ui.components.Avatar
 import org.wizjer.android.ui.components.ChevronRightIcon
+import org.wizjer.android.ui.components.FlaskIcon
 import org.wizjer.android.ui.components.PlusIcon
 import org.wizjer.android.ui.components.ShieldIcon
 import org.wizjer.android.ui.components.SlidersIcon
+import org.wizjer.android.ui.protection.ProtectionStatus
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -55,12 +57,14 @@ fun ChatDrawer(
     email: String,
     chats: List<ChatUi>,
     currentId: String?,
-    protectionActive: Boolean,
+    protectionStatus: ProtectionStatus,
     onNewChat: () -> Unit,
     onOpenChat: (String) -> Unit,
     onDeleteChat: (String) -> Unit,
     onProtection: () -> Unit,
     onSettings: () -> Unit,
+    /** Opens the detector sandbox; null hides the row (release builds). */
+    onSandbox: (() -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
 
@@ -117,24 +121,37 @@ fun ChatDrawer(
             icon = { ShieldIcon(it) },
             onClick = onProtection,
             trailing = {
+                val active = protectionStatus == ProtectionStatus.On || protectionStatus == ProtectionStatus.Starting
+                val label = when (protectionStatus) {
+                    ProtectionStatus.On, ProtectionStatus.Starting -> R.string.drawer_protection_on
+                    ProtectionStatus.Paused -> R.string.drawer_protection_paused
+                    ProtectionStatus.MissingPermissions -> R.string.drawer_protection_off
+                }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Mint dot when protected, an empty ring when something needs attention.
+                    // Mint dot when protected, an empty ring when paused or something needs attention.
                     Box(
                         Modifier
                             .size(8.dp)
                             .clip(CircleShape)
-                            .background(if (protectionActive) colors.secondary else Color.Transparent)
-                            .border(1.5.dp, if (protectionActive) colors.secondary else colors.onBackground, CircleShape)
+                            .background(if (active) colors.secondary else Color.Transparent)
+                            .border(1.5.dp, if (active) colors.secondary else colors.onBackground, CircleShape)
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        stringResource(if (protectionActive) R.string.drawer_protection_on else R.string.drawer_protection_off),
+                        stringResource(label),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (protectionActive) colors.onSurfaceVariant else colors.onBackground,
+                        color = if (active) colors.onSurfaceVariant else colors.onBackground,
                     )
                 }
             },
         )
+        if (onSandbox != null) {
+            DrawerRow(
+                label = stringResource(R.string.drawer_sandbox),
+                icon = { FlaskIcon(it) },
+                onClick = onSandbox,
+            )
+        }
         HorizontalDivider(Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = colors.outlineVariant)
 
         if (chats.isEmpty()) {

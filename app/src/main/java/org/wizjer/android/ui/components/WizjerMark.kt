@@ -51,6 +51,10 @@ class WizjerMarkState {
         look(Offset.Zero, 380)         // back at the viewer
     }
 
+    suspend fun openEye() {
+        openness.animateTo(1f, tween(500, easing = EmphasizedEasing))
+    }
+
     /** Slowly shuts the eye and keeps it shut ("Wizjer can't see"). */
     suspend fun closeEye() {
         pupil.animateTo(Offset.Zero, tween(200))

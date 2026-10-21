@@ -14,20 +14,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,39 +35,43 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
-import org.wizjer.android.R
 import org.wizjer.android.data.account.ProfileStore
+import org.wizjer.android.protection.ProtectionStore
+import org.wizjer.android.R
 import org.wizjer.android.ui.components.BrandMark
 import org.wizjer.android.ui.components.IconCircleButton
 import org.wizjer.android.ui.components.MenuIcon
 import org.wizjer.android.ui.components.PlusIcon
 import org.wizjer.android.ui.permissions.rememberPermissionsState
+import org.wizjer.android.ui.protection.protectionStatus
 
 /**
  * Main screen: a chat with Wizjer. Swipe from the left (or tap the menu) for past chats
@@ -78,14 +82,18 @@ fun HomeScreen(
     profile: ProfileStore,
     state: HomeUiState,
     onOpenSettings: () -> Unit,
+    onOpenProtection: () -> Unit,
     onStartCall: () -> Unit,
     modifier: Modifier = Modifier,
+    onOpenSandbox: (() -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
+    val context = LocalContext.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
-    val protectionActive = rememberPermissionsState().allGranted
+    val protection by remember { ProtectionStore.get(context) }.state.collectAsStateWithLifecycle()
+    val protectionStatus = protectionStatus(protection, rememberPermissionsState())
     val firstName = profile.firstName
     val lastName = profile.lastName
     val email = profile.email
@@ -133,12 +141,13 @@ fun HomeScreen(
                     email = email,
                     chats = state.chats,
                     currentId = state.currentId,
-                    protectionActive = protectionActive,
+                    protectionStatus = protectionStatus,
                     onNewChat = { closeDrawerThen(state::newChat) },
                     onOpenChat = { id -> closeDrawerThen { state.open(id) } },
                     onDeleteChat = ::delete,
-                    onProtection = { closeDrawerThen(onOpenSettings) },
+                    onProtection = { closeDrawerThen(onOpenProtection) },
                     onSettings = { closeDrawerThen(onOpenSettings) },
+                    onSandbox = onOpenSandbox?.let { open -> { closeDrawerThen(open) } },
                 )
             }
         },
@@ -165,8 +174,8 @@ fun HomeScreen(
                     if (chat == null) {
                         EmptyState(
                             firstName = firstName,
-                            protectionActive = protectionActive,
-                            onFixProtection = onOpenSettings,
+                            protectionStatus = protectionStatus,
+                            onFixProtection = onOpenProtection,
                             onSuggestion = { suggestion, text ->
                                 if (suggestion.sendsImmediately) {
                                     send(text)
