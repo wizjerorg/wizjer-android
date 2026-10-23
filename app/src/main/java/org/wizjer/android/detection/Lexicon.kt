@@ -26,12 +26,19 @@ internal object Lexicon {
         "оплат", "доплат", "сплат", "переказ", "надішли гроші", "позич",
     )
 
+    /** Asking for codes, passwords or card data. Paying "blikiem" is everyday; sending someone a BLIK code isn't. */
     val credentials = phrases(
-        "blik", "podaj kod", "kod sms", "kod weryfikacyjny", "przepisz kod", "hasło", "pin", "cvv", "dane karty",
-        "numer karty", "dane logowania", "dane do logowania", "zaloguj się", "zweryfikuj", "potwierdź dane",
-        "weryfikacja konta", "weryfikacji konta",
-        "password", "verification code", "card details", "card number", "login details", "verify your", "log in to",
-        "пароль", "код з смс", "дані картки", "номер картки", "підтвердіть дані", "увійдіть",
+        "kod blik", "kodu blik", "kodem blik", "kod z blik", "wyślij mi blik", "wyślij blik", "wyślesz mi blik",
+        "wyślesz blik", "podeślij blik", "podeślesz mi blik", "prześlij blik", "daj blik", "pożycz blik",
+        "pożyczysz mi blik", "potrzebuję blik", "podaj kod", "kod sms", "kod weryfikacyjny", "przepisz kod",
+        "prześlij kod", "prześlij mi kod", "przesłać kod", "przesłać mi kod", "wyślij kod", "wyślij mi kod",
+        "podeślij kod", "podeślij mi kod", "kod, który przyszedł", "kod który przyszedł", "kod co przyszedł",
+        "hasło", "pin", "cvv", "dane karty", "numer karty", "dane płatności", "dane do płatności", "dane logowania",
+        "dane do logowania", "zaloguj się", "zweryfikuj", "potwierdź dane", "weryfikacja konta", "weryfikacji konta",
+        "password", "verification code", "card details", "card number", "payment details", "login details",
+        "verify your", "log in to", "send me the code", "the code you received",
+        "пароль", "код з смс", "дані картки", "номер картки", "підтвердіть дані", "увійдіть", "надішли код",
+        "скинь код", "перешли код",
     )
 
     val threat = phrases(
@@ -53,17 +60,20 @@ internal object Lexicon {
         "safe account", "безпечний рахунок", "безпечного рахунку",
     )
 
+    /** Prizes, freebies and money said to be waiting (e.g. a tax refund). */
     val prize = phrases(
-        "wygrał", "wygrana", "wygraną", "nagrod", "gratulacje", "voucher", "bon o wartości", "za darmo", "losowani",
-        "you won", "winner", "prize", "congratulations", "free gift",
-        "виграш", "вітаємо", "приз", "безкоштовн",
+        "wygrał", "wygrana", "wygraną", "nagrod", "gratulacje", "voucher", "bon o wartości", "za darmo", "darmow",
+        "losowani", "zwrot podatku", "nadpłat", "przysługuje ci zwrot", "przysługuje zwrot", "otrzymasz zwrot",
+        "you won", "winner", "prize", "congratulations", "free gift", "free nitro", "tax refund", "eligible for a refund",
+        "виграш", "вітаємо", "приз", "безкоштовн", "повернення податку", "повернення коштів",
     )
 
+    /** The "new number" story. Just writing "mamo" or "tato" is everyday, so it doesn't count. */
     val family = phrases(
-        "mamo", "tato", "babciu", "dziadku", "nowy numer", "mój nowy numer", "zgubiłem telefon", "zgubiłam telefon",
-        "zepsuł mi się telefon", "miałem wypadek", "miałam wypadek", "to ja, twój", "to ja, twoja",
-        "mum,", "mom,", "dad,", "new number", "lost my phone",
-        "мамо", "тато", "новий номер", "загубив телефон", "загубила телефон",
+        "nowy numer", "nowego numeru", "zgubiłem telefon", "zgubiłam telefon", "zepsuł mi się telefon",
+        "stary telefon", "miałem wypadek", "miałam wypadek", "to ja, twój", "to ja, twoja",
+        "new number", "lost my phone", "my phone broke",
+        "новий номер", "нового номера", "загубив телефон", "загубила телефон",
     )
 
     val investment = phrases(
@@ -80,11 +90,17 @@ internal object Lexicon {
         "робота з дому", "заробіток", "оплачувані завдання",
     )
 
+    /** Lures of the fake-buyer scam: a seller never has to "collect" the money. */
     val marketplace = phrases(
-        "kup teraz", "odbierz pieniądze", "odebrać pieniądze", "odbierz środki", "odebrać środki",
-        "przesyłka opłacona", "kupujący zapłacił", "kupujący opłacił", "formularz odbioru", "wypełnij formularz",
-        "buyer has paid", "receive payment", "receive funds", "fill in the form",
-        "отримати кошти", "покупець оплатив", "заповніть форму",
+        "odbierz pieniądze", "odebrać pieniądze", "odbierz środki", "odebrać środki", "odbiór środków",
+        "odbioru środków", "potwierdź odbiór", "potwierdzić odbiór", "formularz odbioru", "wypełnij formularz",
+        "receive payment", "receive funds", "fill in the form",
+        "отримати кошти", "заповніть форму",
+    )
+
+    /** Sale wording that marketplaces send too; it only counts next to a link. */
+    val marketplaceSale = phrases(
+        "kup teraz", "przesyłka opłacona", "kupujący zapłacił", "kupujący opłacił", "buyer has paid", "покупець оплатив",
     )
 
     val remoteApp = phrases(
@@ -93,9 +109,9 @@ internal object Lexicon {
     )
 
     val clickPrompt = phrases(
-        "kliknij", "wejdź w link", "wejdź na stronę", "link poniżej", "pod linkiem",
-        "click", "tap the link", "follow the link",
-        "натисніть", "перейдіть за посиланням",
+        "kliknij", "wejdź w link", "wejdź na stronę", "link poniżej", "pod linkiem", "zagłosuj", "oddaj głos",
+        "click", "tap the link", "follow the link", "vote for",
+        "натисніть", "перейдіть за посиланням", "проголосуй",
     )
 
     val parcel = phrases(
@@ -117,18 +133,25 @@ internal object Lexicon {
         "нікому не повідомляйте", "не повідомляйте нікому",
     )
 
-    /** Domain endings popular with throwaway scam sites. */
+    /** Domain endings popular with throwaway scam sites (many on CERT Polska's list). */
     val riskyTlds = setOf(
         "top", "xyz", "click", "online", "site", "shop", "live", "icu", "buzz", "cfd", "sbs", "rest", "store", "club",
         "vip", "win", "bid", "cyou", "monster", "lol", "pw", "tk", "ml", "ga", "cf", "gq", "work", "support", "help",
-        "life", "today", "fun", "space", "info",
+        "life", "today", "fun", "space", "info", "lat", "bond", "mom", "autos", "qpon", "casa", "pics", "skin", "hair",
+        "beauty", "makeup", "homes", "yachts", "boats", "motorcycles", "cam", "quest",
     )
 
-    /** Endings accepted for links written without "https://" (to avoid matching "godz.21" etc.). */
+    /**
+     * Endings accepted for links written without "https://" (to avoid matching "godz.21" etc.). A bare
+     * domain with another ending still counts when the downloaded lists know it.
+     */
     val knownTlds = riskyTlds + setOf(
         "com", "net", "org", "pl", "eu", "ua", "uk", "de", "io", "app", "me", "co", "gov", "edu", "ru", "by", "cz",
         "sk", "lt", "lv", "ee", "us", "fr", "it", "es", "nl", "tv", "ai", "dev", "page", "ly", "gl", "to", "gg", "cc",
-        "ws", "su", "biz", "link",
+        "ws", "su", "biz", "link", "pro", "digital", "website", "tech", "cloud", "blog", "wiki", "forum", "world",
+        "business", "company", "host", "guru", "ink", "best", "network", "email", "news", "baby", "beer", "surf",
+        "luxe", "sale", "br", "ch", "ro", "jp", "se", "dk", "fi", "hu", "pt", "gr", "tr", "cn", "ca", "au", "kz", "md",
+        "bg", "hr", "rs", "vn",
     )
 
     /** Second-level endings where the registrable domain has three parts (bank.com.pl). */
@@ -142,16 +165,26 @@ internal object Lexicon {
         "tiny.pl", "s.id", "rebrand.ly", "bl.ink", "short.io", "v.gd", "qr.ae", "tiny.cc",
     )
 
+    /** Hosts under a shortener's domain that aren't shorteners (Google Maps share links). */
+    val notShorteners = setOf("maps.app.goo.gl")
+
+    /**
+     * Genuine services whose links lead to any person: a payment page (paypal.me/anyone) or a chat
+     * (wa.me/number). Not fake, but no proof the message is safe either.
+     */
+    val personalLinkHosts = setOf("paypal.me", "revolut.me", "wa.me", "t.me")
+
     val brands: List<Brand> = listOf(
         Brand("InPost", BrandCategory.Parcel, listOf("inpost", "paczkomat"), listOf("inpost.pl", "inpost.eu", "inpost.co.uk")),
         Brand("Poczta Polska", BrandCategory.Parcel, listOf("poczta polska", "pocztapolska", "pocztex", "envelo"), listOf("poczta-polska.pl", "pocztapolska.pl", "envelo.pl", "pocztex.pl")),
-        Brand("DPD", BrandCategory.Parcel, listOf("dpd"), listOf("dpd.com", "dpd.pl")),
-        Brand("DHL", BrandCategory.Parcel, listOf("dhl"), listOf("dhl.com", "dhl.pl", "dhlparcel.pl")),
-        Brand("GLS", BrandCategory.Parcel, listOf("gls"), listOf("gls-group.eu", "gls-group.com", "gls-poland.com")),
+        Brand("DPD", BrandCategory.Parcel, listOf("dpd"), listOf("dpd.com", "dpd.pl", "dpd.com.pl")),
+        Brand("DHL", BrandCategory.Parcel, listOf("dhl"), listOf("dhl.com", "dhl.pl", "dhl.com.pl", "dhl24.com.pl", "dhlparcel.pl")),
+        Brand("GLS", BrandCategory.Parcel, listOf("gls"), listOf("gls-group.eu", "gls-group.com", "gls-poland.com", "gls-pl.com")),
         Brand("FedEx", BrandCategory.Parcel, listOf("fedex"), listOf("fedex.com")),
         Brand("Allegro", BrandCategory.Marketplace, listOf("allegro"), listOf("allegro.pl", "allegrolokalnie.pl")),
         Brand("OLX", BrandCategory.Marketplace, listOf("olx"), listOf("olx.pl", "olx.ua")),
         Brand("Vinted", BrandCategory.Marketplace, listOf("vinted"), listOf("vinted.pl", "vinted.com")),
+        Brand("Otomoto", BrandCategory.Marketplace, listOf("otomoto"), listOf("otomoto.pl")),
         Brand("PKO BP", BrandCategory.Bank, listOf("pko", "ipko", "pkobp"), listOf("pkobp.pl", "ipko.pl", "pko.pl")),
         Brand("Pekao", BrandCategory.Bank, listOf("pekao"), listOf("pekao.com.pl")),
         Brand("mBank", BrandCategory.Bank, listOf("mbank"), listOf("mbank.pl")),
@@ -166,6 +199,7 @@ internal object Lexicon {
         Brand("mObywatel", BrandCategory.Government, listOf("mobywatel"), listOf("gov.pl")),
         Brand("Urząd Skarbowy", BrandCategory.Government, listOf("urząd skarbowy", "e-urząd", "podatki"), listOf("podatki.gov.pl", "gov.pl")),
         Brand("Policja", BrandCategory.Government, listOf("policja", "policji"), listOf("policja.pl", "gov.pl")),
+        Brand("gov.pl", BrandCategory.Government, listOf("gov", "mandat", "e-toll", "etoll", "epuap", "profil zaufany"), listOf("gov.pl")),
         Brand("PGE", BrandCategory.Utility, listOf("pge"), listOf("pge.pl", "gkpge.pl", "pge-obrot.pl")),
         Brand("Tauron", BrandCategory.Utility, listOf("tauron"), listOf("tauron.pl")),
         Brand("Enea", BrandCategory.Utility, listOf("enea"), listOf("enea.pl")),
@@ -175,7 +209,15 @@ internal object Lexicon {
         Brand("Netflix", BrandCategory.Other, listOf("netflix"), listOf("netflix.com")),
         Brand("Apple", BrandCategory.Other, listOf("apple", "icloud"), listOf("apple.com", "icloud.com")),
         Brand("Microsoft", BrandCategory.Other, listOf("microsoft"), listOf("microsoft.com")),
-        Brand("Facebook", BrandCategory.Other, listOf("facebook"), listOf("facebook.com", "fb.com")),
+        Brand("Facebook", BrandCategory.Other, listOf("facebook", "messenger"), listOf("facebook.com", "fb.com", "messenger.com")),
+        Brand("PayPal", BrandCategory.Other, listOf("paypal"), listOf("paypal.com")),
+        Brand("Steam", BrandCategory.Other, listOf("steam", "steamcommunity"), listOf("steampowered.com", "steamcommunity.com")),
+        Brand(
+            "Discord",
+            BrandCategory.Other,
+            listOf("discord"),
+            listOf("discord.com", "discord.gg", "discordapp.com", "discordapp.net", "discord.gift", "discord.media"),
+        ),
     )
 
     /**

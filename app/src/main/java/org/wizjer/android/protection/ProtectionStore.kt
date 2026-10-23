@@ -55,8 +55,9 @@ class ProtectionStore private constructor(context: Context) {
         }
     }
 
+    /** Counts one checked message, and one threat found if [threat]. */
     @Synchronized
-    fun recordChecked(source: MessageSource, at: Long) {
+    fun recordChecked(source: MessageSource, at: Long, threat: Boolean = false) {
         val today = LocalDate.now().toEpochDay()
         val sameDay = prefs.getLong(KEY_DAY, -1) == today
         prefs.edit {
@@ -67,6 +68,7 @@ class ProtectionStore private constructor(context: Context) {
                 MessageSource.Sms -> putInt(KEY_SMS_COUNT, prefs.getInt(KEY_SMS_COUNT, 0) + 1)
                 MessageSource.Notification -> putInt(KEY_NOTIFICATION_COUNT, prefs.getInt(KEY_NOTIFICATION_COUNT, 0) + 1)
             }
+            if (threat) putInt(KEY_THREATS, prefs.getInt(KEY_THREATS, 0) + 1)
             putLong(KEY_LAST, at)
         }
         _state.update { it.copy(stats = loadStats()) }

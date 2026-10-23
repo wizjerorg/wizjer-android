@@ -142,7 +142,7 @@
     <string name="protection_status_paused_body">Увімкни його, щоб Wizjer знову перевіряв повідомлення.</string>
     <string name="protection_stats">Статистика</string>
     <string name="stat_today">Перевірено сьогодні</string>
-    <string name="stat_threats">Виявлені загрози</string>
+    <string name="stat_threats">Потенційні загрози</string>
     <string name="stat_total">Перевірено загалом</string>
     <string name="stat_last">Остання перевірка</string>
     <string name="stat_never">Ще нічого</string>
@@ -172,6 +172,24 @@
         <item quantity="many">%d днів тому</item>
         <item quantity="other">%d дня тому</item>
     </plurals>
+    <!-- Scam alerts from background protection; the alert never repeats the message text -->
+    <string name="alert_channel">Попередження про шахрайство</string>
+    <string name="alert_channel_body">Попередження про підозрілі SMS і повідомлення</string>
+    <string name="alert_title">Виявлено підозріле повідомлення</string>
+    <string name="alert_body">Перш ніж щось робити, перевір його в застосунку Wizjer.</string>
+    <!-- The screen an alert opens -->
+    <string name="flagged_title">Підозріле повідомлення</string>
+    <string name="flagged_headline">Це повідомлення може бути шахрайством</string>
+    <string name="flagged_body">Wizjer знайшов у ньому тривожні ознаки. Проаналізуй їх, перш ніж щось робити.</string>
+    <string name="flagged_via_sms">SMS</string>
+    <string name="flagged_via_app">Сповіщення з: %1$s</string>
+    <string name="flagged_via_notification">Сповіщення</string>
+    <string name="flagged_message">Повідомлення</string>
+    <string name="flagged_why">Чому це виглядає підозріло</string>
+    <string name="flagged_analyze">Попроси Wizjer про глибокий аналіз</string>
+    <string name="flagged_analyze_soon">Глибокий аналіз скоро буде доступний.</string>
+    <string name="flagged_gone">Подробиці цього повідомлення вже недоступні: Wizjer зберігає їх, лише поки працює. Знайди повідомлення в застосунку, з якого воно прийшло, і нічого не роби, доки не переконаєшся.</string>
+    <string name="protection_recent">Останні попередження</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Фальшива доплата за посилку</string>
     <string name="type_bank">Видавання себе за банк</string>
@@ -217,9 +235,45 @@
     <string name="sig_gambling_site">Посилання на сайт азартних ігор</string>
     <string name="sig_adult_site">Посилання на сайт для дорослих</string>
     <string name="sig_piracy_site">Посилання на піратський сайт</string>
-    <string name="sig_model_scam">ШІ-модель на телефоні оцінює це як шахрайство (%1$s)</string>
+    <string name="sig_model_scam">ШІ-модель на телефоні вважає це дуже підозрілим (%1$s)</string>
     <string name="sig_model_suspicious">ШІ-модель на телефоні вважає це підозрілим (%1$s)</string>
     <string name="sig_model_ordinary">ШІ-модель на телефоні вважає це звичайним повідомленням (%1$s)</string>
+    <!-- The same reasons in plainer words, for people aged 60+: no technical terms -->
+    <string name="sig_link_simple">Містить посилання на сайт</string>
+    <string name="sig_click_prompt_simple">Підштовхує натиснути на посилання</string>
+    <string name="sig_short_link_simple">Посилання приховує, куди насправді веде</string>
+    <string name="sig_ip_host_simple">Посилання веде на дивну адресу, а не на звичайний сайт</string>
+    <string name="sig_punycode_simple">Адреса сайту підробляє іншу схожими літерами</string>
+    <string name="sig_risky_tld_simple">Адреса сайту виглядає незвично</string>
+    <string name="sig_brand_lookalike_simple">Посилання видає себе за %1$s, але веде не туди</string>
+    <string name="sig_no_https_simple">Сайт не захищений</string>
+    <string name="sig_official_domain_simple">Посилання веде на справжній сайт %1$s</string>
+    <string name="sig_urgency_simple">Квапить діяти швидко</string>
+    <string name="sig_payment_simple">Просить гроші або доплату</string>
+    <string name="sig_credentials_simple">Просить код, пароль або дані картки</string>
+    <string name="sig_threat_simple">Лякає блокуванням рахунку чи покаранням</string>
+    <string name="sig_authority_simple">Видає себе за банк, установу чи поліцію</string>
+    <string name="sig_safe_account_simple">Згадує «безпечний рахунок» – банк ніколи про таке не просить</string>
+    <string name="sig_prize_simple">Обіцяє приз або виграш</string>
+    <string name="sig_family_simple">Хтось видає себе за рідних і пише з нового номера</string>
+    <string name="sig_investment_simple">Обіцяє швидкий і гарантований заробіток</string>
+    <string name="sig_job_simple">Пропонує легку роботу за великі гроші</string>
+    <string name="sig_marketplace_simple">Просить «отримати гроші» за продаж через посилання</string>
+    <string name="sig_remote_app_simple">Просить встановити застосунок</string>
+    <string name="sig_parcel_simple">Стосується посилки чи кур’єра</string>
+    <string name="sig_utility_simple">Стосується рахунку за світло чи газ</string>
+    <string name="sig_money_simple">Згадує суму грошей</string>
+    <string name="sig_bank_account_simple">Дає номер рахунку для переказу</string>
+    <string name="sig_premium_number_simple">Дає дорогий платний номер телефону</string>
+    <string name="sig_obfuscation_simple">Текст навмисно дивно написаний, щоб приховати шахрайство</string>
+    <string name="sig_safety_warning_simple">Попереджає нікому не повідомляти код</string>
+    <string name="sig_cert_list_simple">Цей сайт є у списку відомих шахрайських сайтів</string>
+    <string name="sig_gambling_site_simple">Посилання на сайт з азартними іграми</string>
+    <string name="sig_adult_site_simple">Посилання на сайт для дорослих</string>
+    <string name="sig_piracy_site_simple">Посилання на сайт з незаконними фільмами чи програмами</string>
+    <string name="sig_model_scam_simple">Wizjer оцінює це як дуже підозріле</string>
+    <string name="sig_model_suspicious_simple">Wizjer оцінює це як підозріле</string>
+    <string name="sig_model_ordinary_simple">Wizjer оцінює це як звичайне повідомлення</string>
     <string name="entity_link">Посилання</string>
     <string name="entity_phone">Номер телефону</string>
     <string name="entity_account">Номер рахунку</string>

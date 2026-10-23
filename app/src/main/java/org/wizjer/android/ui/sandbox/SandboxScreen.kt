@@ -73,7 +73,7 @@ import org.wizjer.android.data.lists.ThreatLists
 import org.wizjer.android.data.lists.ThreatListsWorker
 import org.wizjer.android.detection.Analysis
 import org.wizjer.android.detection.DetectorInput
-import org.wizjer.android.data.model.BundledModel
+import org.wizjer.android.data.model.ModelStore
 import org.wizjer.android.detection.LocalScamDetector
 import org.wizjer.android.detection.RiskLevel
 import org.wizjer.android.detection.SampleMessages
@@ -96,7 +96,7 @@ fun SandboxScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     val context = LocalContext.current
     val lists = remember { ThreatLists.get(context) }
-    val detector = remember { LocalScamDetector(sites = { lists.loaded.value.values }, model = { BundledModel.get(context) }) }
+    val detector = remember { LocalScamDetector(sites = { lists.loaded.value.values }, model = { ModelStore.get(context) }) }
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
@@ -108,7 +108,7 @@ fun SandboxScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             LocalScamDetector.warmUp()
-            BundledModel.get(context) // read the model now rather than on the first check
+            ModelStore.get(context) // read the model now rather than on the first check
         }
     }
 
@@ -394,7 +394,8 @@ private fun TechnicalDetails(analysis: Analysis) {
             DetailRow(stringResource(it.stage.label), formatMicros(it.micros), Modifier.padding(start = 16.dp))
         }
         DetailRow(stringResource(R.string.sandbox_detector), analysis.detectorVersion)
-        DetailRow(stringResource(R.string.sandbox_model), if (analysis.modelUsed) "✓" else notYet)
+        val context = LocalContext.current
+        DetailRow(stringResource(R.string.sandbox_model), if (analysis.modelUsed) ModelStore.version(context) ?: "✓" else notYet)
         DetailRow(stringResource(R.string.sandbox_lists), if (analysis.listsUsed) "✓" else stringResource(R.string.sandbox_lists_none))
     }
 }

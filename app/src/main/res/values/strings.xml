@@ -143,7 +143,7 @@
     <string name="protection_status_paused_body">Turn it on so Wizjer checks your messages again.</string>
     <string name="protection_stats">Statistics</string>
     <string name="stat_today">Checked today</string>
-    <string name="stat_threats">Threats found</string>
+    <string name="stat_threats">Potential threats</string>
     <string name="stat_total">Checked in total</string>
     <string name="stat_last">Last check</string>
     <string name="stat_never">Nothing yet</string>
@@ -167,6 +167,24 @@
         <item quantity="one">%d day ago</item>
         <item quantity="other">%d days ago</item>
     </plurals>
+    <!-- Scam alerts from background protection; the alert never repeats the message text -->
+    <string name="alert_channel">Scam alerts</string>
+    <string name="alert_channel_body">Warnings about suspicious texts and messages</string>
+    <string name="alert_title">Suspicious message detected</string>
+    <string name="alert_body">Before you do anything, check it in Wizjer.</string>
+    <!-- The screen an alert opens -->
+    <string name="flagged_title">Suspicious message</string>
+    <string name="flagged_headline">This message may be a scam</string>
+    <string name="flagged_body">Wizjer found warning signs in it. Look at them before you take any action.</string>
+    <string name="flagged_via_sms">SMS</string>
+    <string name="flagged_via_app">Notification from %1$s</string>
+    <string name="flagged_via_notification">Notification</string>
+    <string name="flagged_message">Message</string>
+    <string name="flagged_why">Why it looks suspicious</string>
+    <string name="flagged_analyze">Ask Wizjer for an in-depth analysis</string>
+    <string name="flagged_analyze_soon">In-depth analysis is coming soon.</string>
+    <string name="flagged_gone">The details of this message are no longer available: Wizjer keeps them only while it’s running. Find the message in the app it came from and don’t act on it until you’re sure.</string>
+    <string name="protection_recent">Recent alerts</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Fake parcel fee</string>
     <string name="type_bank">Bank impersonation</string>
@@ -212,9 +230,45 @@
     <string name="sig_gambling_site">Links to a gambling site</string>
     <string name="sig_adult_site">Links to an adult site</string>
     <string name="sig_piracy_site">Links to a piracy site</string>
-    <string name="sig_model_scam">The on-device AI model rates it as a scam (%1$s)</string>
+    <string name="sig_model_scam">The on-device AI model finds it very suspicious (%1$s)</string>
     <string name="sig_model_suspicious">The on-device AI model finds it suspicious (%1$s)</string>
     <string name="sig_model_ordinary">The on-device AI model finds it an ordinary message (%1$s)</string>
+    <!-- The same reasons in plainer words, for people aged 60+: no technical terms -->
+    <string name="sig_link_simple">Contains a link to a website</string>
+    <string name="sig_click_prompt_simple">Urges you to click a link</string>
+    <string name="sig_short_link_simple">The link hides where it really goes</string>
+    <string name="sig_ip_host_simple">The link leads to an odd address, not a normal website</string>
+    <string name="sig_punycode_simple">The web address uses look-alike letters to pass for another</string>
+    <string name="sig_risky_tld_simple">The web address looks unusual</string>
+    <string name="sig_brand_lookalike_simple">The link pretends to be %1$s but doesn’t lead there</string>
+    <string name="sig_no_https_simple">The website isn’t secure</string>
+    <string name="sig_official_domain_simple">The link leads to the real %1$s website</string>
+    <string name="sig_urgency_simple">Rushes you to act quickly</string>
+    <string name="sig_payment_simple">Asks for money or an extra payment</string>
+    <string name="sig_credentials_simple">Asks for a code, password or card details</string>
+    <string name="sig_threat_simple">Threatens to block your account or punish you</string>
+    <string name="sig_authority_simple">Claims to be a bank, an office or the police</string>
+    <string name="sig_safe_account_simple">Mentions a “safe account” – banks never ask for this</string>
+    <string name="sig_prize_simple">Promises a prize or a win</string>
+    <string name="sig_family_simple">Someone claims to be family, writing from a new number</string>
+    <string name="sig_investment_simple">Promises quick, sure profit</string>
+    <string name="sig_job_simple">Offers easy work for big money</string>
+    <string name="sig_marketplace_simple">Asks you to “collect money” for a sale through a link</string>
+    <string name="sig_remote_app_simple">Asks you to install an app</string>
+    <string name="sig_parcel_simple">Is about a parcel or a courier</string>
+    <string name="sig_utility_simple">Is about an electricity or gas bill</string>
+    <string name="sig_money_simple">Mentions an amount of money</string>
+    <string name="sig_bank_account_simple">Gives an account number to send money to</string>
+    <string name="sig_premium_number_simple">Gives an expensive, paid phone number</string>
+    <string name="sig_obfuscation_simple">The text is oddly written to hide a scam</string>
+    <string name="sig_safety_warning_simple">Warns not to share a code with anyone</string>
+    <string name="sig_cert_list_simple">This website is on a list of known scams</string>
+    <string name="sig_gambling_site_simple">Links to a gambling website</string>
+    <string name="sig_adult_site_simple">Links to an adult website</string>
+    <string name="sig_piracy_site_simple">Links to a website with illegal films or software</string>
+    <string name="sig_model_scam_simple">Wizjer rates it as very suspicious</string>
+    <string name="sig_model_suspicious_simple">Wizjer rates it as suspicious</string>
+    <string name="sig_model_ordinary_simple">Wizjer rates it as an ordinary message</string>
     <string name="entity_link">Link</string>
     <string name="entity_phone">Phone number</string>
     <string name="entity_account">Account number</string>

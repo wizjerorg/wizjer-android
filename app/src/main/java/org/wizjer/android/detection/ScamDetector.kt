@@ -38,12 +38,12 @@ class LocalScamDetector(
         val fullText = listOfNotNull(input.sender?.takeIf { it.isNotBlank() }, input.text).joinToString("\n")
         val normalized = timed(Stage.Normalize) { TextNormalizer.normalize(fullText) }
         val indexes = sites()
-        val extraction = timed(Stage.Extract) { EntityExtractor.extract(normalized) }
+        val extraction = timed(Stage.Extract) { EntityExtractor.extract(normalized) { host -> indexes.any { it.listsFor(host).isNotEmpty() } } }
             .let { found -> if (indexes.isEmpty()) found else timed(Stage.Lists) { checkLists(found, indexes) } }
-        val language = detectLanguage(normalized)
+        val language = detectLanguage(normalized, extraction)
         val scorer = model()
         val reasons = timed(Stage.Rules) { RuleEngine.evaluate(normalized, extraction) } +
-            listOfNotNull(scorer?.let { timed(Stage.Model) { modelReason(it, input, language) } })
+            listOfNotNull(scorer?.let { timed(Stage.Model) { modelReason(it, input, language, extraction) } })
         val verdict = timed(Stage.Fusion) {
             RiskFusion.combine(reasons, extraction, normalized.clean.length, language)
         }
@@ -68,9 +68,10 @@ class LocalScamDetector(
     /**
      * The model's verdict as one piece of evidence, against its thresholds for this language and
      * channel. It reassures only about SMS, where it misses almost no scams; chat scams it misses
-     * more often, so there it can add a warning but never talk the rules down.
+     * more often, so there it can add a warning but never talk the rules down. It can't see where
+     * a short link or a bare IP address leads, so it never vouches for a message that hides one.
      */
-    private fun modelReason(model: ScamModel, input: DetectorInput, language: String): Reason? {
+    private fun modelReason(model: ScamModel, input: DetectorInput, language: String, extraction: Extraction): Reason? {
         // The model was trained on the message and its sender separately, not joined.
         val source = when (input.source) {
             MessageSource.Notification -> "notification"
@@ -82,7 +83,8 @@ class LocalScamDetector(
         return when {
             score >= thresholds.scam -> Reason(Signal.ModelScam, detail)
             score >= thresholds.caution -> Reason(Signal.ModelSuspicious, detail)
-            source == "sms" && score < thresholds.caution / 2 -> Reason(Signal.ModelOrdinary, detail)
+            source == "sms" && score < thresholds.caution / 2 && extraction.links.none { it.isShortener || it.isIp } ->
+                Reason(Signal.ModelOrdinary, detail)
             else -> null
         }
     }
@@ -124,14 +126,19 @@ class LocalScamDetector(
         extraction.brands.forEach { add(Entity(EntityKind.Brand, it.name)) }
     }
 
-    /** Rough guess: Cyrillic → Ukrainian; Polish letters or common words → Polish; otherwise English. */
-    private fun detectLanguage(normalized: NormalizedText): String {
-        val folded = normalized.folded
-        val letters = folded.count { it.isLetter() }.coerceAtLeast(1)
+    /**
+     * Rough guess from the words outside links: Cyrillic → Ukrainian; Polish letters or common words
+     * → Polish; otherwise English. A message that's little more than a link counts as Polish, the
+     * language most messages here are in, rather than getting the stricter English thresholds.
+     */
+    private fun detectLanguage(normalized: NormalizedText, extraction: Extraction): String {
+        val folded = extraction.links.fold(normalized.folded) { text, link -> text.replace(TextNormalizer.fold(link.text), " ") }
+        val clean = extraction.links.fold(normalized.clean) { text, link -> text.replace(link.text, " ") }
+        val letters = folded.count { it.isLetter() }
         val cyrillic = folded.count { Character.UnicodeBlock.of(it) == Character.UnicodeBlock.CYRILLIC }
         return when {
-            cyrillic * 2 > letters -> "uk"
-            normalized.clean.any { it in POLISH_LETTERS } || PolishWords.containsMatchIn(folded) -> "pl"
+            cyrillic * 2 > letters.coerceAtLeast(1) -> "uk"
+            letters < MIN_LETTERS || clean.any { it in POLISH_LETTERS } || PolishWords.containsMatchIn(folded) -> "pl"
             else -> "en"
         }
     }
@@ -141,9 +148,14 @@ class LocalScamDetector(
 
         private const val POLISH_LETTERS = "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ"
 
+        /** Fewer letters than this outside links isn't enough to tell the language. */
+        private const val MIN_LETTERS = 8
+
         /** Common Polish words, for texts typed without diacritics (matched on folded text). */
         private val PolishWords = Regex(
-            "(?<!\\p{L})(?:jest|nie|sie|twoj|twoja|prosze|dzien|oraz|przez|ktory|zostala|zostal|jak|dla|czy|juz|tak)(?!\\p{L})",
+            "(?<!\\p{L})(?:jest|nie|sie|twoj|twoja|prosze|dzien|oraz|przez|ktory|zostala|zostal|jak|dla|czy|juz|tak|" +
+                "zobacz|patrz|dzieki|jutro|dzisiaj|dzis|bede|mozesz|gdzie|kiedy|czemu|ale|mam|masz|mnie|sobie|tez|" +
+                "wiem|chce|moze|teraz|zaraz|potem|bylo|bedzie|siema|czesc|hej)(?!\\p{L})",
         )
 
         /** Builds the phrase matchers ahead of time, so the first real check is fast too. */

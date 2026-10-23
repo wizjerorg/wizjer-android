@@ -5,6 +5,7 @@ import android.service.notification.NotificationListenerService
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -48,12 +49,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import org.wizjer.android.R
+import org.wizjer.android.protection.AlertLog
 import org.wizjer.android.protection.AppPermission
+import org.wizjer.android.protection.FlaggedMessage
+import org.wizjer.android.protection.MessageSource
 import org.wizjer.android.protection.ProtectionState
 import org.wizjer.android.protection.ProtectionStore
 import org.wizjer.android.protection.WizjerNotificationListener
 import org.wizjer.android.ui.components.BrandMark
 import org.wizjer.android.ui.components.ChevronLeftIcon
+import org.wizjer.android.ui.components.ChevronRightIcon
 import org.wizjer.android.ui.components.IconCircleButton
 import org.wizjer.android.ui.components.LockIcon
 import org.wizjer.android.ui.components.MessageIcon
@@ -92,11 +97,12 @@ fun protectionStatus(state: ProtectionState, permissions: PermissionsState): Pro
 
 /** "Ochrona w tle": status, the main switch, statistics and what is being checked. */
 @Composable
-fun ProtectionScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun ProtectionScreen(senior: Boolean, onBack: () -> Unit, onOpenAlert: (Int) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val colors = MaterialTheme.colorScheme
     val store = remember { ProtectionStore.get(context) }
     val state by store.state.collectAsStateWithLifecycle()
+    val flagged by AlertLog.flagged.collectAsStateWithLifecycle()
     val permissions = rememberPermissionsState()
     val missing = missingPermissions(state, permissions)
     val status = protectionStatus(state, permissions)
@@ -157,6 +163,14 @@ fun ProtectionScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
             SectionLabel(stringResource(R.string.protection_stats))
             StatsGrid(state, now)
+
+            if (flagged.isNotEmpty()) {
+                SectionLabel(stringResource(R.string.protection_recent))
+                flagged.forEachIndexed { i, item ->
+                    if (i > 0) HorizontalDivider(color = colors.outlineVariant)
+                    FlaggedRow(item, now, senior, onClick = { onOpenAlert(item.id) })
+                }
+            }
 
             SectionLabel(stringResource(R.string.protection_sources))
             SourceRow(
@@ -267,12 +281,7 @@ private fun StatsGrid(state: ProtectionState, now: Long) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StatTile(stats.checkedToday.toString(), stringResource(R.string.stat_today), Modifier.weight(1f).fillMaxHeight())
-            StatTile(
-                stats.threatsFound.toString(),
-                stringResource(R.string.stat_threats),
-                Modifier.weight(1f).fillMaxHeight(),
-                highlight = stats.threatsFound > 0,
-            )
+            StatTile(stats.threatsFound.toString(), stringResource(R.string.stat_threats), Modifier.weight(1f).fillMaxHeight())
         }
         Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StatTile(stats.checkedTotal.toString(), stringResource(R.string.stat_total), Modifier.weight(1f).fillMaxHeight())
@@ -281,13 +290,12 @@ private fun StatsGrid(state: ProtectionState, now: Long) {
     }
 }
 
-/** A number (or short text) with a label under it. [highlight] outlines it in ink to draw attention. */
+/** A number (or short text) with a label under it. */
 @Composable
 private fun StatTile(
     value: String,
     label: String,
     modifier: Modifier = Modifier,
-    highlight: Boolean = false,
     compact: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
@@ -295,7 +303,6 @@ private fun StatTile(
         modifier
             .clip(RoundedCornerShape(22.dp))
             .background(colors.surfaceContainer)
-            .border(1.5.dp, if (highlight) colors.onBackground else Color.Transparent, RoundedCornerShape(22.dp))
             .padding(18.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -307,6 +314,46 @@ private fun StatTile(
         )
         Spacer(Modifier.height(6.dp))
         Text(label, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+    }
+}
+
+/** A message that raised an alert: who sent it, how it came and when. */
+@Composable
+private fun FlaggedRow(flagged: FlaggedMessage, now: Long, senior: Boolean, onClick: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    val message = flagged.message
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val icon = rememberSourceIcon(message, size = 36.dp)
+        Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
+            when {
+                icon != null -> Image(icon, contentDescription = null, modifier = Modifier.size(36.dp))
+                message.source == MessageSource.Sms -> MessageIcon(colors.onBackground)
+                else -> StackIcon(colors.onBackground)
+            }
+        }
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                message.sender?.takeIf { it.isNotBlank() } ?: sourceLabel(message, senior),
+                style = MaterialTheme.typography.titleSmall,
+                color = colors.onBackground,
+                maxLines = 1,
+            )
+            Text(
+                "${sourceLabel(message, senior)} · ${relativeTime(message.receivedAt, now)}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.onSurfaceVariant,
+                maxLines = 1,
+            )
+        }
+        Spacer(Modifier.width(12.dp))
+        ChevronRightIcon(colors.onSurfaceVariant)
     }
 }
 

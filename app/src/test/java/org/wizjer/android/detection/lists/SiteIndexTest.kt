@@ -94,4 +94,18 @@ class SiteIndexTest {
         val shortened = withLists.analyzeNow(DetectorInput("Zobacz https://t.2merkato.com/abc"))
         assertTrue(shortened.reasons.any { it.signal == Signal.ShortLink })
     }
+
+    @Test
+    fun `bare listed domains count as links whatever their ending`() {
+        val index = index(SiteList.Cert to "spiritsharp.digital", SiteList.Cert to "inpost-pl.bond", SiteList.Cert to "weird-shop.yoga")
+        val detector = LocalScamDetector(sites = { listOf(index) })
+        // CERT lists bare domains, and that's how people paste them; .yoga is known only from the list.
+        listOf("spiritsharp.digital", "zobacz inpost-pl.bond/odbior", "weird-shop.yoga", "https://weird-shop.yoga/login").forEach { text ->
+            val analysis = detector.analyzeNow(DetectorInput(text))
+            assertEquals(text, RiskLevel.Dangerous, analysis.level)
+            assertTrue(text, analysis.reasons.any { it.signal == Signal.CertList })
+        }
+        // An ending no list knows still isn't taken for a link.
+        assertTrue(detector.analyzeNow(DetectorInput("jestem w domu.zadzwon jak będziesz")).entities.none { it.kind == EntityKind.Link })
+    }
 }

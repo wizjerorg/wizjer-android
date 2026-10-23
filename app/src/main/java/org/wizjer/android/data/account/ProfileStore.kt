@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.content.edit
 import java.time.LocalDate
+import java.time.Period
 
 /**
  * The user's profile and onboarding state, kept on the device and refreshed from the API.
@@ -34,6 +35,9 @@ class ProfileStore(context: Context) {
     var birthDate: LocalDate?
         get() = read { getString(KEY_BIRTH_DATE, null)?.let(LocalDate::parse) }
         set(value) = write { putString(KEY_BIRTH_DATE, value?.toString()) }
+
+    /** 60 or older: warnings then use plainer words. */
+    val isSenior: Boolean get() = isSenior(birthDate)
 
     /** The server's guess from the first name; may be wrong, see [confidentGender]. */
     val gender: GenderGuess?
@@ -80,3 +84,7 @@ class ProfileStore(context: Context) {
         const val KEY_GENDER_CONFIDENCE = "gender_confidence"
     }
 }
+
+/** Whether someone born on [birthDate] is 60 or older on [today]; false while the date is unknown. */
+fun isSenior(birthDate: LocalDate?, today: LocalDate = LocalDate.now()): Boolean =
+    birthDate != null && Period.between(birthDate, today).years >= 60

@@ -15,6 +15,8 @@ The app is available in **Polish**, **English** and **Ukrainian**.
   your messages and notifications does not leave the phone.
 - Lists of dangerous sites (including CERT Polska's warning list) are downloaded whole and
   checked on the phone, so the server never learns which links you received.
+- Once a day the app asks GitHub whether a newer version of the open AI model has been released
+  and downloads it if so. Nothing about you or your messages is sent.
 - The AI assistant runs in the cloud and needs an account. What you send to it is processed on
   Wizjer's servers.
 - The session token is stored encrypted with a key from the Android Keystore, and app data is
@@ -25,21 +27,25 @@ The app is available in **Polish**, **English** and **Ukrainian**.
 
 Early development. Done so far: onboarding (profile, permissions, account with email
 confirmation, sign-in), the chat home screen, voice-call and settings screens, background
-protection (receiving SMS and notifications), and the on-device detector: text clean-up,
-extraction of links and numbers, threat lists, rules and an AI model, testable in a debug-only
-sandbox. Warnings and the assistant's replies are not connected yet.
+protection (checking incoming SMS and notifications on the phone and alerting about dangerous
+ones), and the on-device detector: text clean-up, extraction of links and numbers, threat lists,
+rules and an AI model, also testable in a debug-only sandbox. An alert opens the flagged message
+with the reasons and what to do. The assistant's replies are not connected yet.
 
 ### The AI model
 
 `app/src/main/assets/model/wizjer-baseline.bin` (2 MB) is a small model trained in the
 [wizjer-model](https://github.com/wizjerorg/wizjer-model) repository on public scam warnings and
-ordinary messages. It runs on the phone like the rules do. To update it, train and export it there
-and copy the file here:
+ordinary messages. It runs on the phone like the rules do.
 
-```bash
-python scripts/train_baseline.py --save dist/model.json
-python scripts/export_model.py dist/model.json dist/wizjer-baseline.bin
-```
+New models are published there as releases (`scripts/release_model.py`, tagged
+`model-YYYY.MM.DD`). Once a day the app checks the latest release (`data/model/ModelUpdates.kt`);
+when it's newer than the model in use, the app downloads it and switches to it, but only after
+the file reproduces the scores its training code gave its own test messages and passes a short
+exam (`ModelCheck`). A model that needs newer feature code than this app has fails that check, so
+the app keeps the one it has. To ship a model inside the app too, copy it to `assets/model/` and
+put its release tag in `assets/model/version.txt`; a newer bundled model always wins over an
+older download.
 
 The Kotlin feature code in `detection/model/` must compute exactly what the training code does;
 `ScamModelTest` checks this against messages scored in Python, which are stored in the model file.
@@ -109,3 +115,7 @@ The app is released under the [MIT License](LICENSE).
 
 The [Manrope](https://github.com/googlefonts/manrope) font is included under the SIL Open
 Font License 1.1 (see [media/fonts/Manrope-OFL.txt](media/fonts/Manrope-OFL.txt)).
+
+User avatars are a port of the "beam" style from
+[Boring Avatars](https://github.com/boringdesigners/boring-avatars) (MIT License, Copyright (c)
+2021 boringdesigners), drawn on the phone in Wizjer's colours.

@@ -54,35 +54,34 @@ object RiskFusion {
         return (value.coerceAtMost(0.95) * 100).roundToInt()
     }
 
-    /** Each scam type is a recognisable combination of signals and brand kinds. */
+    /**
+     * Each scam type is a recognisable combination of signals and brand kinds. A type needs its own
+     * telltale (a parcel, a bank, a marketplace…): supporting signals alone, like a link or a
+     * payment, fit almost every type and name none.
+     */
     private fun scoreTypes(s: Set<Signal>, brands: Set<BrandCategory>): List<TypeScore> {
         fun has(signal: Signal) = if (signal in s) 1.0 else 0.0
         fun any(vararg signals: Signal) = if (signals.any { it in s }) 1.0 else 0.0
         fun brand(category: BrandCategory) = if (category in brands) 1.0 else 0.0
         val riskyLink = any(Signal.CertList, Signal.BrandLookalike, Signal.RiskyTld, Signal.ShortLink, Signal.IpHost, Signal.Punycode)
+        val bank = maxOf(brand(BrandCategory.Bank), has(Signal.SafeAccount))
+        val marketplace = maxOf(has(Signal.Marketplace), brand(BrandCategory.Marketplace))
 
         return listOf(
-            TypeScore(ScamType.ParcelFee, 0.5 * has(Signal.Parcel) + 0.3 * has(Signal.Payment) + 0.2 * riskyLink),
+            TypeScore(ScamType.ParcelFee, has(Signal.Parcel) * (0.5 + 0.3 * has(Signal.Payment) + 0.2 * riskyLink)),
             TypeScore(
                 ScamType.BankImpersonation,
-                0.5 * maxOf(brand(BrandCategory.Bank), has(Signal.SafeAccount)) +
-                    0.25 * any(Signal.Threat, Signal.Credentials) + 0.25 * maxOf(riskyLink, has(Signal.SafeAccount)),
+                bank * (0.5 + 0.25 * any(Signal.Threat, Signal.Credentials) + 0.25 * maxOf(riskyLink, has(Signal.SafeAccount))),
             ),
-            TypeScore(ScamType.CodeTheft, 0.7 * has(Signal.Credentials) + 0.3 * any(Signal.Urgency, Signal.Authority, Signal.Threat)),
-            TypeScore(ScamType.FamilyEmergency, 0.7 * has(Signal.Family) + 0.3 * any(Signal.Payment, Signal.Money)),
-            TypeScore(
-                ScamType.Marketplace,
-                0.6 * maxOf(has(Signal.Marketplace), brand(BrandCategory.Marketplace) * 0.6) + 0.4 * maxOf(riskyLink, has(Signal.Payment)),
-            ),
-            TypeScore(ScamType.Investment, 0.8 * has(Signal.Investment) + 0.2 * any(Signal.Link, Signal.Money)),
-            TypeScore(ScamType.JobTask, 0.8 * has(Signal.Job) + 0.2 * any(Signal.Link, Signal.Payment)),
-            TypeScore(ScamType.UtilityShutoff, 0.5 * has(Signal.Utility) + 0.3 * has(Signal.Threat) + 0.2 * has(Signal.Payment)),
-            TypeScore(
-                ScamType.Government,
-                0.6 * brand(BrandCategory.Government) + 0.4 * any(Signal.Threat, Signal.Payment, Signal.Link),
-            ),
-            TypeScore(ScamType.Prize, 0.8 * has(Signal.Prize) + 0.2 * any(Signal.Link, Signal.Credentials)),
-            TypeScore(ScamType.RemoteAccess, 0.8 * has(Signal.RemoteApp) + 0.2 * has(Signal.Authority)),
+            TypeScore(ScamType.CodeTheft, has(Signal.Credentials) * (0.7 + 0.3 * any(Signal.Urgency, Signal.Authority, Signal.Threat))),
+            TypeScore(ScamType.FamilyEmergency, has(Signal.Family) * (0.7 + 0.3 * any(Signal.Payment, Signal.Money))),
+            TypeScore(ScamType.Marketplace, marketplace * (0.4 + 0.3 * has(Signal.Marketplace) + 0.3 * maxOf(riskyLink, has(Signal.Payment)))),
+            TypeScore(ScamType.Investment, has(Signal.Investment) * (0.8 + 0.2 * any(Signal.Link, Signal.Money))),
+            TypeScore(ScamType.JobTask, has(Signal.Job) * (0.8 + 0.2 * any(Signal.Link, Signal.Payment))),
+            TypeScore(ScamType.UtilityShutoff, has(Signal.Utility) * (0.5 + 0.3 * has(Signal.Threat) + 0.2 * has(Signal.Payment))),
+            TypeScore(ScamType.Government, brand(BrandCategory.Government) * (0.6 + 0.4 * any(Signal.Threat, Signal.Payment, Signal.Link))),
+            TypeScore(ScamType.Prize, has(Signal.Prize) * (0.8 + 0.2 * any(Signal.Link, Signal.Credentials))),
+            TypeScore(ScamType.RemoteAccess, has(Signal.RemoteApp) * (0.8 + 0.2 * has(Signal.Authority))),
             TypeScore(ScamType.Phishing, 0.5 * has(Signal.Credentials) + 0.5 * riskyLink),
         )
     }

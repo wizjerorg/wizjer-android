@@ -10,6 +10,14 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <!-- Lets a flagged notification say which app it came from ("Notification from Messenger"). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <!-- SMS permissions imply telephony; don't hide the app from devices without it. -->
     <uses-feature
         android:name="android.hardware.telephony"

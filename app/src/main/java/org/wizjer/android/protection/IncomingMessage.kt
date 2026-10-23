@@ -1,5 +1,7 @@
 package org.wizjer.android.protection
 
+import org.wizjer.android.detection.DetectorInput
+
 /** Where a message reached the phone from. */
 enum class MessageSource { Sms, Notification }
 
@@ -17,3 +19,6 @@ data class IncomingMessage(
     val appPackage: String?,
     val receivedAt: Long,
 )
+
+/** What the detector checks: the text and its sender kept apart, as the AI model was trained. */
+fun IncomingMessage.toDetectorInput() = DetectorInput(text = text, source = source, sender = sender)

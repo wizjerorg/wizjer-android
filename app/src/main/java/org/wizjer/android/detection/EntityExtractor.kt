@@ -18,6 +18,8 @@ data class FoundLink(
     val impersonates: Brand?,
     /** Brand whose official site this is, if any. */
     val officialFor: Brand?,
+    /** A genuine service's link to any person (paypal.me/anyone, wa.me/number). */
+    val isPersonal: Boolean = false,
     /** Downloaded lists the site is on (filled in by the detector when the lists are available). */
     val lists: Set<SiteList> = emptySet(),
 )
@@ -35,7 +37,8 @@ data class Extraction(
 /** Pulls links, phone numbers, account numbers, amounts and brand mentions out of a message. */
 object EntityExtractor {
 
-    private val schemeUrl = Regex("""(?i)\b(?:https?://|www\.)[^\s<>"']+""")
+    // "www." starts a link only on its own: in "mgmntss-www.com" it's part of the name.
+    private val schemeUrl = Regex("""(?i)(?:\bhttps?://|(?<![\p{L}\p{N}.@-])www\.)[^\s<>"']+""")
     private val bareDomain = Regex(
         """(?i)(?<![@\p{L}\p{N}.-])((?:[\p{L}\p{N}](?:[\p{L}\p{N}-]{0,61}[\p{L}\p{N}])?\.)+[\p{L}]{2,24})(?:[/?#][^\s<>"']*)?""",
     )
@@ -47,24 +50,31 @@ object EntityExtractor {
     )
     private const val TRAILING = ".,;:!?)]}'\"…"
 
-    fun extract(normalized: NormalizedText): Extraction {
+    /**
+     * [isListed] says whether the downloaded lists know a domain: a bare one ("inpost-pl.bond") with
+     * an ending we don't recognise still counts as a link then.
+     */
+    fun extract(normalized: NormalizedText, isListed: (String) -> Boolean = { false }): Extraction {
         val text = normalized.clean
 
         // Account numbers first, so their digits aren't mistaken for phone numbers.
         val accounts = bankAccount.findAll(text).map { it.value.trim() }.toList()
         var rest = text
         accounts.forEach { rest = rest.replace(it, " ") }
+        val links = findLinks(text, isListed)
+        // "revolut.me/marek" names a person, not the bank.
+        val brandText = links.filter { it.isPersonal }.fold(normalized.folded) { folded, link -> folded.replace(TextNormalizer.fold(link.text), " ") }
 
         return Extraction(
-            links = findLinks(text),
+            links = links,
             phones = phone.findAll(rest).mapNotNull { toPhone(it.value) }.distinct().toList(),
             bankAccounts = accounts,
             amounts = amount.findAll(text).map { it.value }.distinct().toList(),
-            brands = Lexicon.brands.filter { brand -> brandMatchers.getValue(brand).any { it.containsMatchIn(normalized.folded) } },
+            brands = Lexicon.brands.filter { brand -> brandMatchers.getValue(brand).any { it.containsMatchIn(brandText) } },
         )
     }
 
-    private fun findLinks(text: String): List<FoundLink> {
+    private fun findLinks(text: String, isListed: (String) -> Boolean): List<FoundLink> {
         val links = mutableListOf<FoundLink>()
         val taken = mutableListOf<IntRange>()
         schemeUrl.findAll(text).forEach { match ->
@@ -73,13 +83,13 @@ object EntityExtractor {
         }
         bareDomain.findAll(text).forEach { match ->
             if (taken.none { it.first <= match.range.last && match.range.first <= it.last }) {
-                parseLink(match.value.trimEnd { it in TRAILING }, requireKnownTld = true)?.let(links::add)
+                parseLink(match.value.trimEnd { it in TRAILING }, requireKnownTld = true, isListed)?.let(links::add)
             }
         }
         return links.distinctBy { it.text.lowercase(Locale.ROOT) }
     }
 
-    private fun parseLink(raw: String, requireKnownTld: Boolean): FoundLink? {
+    private fun parseLink(raw: String, requireKnownTld: Boolean, isListed: (String) -> Boolean = { false }): FoundLink? {
         val explicitHttp = raw.startsWith("http://", ignoreCase = true)
         val authority = raw.substringAfter("://").substringBefore('/').substringBefore('?').substringBefore('#')
         val host = authority.substringAfterLast('@').substringBefore(':').lowercase(Locale.ROOT).removePrefix("www.")
@@ -87,11 +97,13 @@ object EntityExtractor {
 
         val isIp = ipv4.matches(host)
         val tld = host.substringAfterLast('.')
-        if (requireKnownTld && !isIp && tld !in Lexicon.knownTlds) return null
+        if (requireKnownTld && !isIp && tld !in Lexicon.knownTlds && !isListed(host)) return null
 
         val registrable = if (isIp) host else registrableDomain(host)
-        val official = Lexicon.brands.firstOrNull { brand -> brand.officialDomains.any { host == it || host.endsWith(".$it") } }
-        val impersonated = if (official != null || isIp) null else Lexicon.brands.firstOrNull { claimsBrand(host, it) }
+        // paypal.me/anyone is really PayPal, but the money goes to whoever made the link.
+        val personal = registrable in Lexicon.personalLinkHosts
+        val official = if (personal) null else Lexicon.brands.firstOrNull { brand -> brand.officialDomains.any { host == it || host.endsWith(".$it") } }
+        val impersonated = if (official != null || personal || isIp) null else Lexicon.brands.firstOrNull { claimsBrand(host, it) }
 
         return FoundLink(
             text = raw,
@@ -100,10 +112,11 @@ object EntityExtractor {
             explicitHttp = explicitHttp,
             isIp = isIp,
             isPunycode = host.contains("xn--") || host.any { it.code > 127 },
-            isShortener = registrable in Lexicon.shorteners || host in Lexicon.shorteners,
+            isShortener = (registrable in Lexicon.shorteners || host in Lexicon.shorteners) && host !in Lexicon.notShorteners,
             hasRiskyTld = !isIp && tld in Lexicon.riskyTlds,
             impersonates = impersonated,
             officialFor = official,
+            isPersonal = personal,
         )
     }
 

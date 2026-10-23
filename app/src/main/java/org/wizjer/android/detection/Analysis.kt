@@ -35,56 +35,57 @@ enum class ScamType(@StringRes val label: Int) {
 
 /**
  * One piece of evidence. [weight] is its contribution to the risk (log-odds): positive
- * makes a scam more likely, negative less. Labels with %1$s take a detail, e.g. a brand.
+ * makes a scam more likely, negative less. Labels with %1$s take a detail, e.g. a brand;
+ * [simpleLabel] says the same without technical terms, for people aged 60+.
  */
-enum class Signal(val weight: Double, @StringRes val label: Int) {
+enum class Signal(val weight: Double, @StringRes val label: Int, @StringRes val simpleLabel: Int) {
     // Links
-    Link(0.6, R.string.sig_link),
-    ClickPrompt(0.8, R.string.sig_click_prompt),
-    ShortLink(1.5, R.string.sig_short_link),
-    IpHost(2.0, R.string.sig_ip_host),
-    Punycode(2.0, R.string.sig_punycode),
-    RiskyTld(1.6, R.string.sig_risky_tld),
-    BrandLookalike(3.0, R.string.sig_brand_lookalike),
-    NoHttps(0.6, R.string.sig_no_https),
-    OfficialDomain(-2.5, R.string.sig_official_domain),
+    Link(0.6, R.string.sig_link, R.string.sig_link_simple),
+    ClickPrompt(0.8, R.string.sig_click_prompt, R.string.sig_click_prompt_simple),
+    ShortLink(1.5, R.string.sig_short_link, R.string.sig_short_link_simple),
+    IpHost(2.0, R.string.sig_ip_host, R.string.sig_ip_host_simple),
+    Punycode(2.0, R.string.sig_punycode, R.string.sig_punycode_simple),
+    RiskyTld(1.6, R.string.sig_risky_tld, R.string.sig_risky_tld_simple),
+    BrandLookalike(3.0, R.string.sig_brand_lookalike, R.string.sig_brand_lookalike_simple),
+    NoHttps(0.6, R.string.sig_no_https, R.string.sig_no_https_simple),
+    OfficialDomain(-2.5, R.string.sig_official_domain, R.string.sig_official_domain_simple),
 
     // Downloaded threat lists
-    CertList(4.5, R.string.sig_cert_list),
-    GamblingSite(1.8, R.string.sig_gambling_site),
-    AdultSite(1.8, R.string.sig_adult_site),
-    PiracySite(1.2, R.string.sig_piracy_site),
+    CertList(4.5, R.string.sig_cert_list, R.string.sig_cert_list_simple),
+    GamblingSite(1.8, R.string.sig_gambling_site, R.string.sig_gambling_site_simple),
+    AdultSite(1.8, R.string.sig_adult_site, R.string.sig_adult_site_simple),
+    PiracySite(1.2, R.string.sig_piracy_site, R.string.sig_piracy_site_simple),
 
     // Wording and tactics
-    Urgency(1.2, R.string.sig_urgency),
-    Payment(1.4, R.string.sig_payment),
-    Credentials(1.8, R.string.sig_credentials),
-    Threat(1.4, R.string.sig_threat),
-    Authority(0.8, R.string.sig_authority),
-    SafeAccount(3.0, R.string.sig_safe_account),
-    Prize(1.6, R.string.sig_prize),
-    Family(2.6, R.string.sig_family),
-    Investment(1.6, R.string.sig_investment),
-    Job(1.4, R.string.sig_job),
-    Marketplace(1.2, R.string.sig_marketplace),
-    RemoteApp(2.2, R.string.sig_remote_app),
-    Parcel(0.4, R.string.sig_parcel),
-    Utility(0.4, R.string.sig_utility),
+    Urgency(1.2, R.string.sig_urgency, R.string.sig_urgency_simple),
+    Payment(1.4, R.string.sig_payment, R.string.sig_payment_simple),
+    Credentials(1.8, R.string.sig_credentials, R.string.sig_credentials_simple),
+    Threat(1.4, R.string.sig_threat, R.string.sig_threat_simple),
+    Authority(0.8, R.string.sig_authority, R.string.sig_authority_simple),
+    SafeAccount(3.0, R.string.sig_safe_account, R.string.sig_safe_account_simple),
+    Prize(1.6, R.string.sig_prize, R.string.sig_prize_simple),
+    Family(2.6, R.string.sig_family, R.string.sig_family_simple),
+    Investment(1.6, R.string.sig_investment, R.string.sig_investment_simple),
+    Job(1.4, R.string.sig_job, R.string.sig_job_simple),
+    Marketplace(1.2, R.string.sig_marketplace, R.string.sig_marketplace_simple),
+    RemoteApp(2.2, R.string.sig_remote_app, R.string.sig_remote_app_simple),
+    Parcel(0.4, R.string.sig_parcel, R.string.sig_parcel_simple),
+    Utility(0.4, R.string.sig_utility, R.string.sig_utility_simple),
 
     // Other details
-    Money(0.5, R.string.sig_money),
-    BankAccount(0.8, R.string.sig_bank_account),
-    PremiumNumber(1.5, R.string.sig_premium_number),
-    Obfuscation(2.0, R.string.sig_obfuscation),
+    Money(0.5, R.string.sig_money, R.string.sig_money_simple),
+    BankAccount(0.8, R.string.sig_bank_account, R.string.sig_bank_account_simple),
+    PremiumNumber(1.5, R.string.sig_premium_number, R.string.sig_premium_number_simple),
+    Obfuscation(2.0, R.string.sig_obfuscation, R.string.sig_obfuscation_simple),
 
     // Reassuring: typical of genuine messages
-    SafetyWarning(-2.0, R.string.sig_safety_warning),
+    SafetyWarning(-2.0, R.string.sig_safety_warning, R.string.sig_safety_warning_simple),
 
-    // The on-device AI model; the detail is its score. A scam verdict alone is enough for
-    // "dangerous", a "be careful" one for "suspicious".
-    ModelScam(4.0, R.string.sig_model_scam),
-    ModelSuspicious(2.2, R.string.sig_model_suspicious),
-    ModelOrdinary(-0.8, R.string.sig_model_ordinary),
+    // The on-device AI model; the detail is its score. On its own (even with a link) it makes a
+    // message "suspicious"; "dangerous" also takes a red flag the rules can name.
+    ModelScam(2.9, R.string.sig_model_scam, R.string.sig_model_scam_simple),
+    ModelSuspicious(2.2, R.string.sig_model_suspicious, R.string.sig_model_suspicious_simple),
+    ModelOrdinary(-0.8, R.string.sig_model_ordinary, R.string.sig_model_ordinary_simple),
 }
 
 /** A signal found in a message, with an optional detail for its label (e.g. "InPost"). */

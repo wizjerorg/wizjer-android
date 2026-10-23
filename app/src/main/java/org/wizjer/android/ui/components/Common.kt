@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 /** 48dp round touch target for a line icon. */
@@ -55,26 +54,10 @@ fun IconCircleButton(
     }
 }
 
-/** Black circle with the user's initials. */
+/** The user's avatar: a friendly face in the brand colours, generated from their name. */
 @Composable
 fun Avatar(firstName: String, lastName: String, modifier: Modifier = Modifier, size: Dp = 44.dp) {
-    val colors = MaterialTheme.colorScheme
-    val initials = listOf(firstName, lastName)
-        .mapNotNull { it.trim().firstOrNull()?.uppercaseChar() }
-        .joinToString("")
-    Box(
-        modifier
-            .size(size)
-            .clip(CircleShape)
-            .background(colors.primary),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            initials,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = (size.value * 0.36f).sp),
-            color = colors.onPrimary,
-        )
-    }
+    BeamAvatar("$firstName $lastName".trim().ifEmpty { "Wizjer" }, modifier.size(size))
 }
 
 /** Bottom sheet asking to confirm something irreversible. */

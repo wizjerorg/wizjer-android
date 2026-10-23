@@ -142,7 +142,7 @@
     <string name="protection_status_paused_body">Włącz ją, aby Wizjer znów sprawdzał wiadomości.</string>
     <string name="protection_stats">Statystyki</string>
     <string name="stat_today">Sprawdzone dziś</string>
-    <string name="stat_threats">Wykryte zagrożenia</string>
+    <string name="stat_threats">Potencjalne zagrożenia</string>
     <string name="stat_total">Sprawdzone łącznie</string>
     <string name="stat_last">Ostatnie sprawdzenie</string>
     <string name="stat_never">Jeszcze nic</string>
@@ -172,6 +172,24 @@
         <item quantity="many">%d dni temu</item>
         <item quantity="other">%d dnia temu</item>
     </plurals>
+    <!-- Scam alerts from background protection; the alert never repeats the message text -->
+    <string name="alert_channel">Ostrzeżenia przed oszustwami</string>
+    <string name="alert_channel_body">Ostrzeżenia o podejrzanych SMS-ach i wiadomościach</string>
+    <string name="alert_title">Wykryto podejrzaną wiadomość</string>
+    <string name="alert_body">Zanim cokolwiek zrobisz, sprawdź ją w aplikacji Wizjer.</string>
+    <!-- The screen an alert opens -->
+    <string name="flagged_title">Podejrzana wiadomość</string>
+    <string name="flagged_headline">Ta wiadomość może być oszustwem</string>
+    <string name="flagged_body">Wizjer znalazł w niej sygnały ostrzegawcze. Przeanalizuj je, zanim podejmiesz jakiekolwiek działanie.</string>
+    <string name="flagged_via_sms">SMS</string>
+    <string name="flagged_via_app">Powiadomienie z: %1$s</string>
+    <string name="flagged_via_notification">Powiadomienie</string>
+    <string name="flagged_message">Wiadomość</string>
+    <string name="flagged_why">Dlaczego wygląda podejrzanie</string>
+    <string name="flagged_analyze">Poproś Wizjera o dogłębną analizę</string>
+    <string name="flagged_analyze_soon">Dogłębna analiza będzie dostępna wkrótce.</string>
+    <string name="flagged_gone">Szczegóły tej wiadomości nie są już dostępne: Wizjer trzyma je tylko, dopóki działa. Znajdź wiadomość w aplikacji, z której przyszła, i nie reaguj na nią, dopóki nie masz pewności.</string>
+    <string name="protection_recent">Ostatnie ostrzeżenia</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Fałszywa dopłata do przesyłki</string>
     <string name="type_bank">Podszywanie się pod bank</string>
@@ -217,9 +235,45 @@
     <string name="sig_gambling_site">Link do strony hazardowej</string>
     <string name="sig_adult_site">Link do strony dla dorosłych</string>
     <string name="sig_piracy_site">Link do strony z pirackimi treściami</string>
-    <string name="sig_model_scam">Model AI w telefonie ocenia to jako oszustwo (%1$s)</string>
+    <string name="sig_model_scam">Model AI w telefonie uznaje to za bardzo podejrzane (%1$s)</string>
     <string name="sig_model_suspicious">Model AI w telefonie uznaje to za podejrzane (%1$s)</string>
     <string name="sig_model_ordinary">Model AI w telefonie uznaje to za zwykłą wiadomość (%1$s)</string>
+    <!-- The same reasons in plainer words, for people aged 60+: no technical terms -->
+    <string name="sig_link_simple">Zawiera link do strony</string>
+    <string name="sig_click_prompt_simple">Namawia, żeby kliknąć w link</string>
+    <string name="sig_short_link_simple">Link ukrywa, dokąd naprawdę prowadzi</string>
+    <string name="sig_ip_host_simple">Link prowadzi na dziwny adres, a nie na zwykłą stronę</string>
+    <string name="sig_punycode_simple">Adres strony udaje inny za pomocą podobnych liter</string>
+    <string name="sig_risky_tld_simple">Adres strony wygląda nietypowo</string>
+    <string name="sig_brand_lookalike_simple">Link udaje stronę %1$s, ale do niej nie prowadzi</string>
+    <string name="sig_no_https_simple">Strona nie jest zabezpieczona</string>
+    <string name="sig_official_domain_simple">Link prowadzi na prawdziwą stronę %1$s</string>
+    <string name="sig_urgency_simple">Pogania i każe się spieszyć</string>
+    <string name="sig_payment_simple">Prosi o pieniądze lub dopłatę</string>
+    <string name="sig_credentials_simple">Prosi o kod, hasło albo dane karty</string>
+    <string name="sig_threat_simple">Straszy blokadą konta lub karą</string>
+    <string name="sig_authority_simple">Podaje się za bank, urząd lub policję</string>
+    <string name="sig_safe_account_simple">Mówi o „bezpiecznym koncie” – bank nigdy o to nie prosi</string>
+    <string name="sig_prize_simple">Obiecuje nagrodę lub wygraną</string>
+    <string name="sig_family_simple">Ktoś podaje się za bliską osobę i pisze z nowego numeru</string>
+    <string name="sig_investment_simple">Obiecuje szybki i pewny zarobek</string>
+    <string name="sig_job_simple">Oferuje łatwą pracę za duże pieniądze</string>
+    <string name="sig_marketplace_simple">Każe „odebrać pieniądze” za sprzedaż przez link</string>
+    <string name="sig_remote_app_simple">Namawia do zainstalowania aplikacji</string>
+    <string name="sig_parcel_simple">Dotyczy paczki lub kuriera</string>
+    <string name="sig_utility_simple">Dotyczy rachunku za prąd lub gaz</string>
+    <string name="sig_money_simple">Pada w niej kwota pieniędzy</string>
+    <string name="sig_bank_account_simple">Podaje numer konta do przelewu</string>
+    <string name="sig_premium_number_simple">Podaje drogi, płatny numer telefonu</string>
+    <string name="sig_obfuscation_simple">Tekst jest dziwnie zapisany, żeby ukryć oszustwo</string>
+    <string name="sig_safety_warning_simple">Ostrzega, żeby nikomu nie podawać kodu</string>
+    <string name="sig_cert_list_simple">Ta strona jest na liście znanych oszustw</string>
+    <string name="sig_gambling_site_simple">Link do strony z hazardem</string>
+    <string name="sig_adult_site_simple">Link do strony dla dorosłych</string>
+    <string name="sig_piracy_site_simple">Link do strony z nielegalnymi filmami lub programami</string>
+    <string name="sig_model_scam_simple">Wizjer ocenia ją jako bardzo podejrzaną</string>
+    <string name="sig_model_suspicious_simple">Wizjer ocenia ją jako podejrzaną</string>
+    <string name="sig_model_ordinary_simple">Wizjer ocenia ją jako zwykłą wiadomość</string>
     <string name="entity_link">Link</string>
     <string name="entity_phone">Numer telefonu</string>
     <string name="entity_account">Numer konta</string>

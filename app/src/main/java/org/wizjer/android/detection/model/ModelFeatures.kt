@@ -50,6 +50,12 @@ internal object ModelFeatures {
     private val PHONE = Regex("(?:\\+?48)?[ -]?$D{3}[ -]?$D{3}[ -]?$D{3}$B")
     private val MOJIBAKE = Regex("[ĹÄĂÅÃâ][\\x80-\\u02FF\\u2010-\\u203A]")
 
+    /**
+     * Genuine services whose links lead to any person (paypal.me/anyone, wa.me/number): never for or
+     * against a brand, and a brand named only inside them isn't a mention.
+     */
+    private val PERSONAL_LINK_HOSTS = listOf("paypal.me", "revolut.me", "wa.me", "t.me")
+
     private val FREEMAIL = setOf(
         "gmail.com", "wp.pl", "o2.pl", "onet.pl", "op.pl", "interia.pl", "interia.eu", "poczta.fm", "gazeta.pl", "tlen.pl",
         "outlook.com", "hotmail.com", "live.com", "yahoo.com", "icloud.com", "ukr.net", "i.ua", "meta.ua",
@@ -69,7 +75,7 @@ internal object ModelFeatures {
         "${B}pge$B" to listOf("pge.pl", "gkpge.pl"), "tauron" to listOf("tauron.pl"), "energa" to listOf("energa.pl"),
         "${B}enea$B" to listOf("enea.pl"), "orange" to listOf("orange.pl"), "${B}play$B" to listOf("play.pl"),
         "${B}plus$B" to listOf("plus.pl"), "t-mobile" to listOf("t-mobile.pl"), "netflix" to listOf("netflix.com"),
-        "facebook|messenger" to listOf("facebook.com", "fb.com"), "whatsapp" to listOf("whatsapp.com", "wa.me"),
+        "facebook|messenger" to listOf("facebook.com", "fb.com"), "whatsapp" to listOf("whatsapp.com"),
         "bnp paribas" to listOf("bnpparibas.pl"), "credit agricole" to listOf("credit-agricole.pl"), "velobank" to listOf("velobank.pl"),
         "revolut" to listOf("revolut.com"), "binance" to listOf("binance.com"), "zondacrypto|zonda" to listOf("zondacrypto.com"),
         "booking" to listOf("booking.com"), "e-?toll" to listOf("etoll.gov.pl"), "${B}nfz$B|pacjent\\.gov" to listOf("nfz.gov.pl", "pacjent.gov.pl"),
@@ -133,9 +139,7 @@ internal object ModelFeatures {
         if (subject.isNotEmpty()) {
             WORD.findAll(withoutPolishLetters(norm(subject))).forEach { feats.add("s" + it.value) }
         }
-        val hosts = URL.findAll(normalized).map { match ->
-            match.value.replaceFirst(URL_PREFIX, "").substringBefore('/').trimEnd('.', ',', ':', ';', '!', '?', ')')
-        }.toList()
+        val hosts = URL.findAll(normalized).map { hostOf(it.value) }.toList()
         for (host in hosts) {
             feats.add("url")
             feats.add("tld." + host.substringAfterLast('.'))
@@ -169,10 +173,11 @@ internal object ModelFeatures {
                 }
             }
         }
-        val official = brandDomains(plain)
-        if (official.isNotEmpty() && hosts.isNotEmpty()) {
+        val official = brandDomains(URL.replace(plain) { if (isPersonal(hostOf(it.value))) " " else it.value })
+        val branded = hosts.filterNot(::isPersonal)
+        if (official.isNotEmpty() && branded.isNotEmpty()) {
             // A brand named in the text with a link elsewhere is the classic phishing tell.
-            val own = hosts.all { host -> official.any { host == it || host.endsWith(".$it") } }
+            val own = branded.all { host -> official.any { host == it || host.endsWith(".$it") } }
             meta.add(if (own) "brand.link.own" else "brand.link.other")
         }
         meta.add("mixed.script", normalized.split(SPACES).count { it.isNotEmpty() && CYRILLIC.containsMatchIn(it) && LATIN.containsMatchIn(it) })
@@ -206,6 +211,11 @@ internal object ModelFeatures {
             },
         )
     }
+
+    private fun hostOf(url: String): String =
+        url.replaceFirst(URL_PREFIX, "").substringBefore('/').trimEnd('.', ',', ':', ';', '!', '?', ')')
+
+    private fun isPersonal(host: String): Boolean = PERSONAL_LINK_HOSTS.any { host == it || host.endsWith(".$it") }
 
     private fun brandDomains(text: String): List<String> = BRANDS.filter { (pattern, _) -> pattern.containsMatchIn(text) }.flatMap { it.second }
 

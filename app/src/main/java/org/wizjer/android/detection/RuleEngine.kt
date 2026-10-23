@@ -44,7 +44,7 @@ object RuleEngine {
         if (Lexicon.family.matches(text)) add(Signal.Family)
         if (Lexicon.investment.matches(text)) add(Signal.Investment)
         if (Lexicon.job.matches(text)) add(Signal.Job)
-        if (Lexicon.marketplace.matches(text)) add(Signal.Marketplace)
+        if (Lexicon.marketplace.matches(text) || Lexicon.marketplaceSale.matches(text) && links.isNotEmpty()) add(Signal.Marketplace)
         if (Lexicon.remoteApp.matches(text)) add(Signal.RemoteApp)
         if (Lexicon.clickPrompt.matches(text) && links.isNotEmpty()) add(Signal.ClickPrompt)
         if (Lexicon.parcel.matches(text) || BrandCategory.Parcel in categories) add(Signal.Parcel)

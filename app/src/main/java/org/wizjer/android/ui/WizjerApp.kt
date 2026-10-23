@@ -1,5 +1,6 @@
 package org.wizjer.android.ui
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
@@ -14,16 +15,21 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.wizjer.android.BuildConfig
+import org.wizjer.android.R
 import org.wizjer.android.data.account.AccountSession
 import org.wizjer.android.data.account.RefreshResult
 import org.wizjer.android.data.lists.ThreatListsWorker
+import org.wizjer.android.data.model.ModelUpdateWorker
+import org.wizjer.android.protection.AlertLog
 import org.wizjer.android.ui.account.AccountScreen
 import org.wizjer.android.ui.account.EmailCodeScreen
 import org.wizjer.android.ui.account.EmailSignupScreen
@@ -35,6 +41,7 @@ import org.wizjer.android.ui.home.rememberHomeUiState
 import org.wizjer.android.ui.onboarding.WelcomeScreen
 import org.wizjer.android.ui.permissions.PermissionsScreen
 import org.wizjer.android.ui.profile.BirthDateScreen
+import org.wizjer.android.ui.protection.FlaggedMessageScreen
 import org.wizjer.android.ui.protection.ProtectionScreen
 import org.wizjer.android.ui.profile.NameScreen
 import org.wizjer.android.ui.sandbox.SandboxScreen
@@ -132,9 +139,12 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
     }
 }
 
-private enum class MainScreen { Chat, Call, Protection, Sandbox, Settings }
+private enum class MainScreen { Chat, Call, Protection, Flagged, Sandbox, Settings }
 
-/** The app after onboarding: the chat, a voice call over it, protection, settings and (debug) the sandbox. */
+/**
+ * The app after onboarding: the chat, a voice call over it, protection and the messages it flagged,
+ * settings and (debug) the sandbox.
+ */
 @Composable
 private fun MainShell(
     session: AccountSession,
@@ -143,14 +153,38 @@ private fun MainShell(
     onSignOut: () -> Unit,
 ) {
     var screen by rememberSaveable { mutableStateOf(MainScreen.Chat) }
+    // The flagged message on show, and where Back from it leads.
+    var flaggedId by rememberSaveable { mutableIntStateOf(0) }
+    var flaggedFrom by rememberSaveable { mutableStateOf(MainScreen.Chat) }
     val homeState = rememberHomeUiState()
     val screens = rememberSaveableStateHolder()
     val context = LocalContext.current
 
-    // Threat lists start downloading once onboarding is done, then refresh in the background.
-    LaunchedEffect(Unit) { ThreatListsWorker.schedule(context) }
+    // Threat lists start downloading once onboarding is done, then refresh in the background;
+    // newer AI models come from the wizjer-model releases.
+    LaunchedEffect(Unit) {
+        ThreatListsWorker.schedule(context)
+        ModelUpdateWorker.schedule(context)
+    }
 
-    BackHandler(enabled = screen != MainScreen.Chat) { screen = MainScreen.Chat }
+    fun openFlagged(id: Int, from: MainScreen) {
+        flaggedId = id
+        flaggedFrom = from
+        screen = MainScreen.Flagged
+    }
+
+    // A tapped scam alert opens its message, wherever the user was.
+    val tappedAlert by AlertLog.opened.collectAsStateWithLifecycle()
+    LaunchedEffect(tappedAlert) {
+        tappedAlert?.let { id ->
+            openFlagged(id, from = MainScreen.Chat)
+            AlertLog.shown()
+        }
+    }
+
+    BackHandler(enabled = screen != MainScreen.Chat) {
+        screen = if (screen == MainScreen.Flagged) flaggedFrom else MainScreen.Chat
+    }
 
     AnimatedContent(
         targetState = screen,
@@ -177,7 +211,18 @@ private fun MainShell(
                     onOpenSandbox = if (BuildConfig.DEBUG) ({ screen = MainScreen.Sandbox }) else null,
                 )
                 MainScreen.Call -> CallScreen(onEnd = { screen = MainScreen.Chat })
-                MainScreen.Protection -> ProtectionScreen(onBack = { screen = MainScreen.Chat })
+                MainScreen.Protection -> ProtectionScreen(
+                    senior = session.profile.isSenior,
+                    onBack = { screen = MainScreen.Chat },
+                    onOpenAlert = { openFlagged(it, from = MainScreen.Protection) },
+                )
+                MainScreen.Flagged -> FlaggedMessageScreen(
+                    AlertLog.find(flaggedId),
+                    senior = session.profile.isSenior,
+                    onBack = { screen = flaggedFrom },
+                    // The AI chat isn't connected yet; it will take the message for an in-depth analysis.
+                    onAskWizjer = { Toast.makeText(context, R.string.flagged_analyze_soon, Toast.LENGTH_SHORT).show() },
+                )
                 MainScreen.Sandbox -> SandboxScreen(onBack = { screen = MainScreen.Chat })
                 MainScreen.Settings -> SettingsScreen(
                     profile = session.profile,
