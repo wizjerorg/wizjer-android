@@ -25,9 +25,24 @@ The app is available in **Polish**, **English** and **Ukrainian**.
 
 Early development. Done so far: onboarding (profile, permissions, account with email
 confirmation, sign-in), the chat home screen, voice-call and settings screens, background
-protection (receiving SMS and notifications), and the first on-device detector: text clean-up,
-extraction of links and numbers, threat lists and rules, testable in a debug-only sandbox.
-Warnings and the assistant's replies are not connected yet.
+protection (receiving SMS and notifications), and the on-device detector: text clean-up,
+extraction of links and numbers, threat lists, rules and an AI model, testable in a debug-only
+sandbox. Warnings and the assistant's replies are not connected yet.
+
+### The AI model
+
+`app/src/main/assets/model/wizjer-baseline.bin` (2 MB) is a small model trained in the
+[wizjer-model](https://github.com/wizjerorg/wizjer-model) repository on public scam warnings and
+ordinary messages. It runs on the phone like the rules do. To update it, train and export it there
+and copy the file here:
+
+```bash
+python scripts/train_baseline.py --save dist/model.json
+python scripts/export_model.py dist/model.json dist/wizjer-baseline.bin
+```
+
+The Kotlin feature code in `detection/model/` must compute exactly what the training code does;
+`ScamModelTest` checks this against messages scored in Python, which are stored in the model file.
 
 ## Building
 
@@ -58,9 +73,11 @@ app/src/main/java/org/wizjer/android/
 ├── data/
 │   ├── api/                 Small HTTPS/JSON client
 │   ├── account/             AccountSession (sign-up, sign-in, profile sync), stores
-│   └── lists/               Threat-list download and background refresh
-├── detection/               On-device scam detector (clean-up, extraction, rules, scoring)
-│   └── lists/               Compact on-disk index of flagged domains
+│   ├── lists/               Threat-list download and background refresh
+│   └── model/               Loads the bundled AI model
+├── detection/               On-device scam detector (clean-up, extraction, rules, model, scoring)
+│   ├── lists/               Compact on-disk index of flagged domains
+│   └── model/               The AI model: features, BLAKE2b hashing, scoring
 ├── protection/              Permissions, SMS receiver and the notification listener
 └── ui/
     ├── WizjerApp.kt         Navigation: onboarding → main app

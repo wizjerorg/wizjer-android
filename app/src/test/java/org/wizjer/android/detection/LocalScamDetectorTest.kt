@@ -1,8 +1,11 @@
 package org.wizjer.android.detection
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.wizjer.android.detection.model.ScamModel
+import java.io.File
 
 class LocalScamDetectorTest {
 
@@ -67,5 +70,44 @@ class LocalScamDetectorTest {
         // "pin" must not match "pinezka", "fee" must not match "feedback".
         val analysis = analyze("Kupiłam pinezki i dałam feedback w sklepie.")
         assertTrue(analysis.reasons.none { it.signal == Signal.Credentials || it.signal == Signal.Payment })
+    }
+
+    private val withModel = LocalScamDetector(model = { model })
+
+    @Test
+    fun `every sample keeps its expected level with the AI model`() {
+        SampleMessages.all.forEach { sample ->
+            val analysis = withModel.analyzeNow(DetectorInput(sample.text, sender = sample.sender))
+            assertEquals("${sample.label} (risk ${analysis.risk}): ${analysis.reasons.map { it.signal }}", sample.expected, analysis.level)
+            assertTrue(analysis.modelUsed)
+        }
+    }
+
+    @Test
+    fun `the model catches a callback scam the rules miss`() {
+        val text = "Wykryto logowanie z Wietnamu do Twojego konta. Jesli to nie Ty, zadzwon natychmiast pod +48 22 410 18 52 REF: VN7701"
+        assertEquals(RiskLevel.Safe, analyze(text).level)
+        val analysis = withModel.analyzeNow(DetectorInput(text))
+        assertEquals(RiskLevel.Dangerous, analysis.level)
+        assertTrue(analysis.reasons.any { it.signal == Signal.ModelScam })
+    }
+
+    @Test
+    fun `a genuine bank alert with a helpline stays safe`() {
+        val analysis = withModel.analyzeNow(
+            DetectorInput("mBank: dodano nowe urzadzenie do aplikacji mobilnej. Jesli to nie Ty, zadzwon na 801 300 800."),
+        )
+        assertEquals(RiskLevel.Safe, analysis.level)
+    }
+
+    @Test
+    fun `without a model the rules decide alone`() {
+        val analysis = analyze(SampleMessages.all.first().text)
+        assertFalse(analysis.modelUsed)
+        assertTrue(analysis.reasons.none { it.signal.name.startsWith("Model") })
+    }
+
+    companion object {
+        private val model = File("src/main/assets/${ScamModel.ASSET}").inputStream().use { ScamModel.read(it) }
     }
 }

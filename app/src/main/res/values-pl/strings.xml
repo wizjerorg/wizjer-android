@@ -217,6 +217,9 @@
     <string name="sig_gambling_site">Link do strony hazardowej</string>
     <string name="sig_adult_site">Link do strony dla dorosłych</string>
     <string name="sig_piracy_site">Link do strony z pirackimi treściami</string>
+    <string name="sig_model_scam">Model AI w telefonie ocenia to jako oszustwo (%1$s)</string>
+    <string name="sig_model_suspicious">Model AI w telefonie uznaje to za podejrzane (%1$s)</string>
+    <string name="sig_model_ordinary">Model AI w telefonie uznaje to za zwykłą wiadomość (%1$s)</string>
     <string name="entity_link">Link</string>
     <string name="entity_phone">Numer telefonu</string>
     <string name="entity_account">Numer konta</string>
@@ -239,6 +242,7 @@
     <string name="stage_extract">Ekstrakcja</string>
     <string name="stage_lists">Listy zagrożeń</string>
     <string name="stage_rules">Reguły</string>
+    <string name="stage_model">Model AI</string>
     <string name="stage_fusion">Ocena</string>
     <string name="drawer_sandbox">Piaskownica</string>
     <string name="sandbox_hint">Wklej lub wpisz wiadomość do sprawdzenia…</string>

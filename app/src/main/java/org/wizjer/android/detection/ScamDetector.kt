@@ -4,7 +4,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wizjer.android.detection.lists.SiteIndex
 import org.wizjer.android.detection.lists.SiteList
+import org.wizjer.android.detection.model.ScamModel
+import org.wizjer.android.protection.MessageSource
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 /** Decides how likely a message is a scam. Used by background protection, the chat and the sandbox. */
 interface ScamDetector {
@@ -12,10 +15,11 @@ interface ScamDetector {
 }
 
 /**
- * On-device detector: text clean-up, extraction, threat lists, rules and scoring.
- * The AI model (Phase 3) will plug in between rules and scoring.
+ * On-device detector: text clean-up, extraction, threat lists, rules, the AI model and scoring.
  */
 class LocalScamDetector(
+    /** The on-device AI model; null leaves the rules on their own (as in most tests). */
+    private val model: () -> ScamModel? = { null },
     /** The downloaded threat lists. Read on every check, so a fresh download applies at once. */
     private val sites: () -> Collection<SiteIndex> = { emptyList() },
 ) : ScamDetector {
@@ -36,8 +40,10 @@ class LocalScamDetector(
         val indexes = sites()
         val extraction = timed(Stage.Extract) { EntityExtractor.extract(normalized) }
             .let { found -> if (indexes.isEmpty()) found else timed(Stage.Lists) { checkLists(found, indexes) } }
-        val reasons = timed(Stage.Rules) { RuleEngine.evaluate(normalized, extraction) }
         val language = detectLanguage(normalized)
+        val scorer = model()
+        val reasons = timed(Stage.Rules) { RuleEngine.evaluate(normalized, extraction) } +
+            listOfNotNull(scorer?.let { timed(Stage.Model) { modelReason(it, input, language) } })
         val verdict = timed(Stage.Fusion) {
             RiskFusion.combine(reasons, extraction, normalized.clean.length, language)
         }
@@ -54,8 +60,31 @@ class LocalScamDetector(
             language = language,
             timings = timings,
             detectorVersion = VERSION,
+            modelUsed = scorer != null,
             listsUsed = indexes.isNotEmpty(),
         )
+    }
+
+    /**
+     * The model's verdict as one piece of evidence, against its thresholds for this language and
+     * channel. It reassures only about SMS, where it misses almost no scams; chat scams it misses
+     * more often, so there it can add a warning but never talk the rules down.
+     */
+    private fun modelReason(model: ScamModel, input: DetectorInput, language: String): Reason? {
+        // The model was trained on the message and its sender separately, not joined.
+        val source = when (input.source) {
+            MessageSource.Notification -> "notification"
+            MessageSource.Sms, null -> "sms"
+        }
+        val score = model.score(input.text, source, input.sender.orEmpty())
+        val thresholds = model.thresholds(language, source) ?: return null
+        val detail = "${(score * 100).roundToInt()}%"
+        return when {
+            score >= thresholds.scam -> Reason(Signal.ModelScam, detail)
+            score >= thresholds.caution -> Reason(Signal.ModelSuspicious, detail)
+            source == "sms" && score < thresholds.caution / 2 -> Reason(Signal.ModelOrdinary, detail)
+            else -> null
+        }
     }
 
     /** Marks each link with the lists it's on; a listed link shortener counts as a short link. */

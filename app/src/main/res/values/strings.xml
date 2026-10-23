@@ -212,6 +212,9 @@
     <string name="sig_gambling_site">Links to a gambling site</string>
     <string name="sig_adult_site">Links to an adult site</string>
     <string name="sig_piracy_site">Links to a piracy site</string>
+    <string name="sig_model_scam">The on-device AI model rates it as a scam (%1$s)</string>
+    <string name="sig_model_suspicious">The on-device AI model finds it suspicious (%1$s)</string>
+    <string name="sig_model_ordinary">The on-device AI model finds it an ordinary message (%1$s)</string>
     <string name="entity_link">Link</string>
     <string name="entity_phone">Phone number</string>
     <string name="entity_account">Account number</string>
@@ -234,6 +237,7 @@
     <string name="stage_extract">Extraction</string>
     <string name="stage_lists">Threat lists</string>
     <string name="stage_rules">Rules</string>
+    <string name="stage_model">AI model</string>
     <string name="stage_fusion">Scoring</string>
     <string name="drawer_sandbox">Sandbox</string>
     <string name="sandbox_hint">Paste or type a message to check…</string>

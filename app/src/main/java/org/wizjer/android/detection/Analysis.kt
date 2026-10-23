@@ -79,6 +79,12 @@ enum class Signal(val weight: Double, @StringRes val label: Int) {
 
     // Reassuring: typical of genuine messages
     SafetyWarning(-2.0, R.string.sig_safety_warning),
+
+    // The on-device AI model; the detail is its score. A scam verdict alone is enough for
+    // "dangerous", a "be careful" one for "suspicious".
+    ModelScam(4.0, R.string.sig_model_scam),
+    ModelSuspicious(2.2, R.string.sig_model_suspicious),
+    ModelOrdinary(-0.8, R.string.sig_model_ordinary),
 }
 
 /** A signal found in a message, with an optional detail for its label (e.g. "InPost"). */
@@ -125,6 +131,7 @@ enum class Stage(@StringRes val label: Int) {
     Extract(R.string.stage_extract),
     Lists(R.string.stage_lists),
     Rules(R.string.stage_rules),
+    Model(R.string.stage_model),
     Fusion(R.string.stage_fusion),
 }
 
@@ -148,7 +155,7 @@ data class Analysis(
     val language: String,
     val timings: List<StageTiming>,
     val detectorVersion: String,
-    /** Whether the on-device AI model took part (not yet: Phase 3). */
+    /** Whether the on-device AI model took part. */
     val modelUsed: Boolean = false,
     /** Whether the links were checked against the downloaded threat lists. */
     val listsUsed: Boolean = false,

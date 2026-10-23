@@ -217,6 +217,9 @@
     <string name="sig_gambling_site">Посилання на сайт азартних ігор</string>
     <string name="sig_adult_site">Посилання на сайт для дорослих</string>
     <string name="sig_piracy_site">Посилання на піратський сайт</string>
+    <string name="sig_model_scam">ШІ-модель на телефоні оцінює це як шахрайство (%1$s)</string>
+    <string name="sig_model_suspicious">ШІ-модель на телефоні вважає це підозрілим (%1$s)</string>
+    <string name="sig_model_ordinary">ШІ-модель на телефоні вважає це звичайним повідомленням (%1$s)</string>
     <string name="entity_link">Посилання</string>
     <string name="entity_phone">Номер телефону</string>
     <string name="entity_account">Номер рахунку</string>
@@ -239,6 +242,7 @@
     <string name="stage_extract">Вилучення</string>
     <string name="stage_lists">Списки загроз</string>
     <string name="stage_rules">Правила</string>
+    <string name="stage_model">ШІ-модель</string>
     <string name="stage_fusion">Оцінка</string>
     <string name="drawer_sandbox">Пісочниця</string>
     <string name="sandbox_hint">Встав або введи повідомлення для перевірки…</string>

@@ -73,6 +73,7 @@ import org.wizjer.android.data.lists.ThreatLists
 import org.wizjer.android.data.lists.ThreatListsWorker
 import org.wizjer.android.detection.Analysis
 import org.wizjer.android.detection.DetectorInput
+import org.wizjer.android.data.model.BundledModel
 import org.wizjer.android.detection.LocalScamDetector
 import org.wizjer.android.detection.RiskLevel
 import org.wizjer.android.detection.SampleMessages
@@ -95,7 +96,7 @@ fun SandboxScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     val context = LocalContext.current
     val lists = remember { ThreatLists.get(context) }
-    val detector = remember { LocalScamDetector { lists.loaded.value.values } }
+    val detector = remember { LocalScamDetector(sites = { lists.loaded.value.values }, model = { BundledModel.get(context) }) }
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
@@ -104,7 +105,12 @@ fun SandboxScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     var source by rememberSaveable { mutableStateOf(MessageSource.Sms) }
     var analysis by remember { mutableStateOf<Analysis?>(null) }
 
-    LaunchedEffect(Unit) { withContext(Dispatchers.Default) { LocalScamDetector.warmUp() } }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.Default) {
+            LocalScamDetector.warmUp()
+            BundledModel.get(context) // read the model now rather than on the first check
+        }
+    }
 
     fun check() {
         if (text.isBlank()) return
