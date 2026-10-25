@@ -139,7 +139,7 @@
     <string name="protection_status_starting_body">This only takes a moment.</string>
     <string name="protection_status_missing">Protection is incomplete</string>
     <string name="protection_status_missing_body">Some permissions are missing. Allow them to finish setting up.</string>
-    <string name="protection_status_paused">Protection is paused</string>
+    <string name="protection_status_paused">Background protection is off</string>
     <string name="protection_status_paused_body">Turn it on so Wizjer checks your messages again.</string>
     <string name="protection_stats">Statistics</string>
     <string name="stat_today">Checked today</string>
@@ -172,6 +172,10 @@
     <string name="alert_channel_body">Warnings about suspicious texts and messages</string>
     <string name="alert_title">Suspicious message detected</string>
     <string name="alert_body">Before you do anything, check it in Wizjer.</string>
+    <string name="alert_careful_channel">Be careful</string>
+    <string name="alert_careful_channel_body">Gentle notes about messages worth a second look</string>
+    <string name="alert_careful_title">Take care with this message</string>
+    <string name="alert_careful_body">Wizjer noticed something worth checking. Have a look in the app before you click or pay.</string>
     <!-- The screen an alert opens -->
     <string name="flagged_title">Suspicious message</string>
     <string name="flagged_headline">This message may be a scam</string>
@@ -181,10 +185,14 @@
     <string name="flagged_via_notification">Notification</string>
     <string name="flagged_message">Message</string>
     <string name="flagged_why">Why it looks suspicious</string>
+    <string name="flagged_careful_title">Message to check</string>
+    <string name="flagged_careful_headline">Take care with this message</string>
+    <string name="flagged_careful_body">Wizjer noticed a few things worth checking. Look at them before you take any action.</string>
+    <string name="flagged_careful_why">What to watch out for</string>
     <string name="flagged_analyze">Ask Wizjer for an in-depth analysis</string>
-    <string name="flagged_analyze_soon">In-depth analysis is coming soon.</string>
-    <string name="flagged_gone">The details of this message are no longer available: Wizjer keeps them only while it’s running. Find the message in the app it came from and don’t act on it until you’re sure.</string>
+    <string name="flagged_gone">The details of this message are no longer available: Wizjer keeps only the last 5 alerts. Find the message in the app it came from and don’t act on it until you’re sure.</string>
     <string name="protection_recent">Recent alerts</string>
+    <string name="protection_recent_none">No alerts yet.</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Fake parcel fee</string>
     <string name="type_bank">Bank impersonation</string>
@@ -224,6 +232,7 @@
     <string name="sig_money">Mentions an amount of money</string>
     <string name="sig_bank_account">Contains a bank account number</string>
     <string name="sig_premium_number">Contains a premium-rate number</string>
+    <string name="sig_small_fee">Asks for a tiny fee for a parcel or a bill</string>
     <string name="sig_obfuscation">The text is deliberately disguised</string>
     <string name="sig_safety_warning">Contains a typical “never share this” warning</string>
     <string name="sig_cert_list">The site is on CERT Polska’s warning list</string>
@@ -260,6 +269,7 @@
     <string name="sig_money_simple">Mentions an amount of money</string>
     <string name="sig_bank_account_simple">Gives an account number to send money to</string>
     <string name="sig_premium_number_simple">Gives an expensive, paid phone number</string>
+    <string name="sig_small_fee_simple">Asks for a small payment for a parcel or bill – a common trick</string>
     <string name="sig_obfuscation_simple">The text is oddly written to hide a scam</string>
     <string name="sig_safety_warning_simple">Warns not to share a code with anyone</string>
     <string name="sig_cert_list_simple">This website is on a list of known scams</string>
@@ -334,7 +344,7 @@
     <string name="drawer_protection">Background protection</string>
     <string name="drawer_protection_on">On</string>
     <string name="drawer_protection_off">Needs attention</string>
-    <string name="drawer_protection_paused">Paused</string>
+    <string name="drawer_protection_paused">Off</string>
     <string name="drawer_settings">Settings</string>
     <string name="chat_deleted">Chat deleted</string>
     <string name="action_undo">Undo</string>
@@ -361,19 +371,154 @@
     <string name="settings_version">Version %1$s</string>
     <string name="settings_logout">Log out</string>
     <string name="logout_title">Log out?</string>
-    <string name="logout_body">Chats saved on this phone will be deleted.</string>
+    <string name="logout_body">Your chats stay in your account. Alerts saved on this phone will be deleted.</string>
 
-    <!-- Sample conversations shown until the assistant is connected -->
-    <string name="sample_parcel_title">Parcel fee text</string>
-    <string name="sample_parcel_user">Check this message:\nInPost: Your parcel is on hold. Pay 1.99 PLN within 24h: inpost-dostawa.top/pl</string>
-    <string name="sample_parcel_reply">Be careful — this looks like a scam. Don’t tap the link and don’t enter your card details. InPost doesn’t ask for extra fees by text with a link. If you’re expecting a parcel, check its status in the official app. In Poland you can forward suspicious texts to 8080 (CERT Polska).</string>
-    <string name="sample_parcel_reason_link">The link leads to a site that doesn’t belong to InPost.</string>
-    <string name="sample_parcel_reason_payment">Asking for an extra fee is a common scam trick.</string>
-    <string name="sample_parcel_reason_urgency">The message pressures you to act fast.</string>
-    <string name="sample_bank_title">Call “from the bank”</string>
-    <string name="sample_bank_user">Someone is calling me and says they’re from my bank. What should I do?</string>
-    <string name="sample_bank_reply">The safest thing is to hang up now. Your bank will never ask you to move money to a “safe account”, share a code or install an app. If you’re unsure, call your bank yourself using the number on the back of your card.</string>
 
     <string name="language_title">Language</string>
+
+    <!-- The AI assistant's chat -->
+    <string name="action_close">Close</string>
+    <string name="composer_attach">Add photos</string>
+    <string name="composer_take_photo">Take a photo</string>
+    <string name="composer_choose_photo">Choose from your photos</string>
+    <string name="ai_notice_no_camera">No camera app was found on this phone.</string>
+    <string name="composer_stop">Stop the reply</string>
+    <string name="composer_photo">Photo %1$d</string>
+    <string name="composer_photo_failed">Photo not uploaded. Tap to try again</string>
+    <string name="composer_remove_photo">Remove photo</string>
+    <string name="message_stop_reading">Stop reading</string>
+    <string name="ai_read_unavailable">Reading aloud in this language isn’t available on this phone.</string>
+    <string name="ai_photo">Photo</string>
+    <string name="ai_scroll_down">Go to the newest message</string>
+    <string name="ai_reconnecting">Reconnecting…</string>
+    <string name="ai_interrupted">The connection was lost. The reply may already be finished.</string>
+    <string name="ai_reload">Load again</string>
+    <string name="ai_load_failed">Couldn’t load this chat</string>
+    <string name="ai_chats_failed">Couldn’t load your chats.</string>
+    <string name="ai_chat_photo_title">Photo check</string>
+    <string name="ai_chat_replying">Wizjer is replying</string>
+    <string name="ai_status_stopped">Stopped</string>
+    <string name="ai_status_too_long">The reply was too long and got cut off.</string>
+    <string name="ai_status_incomplete">Wizjer didn’t get to finish this analysis.</string>
+    <string name="ai_link_title">Open %1$s?</string>
+    <string name="ai_link_body">%1$s</string>
+    <string name="ai_link_open">Open</string>
+    <string name="ai_code">Code</string>
+    <string name="ai_code_copy">Copy code</string>
+    <string name="ai_sources">Sources</string>
+    <string name="ai_text_shortened">Shortened to %1$d characters, the most one message can hold.</string>
+    <plurals name="ai_usage_left">
+        <item quantity="one">%d message left today</item>
+        <item quantity="other">%d messages left today</item>
+    </plurals>
+    <string name="ai_usage_none">You’ve used today’s messages. More from %1$s.</string>
+
+    <!-- What Wizjer checked while writing a reply -->
+    <plurals name="ai_steps_count">
+        <item quantity="one">%d step of the analysis</item>
+        <item quantity="other">%d steps of the analysis</item>
+    </plurals>
+    <string name="ai_step_phone_running">Checking the number %1$s</string>
+    <string name="ai_step_phone_failed">Couldn’t check the number %1$s</string>
+    <string name="ai_step_phone_invalid">That isn’t a phone number</string>
+    <string name="ai_step_phone_unknown">%1$s – no reports in Wizjer’s database</string>
+    <string name="ai_step_phone_found">%1$s – %2$s (%3$s)</string>
+    <string name="ai_step_phone_found_plain">%1$s – %2$s</string>
+    <string name="ai_phone_verdict_scam">reported as a scam</string>
+    <string name="ai_phone_verdict_spam">reported as spam</string>
+    <string name="ai_phone_verdict_safe">rated as safe</string>
+    <string name="ai_phone_verdict_unclear">no clear rating</string>
+    <plurals name="ai_phone_reports">
+        <item quantity="one">%d report</item>
+        <item quantity="other">%d reports</item>
+    </plurals>
+    <string name="ai_step_site_running">Checking %1$s</string>
+    <string name="ai_step_site_failed">Couldn’t check %1$s</string>
+    <string name="ai_step_site_invalid">That isn’t a website address</string>
+    <string name="ai_step_site_clean">%1$s – not on any warning list</string>
+    <string name="ai_step_site_flagged">%1$s – %2$s</string>
+    <string name="ai_list_cert">on CERT Polska’s warning list</string>
+    <string name="ai_list_shortener">a link shortener that hides the real address</string>
+    <string name="ai_list_gambling">a gambling site</string>
+    <string name="ai_list_piracy">a piracy site</string>
+    <string name="ai_list_adult">an adult site</string>
+    <string name="ai_list_other">on a warning list</string>
+    <string name="ai_step_search_running">Searching the web: “%1$s”</string>
+    <string name="ai_step_search_done">Searched the web: “%1$s”</string>
+    <string name="ai_step_search_failed">The web search didn’t work</string>
+    <string name="ai_step_guide_running">Reading a Wizjer guide</string>
+    <string name="ai_step_guide_done">Read the guide: %1$s</string>
+    <string name="ai_step_guide_done_plain">Read a Wizjer guide</string>
+    <string name="ai_step_guide_failed">Couldn’t open the guide</string>
+    <string name="ai_guide_bank">people posing as a bank or the police</string>
+    <string name="ai_guide_payments">fake payment requests</string>
+    <string name="ai_guide_investments">fake investments</string>
+    <string name="ai_guide_marketplace">scams when buying and selling online</string>
+    <string name="ai_guide_report">what to do after a scam</string>
+    <string name="ai_step_account_running">Looking at your account details</string>
+    <string name="ai_step_account_done">Looked at your account details</string>
+    <string name="ai_step_account_failed">Couldn’t look at your account details</string>
+    <string name="ai_step_other_running">Checking…</string>
+    <string name="ai_step_other_done">Extra check done</string>
+    <string name="ai_step_other_failed">A check didn’t work</string>
+
+    <!-- A message that wasn't sent, and what to do -->
+    <string name="ai_action_retry">Try again</string>
+    <string name="ai_action_edit">Edit</string>
+    <string name="ai_action_sign_in">Sign in</string>
+    <string name="ai_error_offline">No internet connection</string>
+    <string name="ai_error_offline_body">Check your connection and try again.</string>
+    <string name="ai_error_ai_busy">Wizjer is very busy right now</string>
+    <string name="ai_error_ai_busy_body">Try again in a moment.</string>
+    <string name="ai_error_generic">Something went wrong</string>
+    <string name="ai_error_generic_body">Wizjer couldn’t reply this time. Try again.</string>
+    <string name="ai_error_refused">Wizjer can’t answer this message</string>
+    <string name="ai_error_refused_body">Try describing what happened in other words.</string>
+    <string name="ai_error_unfinished">Wizjer didn’t finish the reply</string>
+    <string name="ai_error_unfinished_body">Try sending the message again.</string>
+    <string name="ai_error_daily_limit">You’ve used today’s messages</string>
+    <string name="ai_error_daily_limit_body">You can send more from %1$s.</string>
+    <string name="ai_error_daily_limit_tomorrow">You can send more tomorrow.</string>
+    <string name="ai_error_too_many_replies">Wizjer is already replying in other chats</string>
+    <string name="ai_error_wait_body">Wait until it’s done, then try again.</string>
+    <string name="ai_error_busy">Wizjer is still replying in this chat</string>
+    <string name="ai_error_too_many_requests">Too many messages at once</string>
+    <string name="ai_error_too_many_requests_body">Wait a minute and try again.</string>
+    <string name="ai_error_chat_full">This chat is full</string>
+    <string name="ai_error_chat_full_body">Start a new chat and Wizjer will take this message there.</string>
+    <string name="ai_error_too_many_images">Too many photos in this chat</string>
+    <string name="ai_error_too_many_images_body">One chat can hold up to 10 photos. Start a new chat to send these.</string>
+    <string name="ai_error_invalid_images">The photos couldn’t be attached</string>
+    <string name="ai_error_invalid_images_body">Edit the message and add them again.</string>
+    <string name="ai_error_invalid">This message can’t be sent</string>
+    <string name="ai_error_invalid_body">It may be empty or too long.</string>
+    <string name="ai_error_not_found">This chat no longer exists</string>
+    <string name="ai_error_not_found_body">Send the message again and Wizjer will start a new chat.</string>
+    <string name="ai_error_signed_out">Your session has expired</string>
+    <string name="ai_error_signed_out_body">Sign in again to talk to Wizjer.</string>
+    <string name="ai_error_not_confirmed">Confirm your e-mail address</string>
+    <string name="ai_error_not_confirmed_body">Sign in again and enter the code we sent you.</string>
+    <string name="ai_error_stopped">Stopped before Wizjer replied</string>
+    <string name="ai_error_stopped_body">Nothing was saved. You can send it again.</string>
+    <string name="ai_notice_delete_failed">Couldn’t delete the chat. Check your connection.</string>
+    <string name="ai_notice_stop_failed">Couldn’t stop the reply. Check your connection.</string>
+    <string name="ai_notice_chat_gone">This chat was deleted.</string>
+    <string name="ai_notice_photos_per_message">One message can have up to %1$d photos.</string>
+    <string name="ai_notice_photos_per_chat">One chat can hold up to %1$d photos.</string>
+    <string name="ai_notice_photo_unreadable">Couldn’t open this photo.</string>
+
+    <!-- What "Ask Wizjer for an in-depth analysis" sends to the assistant -->
+    <string name="ai_ask_intro">Take a close look at this message – Wizjer’s protection flagged it as suspicious. Is it a scam, and what should I do?</string>
+    <string name="ai_ask_sms">Text message (SMS)</string>
+    <string name="ai_ask_sms_from">Text message (SMS) from: %1$s</string>
+    <string name="ai_ask_app">Notification from the %1$s app</string>
+    <string name="ai_ask_app_from">Notification from the %1$s app, sender: %2$s</string>
+    <string name="ai_ask_notification">Notification</string>
+    <string name="ai_ask_notification_from">Notification, sender: %1$s</string>
+    <string name="ai_ask_email">E-mail</string>
+    <string name="ai_ask_email_from">E-mail from: %1$s</string>
+    <string name="ai_ask_subject">Subject: %1$s</string>
+    <string name="ai_ask_text">Message: “%1$s”</string>
+    <string name="ai_ask_signs">What protection noticed:</string>
 
 </resources>

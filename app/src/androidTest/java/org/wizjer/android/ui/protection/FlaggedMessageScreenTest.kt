@@ -58,6 +58,17 @@ class FlaggedMessageScreenTest {
     }
 
     @Test
+    fun aBeCarefulNoteSoundsCalmer() {
+        val message = IncomingMessage(MessageSource.Sms, SENDER, "Pilne! Dopłać 2 zł do przesyłki, inaczej wróci do nadawcy.", null, System.currentTimeMillis())
+        val analysis = LocalScamDetector(model = { ModelStore.get(context) }).analyzeNow(message.toDetectorInput())
+        compose.setContent { WizjerTheme { FlaggedMessageScreen(FlaggedMessage(2, message, analysis), senior = false, onBack = {}, onAskWizjer = {}) } }
+        compose.onNodeWithText(context.getString(R.string.flagged_careful_title)).assertIsDisplayed()
+        compose.onNodeWithText(context.getString(R.string.flagged_careful_headline)).assertIsDisplayed()
+        compose.onNodeWithText(context.getString(R.string.flagged_careful_why)).assertIsDisplayed()
+        compose.onNodeWithText(context.getString(R.string.flagged_headline)).assertDoesNotExist()
+    }
+
+    @Test
     fun explainsWhenTheMessageIsGone() {
         compose.setContent { WizjerTheme { FlaggedMessageScreen(null, senior = false, onBack = {}, onAskWizjer = {}) } }
         compose.onNodeWithText(context.getString(R.string.flagged_gone)).assertIsDisplayed()

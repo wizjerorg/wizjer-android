@@ -138,7 +138,7 @@
     <string name="protection_status_starting_body">To potrwa tylko chwilę.</string>
     <string name="protection_status_missing">Ochrona niepełna</string>
     <string name="protection_status_missing_body">Brakuje uprawnień. Przyznaj je, aby dokończyć konfigurację.</string>
-    <string name="protection_status_paused">Ochrona wstrzymana</string>
+    <string name="protection_status_paused">Ochrona w tle wyłączona</string>
     <string name="protection_status_paused_body">Włącz ją, aby Wizjer znów sprawdzał wiadomości.</string>
     <string name="protection_stats">Statystyki</string>
     <string name="stat_today">Sprawdzone dziś</string>
@@ -177,6 +177,10 @@
     <string name="alert_channel_body">Ostrzeżenia o podejrzanych SMS-ach i wiadomościach</string>
     <string name="alert_title">Wykryto podejrzaną wiadomość</string>
     <string name="alert_body">Zanim cokolwiek zrobisz, sprawdź ją w aplikacji Wizjer.</string>
+    <string name="alert_careful_channel">Uważaj</string>
+    <string name="alert_careful_channel_body">Delikatne uwagi o wiadomościach, którym warto się przyjrzeć</string>
+    <string name="alert_careful_title">Uważaj na tę wiadomość</string>
+    <string name="alert_careful_body">Wizjer zauważył coś, co warto sprawdzić. Zajrzyj do aplikacji, zanim klikniesz lub zapłacisz.</string>
     <!-- The screen an alert opens -->
     <string name="flagged_title">Podejrzana wiadomość</string>
     <string name="flagged_headline">Ta wiadomość może być oszustwem</string>
@@ -186,10 +190,14 @@
     <string name="flagged_via_notification">Powiadomienie</string>
     <string name="flagged_message">Wiadomość</string>
     <string name="flagged_why">Dlaczego wygląda podejrzanie</string>
+    <string name="flagged_careful_title">Wiadomość do sprawdzenia</string>
+    <string name="flagged_careful_headline">Uważaj na tę wiadomość</string>
+    <string name="flagged_careful_body">Wizjer zauważył w niej kilka rzeczy, które warto sprawdzić. Przeanalizuj je, zanim podejmiesz jakiekolwiek działanie.</string>
+    <string name="flagged_careful_why">Na co uważać</string>
     <string name="flagged_analyze">Poproś Wizjera o dogłębną analizę</string>
-    <string name="flagged_analyze_soon">Dogłębna analiza będzie dostępna wkrótce.</string>
-    <string name="flagged_gone">Szczegóły tej wiadomości nie są już dostępne: Wizjer trzyma je tylko, dopóki działa. Znajdź wiadomość w aplikacji, z której przyszła, i nie reaguj na nią, dopóki nie masz pewności.</string>
+    <string name="flagged_gone">Szczegóły tej wiadomości nie są już dostępne: Wizjer pamięta tylko 5 ostatnich ostrzeżeń. Znajdź wiadomość w aplikacji, z której przyszła, i nie reaguj na nią, dopóki nie masz pewności.</string>
     <string name="protection_recent">Ostatnie ostrzeżenia</string>
+    <string name="protection_recent_none">Na razie brak ostrzeżeń.</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Fałszywa dopłata do przesyłki</string>
     <string name="type_bank">Podszywanie się pod bank</string>
@@ -229,6 +237,7 @@
     <string name="sig_money">Zawiera kwotę pieniędzy</string>
     <string name="sig_bank_account">Zawiera numer konta bankowego</string>
     <string name="sig_premium_number">Zawiera numer o podwyższonej opłacie</string>
+    <string name="sig_small_fee">Żąda drobnej dopłaty za przesyłkę lub rachunek</string>
     <string name="sig_obfuscation">Tekst jest celowo zniekształcony</string>
     <string name="sig_safety_warning">Zawiera typowe ostrzeżenie „nie podawaj nikomu”</string>
     <string name="sig_cert_list">Strona jest na liście ostrzeżeń CERT Polska</string>
@@ -265,6 +274,7 @@
     <string name="sig_money_simple">Pada w niej kwota pieniędzy</string>
     <string name="sig_bank_account_simple">Podaje numer konta do przelewu</string>
     <string name="sig_premium_number_simple">Podaje drogi, płatny numer telefonu</string>
+    <string name="sig_small_fee_simple">Prosi o małą dopłatę za paczkę lub rachunek – częsty trik oszustów</string>
     <string name="sig_obfuscation_simple">Tekst jest dziwnie zapisany, żeby ukryć oszustwo</string>
     <string name="sig_safety_warning_simple">Ostrzega, żeby nikomu nie podawać kodu</string>
     <string name="sig_cert_list_simple">Ta strona jest na liście znanych oszustw</string>
@@ -338,7 +348,7 @@
     <string name="drawer_protection">Ochrona w tle</string>
     <string name="drawer_protection_on">Aktywna</string>
     <string name="drawer_protection_off">Wymaga uwagi</string>
-    <string name="drawer_protection_paused">Wstrzymana</string>
+    <string name="drawer_protection_paused">Wyłączona</string>
     <string name="drawer_settings">Ustawienia</string>
     <string name="chat_deleted">Rozmowa usunięta</string>
     <string name="action_undo">Cofnij</string>
@@ -365,19 +375,160 @@
     <string name="settings_version">Wersja %1$s</string>
     <string name="settings_logout">Wyloguj się</string>
     <string name="logout_title">Wylogować się?</string>
-    <string name="logout_body">Rozmowy zapisane na tym telefonie zostaną usunięte.</string>
+    <string name="logout_body">Rozmowy zostaną na Twoim koncie. Ostrzeżenia zapisane na tym telefonie zostaną usunięte.</string>
 
-    <!-- Sample conversations shown until the assistant is connected -->
-    <string name="sample_parcel_title">SMS o dopłacie do paczki</string>
-    <string name="sample_parcel_user">Sprawdź tę wiadomość:\nInPost: Twoja paczka została wstrzymana. Dopłać 1,99 zł w ciągu 24h: inpost-dostawa.top/pl</string>
-    <string name="sample_parcel_reply">Uważaj – to wygląda na oszustwo. Nie klikaj w link i nie podawaj danych karty. InPost nie prosi o dopłaty przez SMS z linkiem. Jeśli czekasz na paczkę, sprawdź jej status w oficjalnej aplikacji. Podejrzany SMS możesz przekazać na numer 8080 (CERT Polska).</string>
-    <string name="sample_parcel_reason_link">Link prowadzi do strony, która nie należy do InPost.</string>
-    <string name="sample_parcel_reason_payment">Prośba o dopłatę to częsty trik oszustów.</string>
-    <string name="sample_parcel_reason_urgency">Wiadomość wywiera presję czasu.</string>
-    <string name="sample_bank_title">Telefon „z banku”</string>
-    <string name="sample_bank_user">Ktoś do mnie dzwoni i podaje się za pracownika banku. Co mam zrobić?</string>
-    <string name="sample_bank_reply">Najlepiej od razu się rozłącz. Bank nigdy nie poprosi cię o przelew na „bezpieczne konto”, kod BLIK ani instalację aplikacji. Jeśli masz wątpliwości, zadzwoń do banku samodzielnie – na numer z odwrotu karty.</string>
 
     <string name="language_title">Język</string>
+
+    <!-- The AI assistant's chat -->
+    <string name="action_close">Zamknij</string>
+    <string name="composer_attach">Dodaj zdjęcia</string>
+    <string name="composer_take_photo">Zrób zdjęcie</string>
+    <string name="composer_choose_photo">Wybierz ze zdjęć</string>
+    <string name="ai_notice_no_camera">Na tym telefonie nie znaleziono aplikacji aparatu.</string>
+    <string name="composer_stop">Zatrzymaj odpowiedź</string>
+    <string name="composer_photo">Zdjęcie %1$d</string>
+    <string name="composer_photo_failed">Nie wysłano zdjęcia. Dotknij, aby spróbować ponownie</string>
+    <string name="composer_remove_photo">Usuń zdjęcie</string>
+    <string name="message_stop_reading">Przestań czytać</string>
+    <string name="ai_read_unavailable">Czytanie na głos w tym języku nie jest dostępne na tym telefonie.</string>
+    <string name="ai_photo">Zdjęcie</string>
+    <string name="ai_scroll_down">Przejdź do najnowszej wiadomości</string>
+    <string name="ai_reconnecting">Łączenie ponownie…</string>
+    <string name="ai_interrupted">Połączenie zostało przerwane. Odpowiedź mogła się już skończyć.</string>
+    <string name="ai_reload">Wczytaj ponownie</string>
+    <string name="ai_load_failed">Nie udało się wczytać rozmowy</string>
+    <string name="ai_chats_failed">Nie udało się wczytać rozmów.</string>
+    <string name="ai_chat_photo_title">Sprawdzenie zdjęcia</string>
+    <string name="ai_chat_replying">Wizjer odpowiada</string>
+    <string name="ai_status_stopped">Zatrzymano</string>
+    <string name="ai_status_too_long">Odpowiedź była za długa i została ucięta.</string>
+    <string name="ai_status_incomplete">Wizjer nie zdążył dokończyć tej analizy.</string>
+    <string name="ai_link_title">Otworzyć %1$s?</string>
+    <string name="ai_link_body">%1$s</string>
+    <string name="ai_link_open">Otwórz</string>
+    <string name="ai_code">Kod</string>
+    <string name="ai_code_copy">Kopiuj kod</string>
+    <string name="ai_sources">Źródła</string>
+    <string name="ai_text_shortened">Skrócono do %1$d znaków – tyle mieści jedna wiadomość.</string>
+    <plurals name="ai_usage_left">
+        <item quantity="one">Na dziś została %d wiadomość</item>
+        <item quantity="few">Na dziś zostały %d wiadomości</item>
+        <item quantity="many">Na dziś zostało %d wiadomości</item>
+        <item quantity="other">Na dziś zostało %d wiadomości</item>
+    </plurals>
+    <string name="ai_usage_none">Wykorzystano dzisiejszy limit wiadomości. Kolejne od %1$s.</string>
+
+    <!-- What Wizjer checked while writing a reply -->
+    <plurals name="ai_steps_count">
+        <item quantity="one">%d krok analizy</item>
+        <item quantity="few">%d kroki analizy</item>
+        <item quantity="many">%d kroków analizy</item>
+        <item quantity="other">%d kroku analizy</item>
+    </plurals>
+    <string name="ai_step_phone_running">Sprawdzanie numeru %1$s</string>
+    <string name="ai_step_phone_failed">Nie udało się sprawdzić numeru %1$s</string>
+    <string name="ai_step_phone_invalid">To nie jest numer telefonu</string>
+    <string name="ai_step_phone_unknown">%1$s – brak zgłoszeń w bazie Wizjera</string>
+    <string name="ai_step_phone_found">%1$s – %2$s (%3$s)</string>
+    <string name="ai_step_phone_found_plain">%1$s – %2$s</string>
+    <string name="ai_phone_verdict_scam">zgłaszany jako oszustwo</string>
+    <string name="ai_phone_verdict_spam">zgłaszany jako spam</string>
+    <string name="ai_phone_verdict_safe">oceniany jako bezpieczny</string>
+    <string name="ai_phone_verdict_unclear">bez jednoznacznej oceny</string>
+    <plurals name="ai_phone_reports">
+        <item quantity="one">%d zgłoszenie</item>
+        <item quantity="few">%d zgłoszenia</item>
+        <item quantity="many">%d zgłoszeń</item>
+        <item quantity="other">%d zgłoszenia</item>
+    </plurals>
+    <string name="ai_step_site_running">Sprawdzanie strony %1$s</string>
+    <string name="ai_step_site_failed">Nie udało się sprawdzić strony %1$s</string>
+    <string name="ai_step_site_invalid">To nie jest adres strony</string>
+    <string name="ai_step_site_clean">%1$s – nie figuruje na listach ostrzeżeń</string>
+    <string name="ai_step_site_flagged">%1$s – %2$s</string>
+    <string name="ai_list_cert">na liście ostrzeżeń CERT Polska</string>
+    <string name="ai_list_shortener">skracacz linków, który ukrywa prawdziwy adres</string>
+    <string name="ai_list_gambling">strona hazardowa</string>
+    <string name="ai_list_piracy">strona z pirackimi treściami</string>
+    <string name="ai_list_adult">strona dla dorosłych</string>
+    <string name="ai_list_other">na liście ostrzeżeń</string>
+    <string name="ai_step_search_running">Szukanie w internecie: „%1$s”</string>
+    <string name="ai_step_search_done">Przeszukano internet: „%1$s”</string>
+    <string name="ai_step_search_failed">Wyszukiwanie w internecie się nie udało</string>
+    <string name="ai_step_guide_running">Czytanie poradnika Wizjera</string>
+    <string name="ai_step_guide_done">Przeczytano poradnik: %1$s</string>
+    <string name="ai_step_guide_done_plain">Przeczytano poradnik Wizjera</string>
+    <string name="ai_step_guide_failed">Nie udało się otworzyć poradnika</string>
+    <string name="ai_guide_bank">podszywanie się pod bank lub policję</string>
+    <string name="ai_guide_payments">fałszywe prośby o dopłatę</string>
+    <string name="ai_guide_investments">fałszywe inwestycje</string>
+    <string name="ai_guide_marketplace">oszustwa przy kupnie i sprzedaży w internecie</string>
+    <string name="ai_guide_report">co zrobić po oszustwie</string>
+    <string name="ai_step_account_running">Sprawdzanie danych Twojego konta</string>
+    <string name="ai_step_account_done">Sprawdzono dane Twojego konta</string>
+    <string name="ai_step_account_failed">Nie udało się sprawdzić danych konta</string>
+    <string name="ai_step_other_running">Sprawdzanie…</string>
+    <string name="ai_step_other_done">Dodatkowe sprawdzenie</string>
+    <string name="ai_step_other_failed">Sprawdzenie się nie udało</string>
+
+    <!-- A message that wasn't sent, and what to do -->
+    <string name="ai_action_retry">Spróbuj ponownie</string>
+    <string name="ai_action_edit">Edytuj</string>
+    <string name="ai_action_sign_in">Zaloguj się</string>
+    <string name="ai_error_offline">Brak połączenia z internetem</string>
+    <string name="ai_error_offline_body">Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="ai_error_ai_busy">Wizjer jest teraz bardzo zajęty</string>
+    <string name="ai_error_ai_busy_body">Spróbuj ponownie za chwilę.</string>
+    <string name="ai_error_generic">Coś poszło nie tak</string>
+    <string name="ai_error_generic_body">Wizjer nie mógł tym razem odpowiedzieć. Spróbuj ponownie.</string>
+    <string name="ai_error_refused">Wizjer nie może odpowiedzieć na tę wiadomość</string>
+    <string name="ai_error_refused_body">Spróbuj opisać, co się stało, innymi słowami.</string>
+    <string name="ai_error_unfinished">Wizjer nie dokończył odpowiedzi</string>
+    <string name="ai_error_unfinished_body">Spróbuj wysłać wiadomość jeszcze raz.</string>
+    <string name="ai_error_daily_limit">Wykorzystano dzisiejszy limit wiadomości</string>
+    <string name="ai_error_daily_limit_body">Kolejne możesz wysłać od %1$s.</string>
+    <string name="ai_error_daily_limit_tomorrow">Kolejne możesz wysłać jutro.</string>
+    <string name="ai_error_too_many_replies">Wizjer odpowiada już w innych rozmowach</string>
+    <string name="ai_error_wait_body">Poczekaj, aż skończy, i spróbuj ponownie.</string>
+    <string name="ai_error_busy">Wizjer jeszcze odpowiada w tej rozmowie</string>
+    <string name="ai_error_too_many_requests">Za dużo wiadomości naraz</string>
+    <string name="ai_error_too_many_requests_body">Odczekaj minutę i spróbuj ponownie.</string>
+    <string name="ai_error_chat_full">Ta rozmowa jest już pełna</string>
+    <string name="ai_error_chat_full_body">Zacznij nową, a Wizjer przeniesie do niej tę wiadomość.</string>
+    <string name="ai_error_too_many_images">Za dużo zdjęć w tej rozmowie</string>
+    <string name="ai_error_too_many_images_body">Jedna rozmowa mieści najwyżej 10 zdjęć. Zacznij nową, aby wysłać te.</string>
+    <string name="ai_error_invalid_images">Nie udało się dołączyć zdjęć</string>
+    <string name="ai_error_invalid_images_body">Edytuj wiadomość i dodaj je jeszcze raz.</string>
+    <string name="ai_error_invalid">Tej wiadomości nie da się wysłać</string>
+    <string name="ai_error_invalid_body">Może być pusta albo za długa.</string>
+    <string name="ai_error_not_found">Ta rozmowa już nie istnieje</string>
+    <string name="ai_error_not_found_body">Wyślij wiadomość jeszcze raz, a Wizjer zacznie nową rozmowę.</string>
+    <string name="ai_error_signed_out">Sesja wygasła</string>
+    <string name="ai_error_signed_out_body">Zaloguj się ponownie, aby rozmawiać z Wizjerem.</string>
+    <string name="ai_error_not_confirmed">Potwierdź adres e-mail</string>
+    <string name="ai_error_not_confirmed_body">Zaloguj się ponownie i wpisz kod, który wysłaliśmy.</string>
+    <string name="ai_error_stopped">Zatrzymano, zanim Wizjer odpowiedział</string>
+    <string name="ai_error_stopped_body">Nic nie zostało zapisane. Możesz wysłać ją jeszcze raz.</string>
+    <string name="ai_notice_delete_failed">Nie udało się usunąć rozmowy. Sprawdź połączenie.</string>
+    <string name="ai_notice_stop_failed">Nie udało się zatrzymać odpowiedzi. Sprawdź połączenie.</string>
+    <string name="ai_notice_chat_gone">Ta rozmowa została usunięta.</string>
+    <string name="ai_notice_photos_per_message">Jedna wiadomość może mieć najwyżej %1$d zdjęcia.</string>
+    <string name="ai_notice_photos_per_chat">Jedna rozmowa mieści najwyżej %1$d zdjęć.</string>
+    <string name="ai_notice_photo_unreadable">Nie udało się otworzyć zdjęcia.</string>
+
+    <!-- What "Ask Wizjer for an in-depth analysis" sends to the assistant -->
+    <string name="ai_ask_intro">Przeanalizuj dokładnie tę wiadomość – ochrona Wizjera uznała ją za podejrzaną. Czy to oszustwo i co mam zrobić?</string>
+    <string name="ai_ask_sms">SMS</string>
+    <string name="ai_ask_sms_from">SMS od: %1$s</string>
+    <string name="ai_ask_app">Powiadomienie z aplikacji %1$s</string>
+    <string name="ai_ask_app_from">Powiadomienie z aplikacji %1$s, od: %2$s</string>
+    <string name="ai_ask_notification">Powiadomienie</string>
+    <string name="ai_ask_notification_from">Powiadomienie od: %1$s</string>
+    <string name="ai_ask_email">E-mail</string>
+    <string name="ai_ask_email_from">E-mail od: %1$s</string>
+    <string name="ai_ask_subject">Temat: %1$s</string>
+    <string name="ai_ask_text">Treść: „%1$s”</string>
+    <string name="ai_ask_signs">Ochrona Wizjera zwróciła uwagę na:</string>
 
 </resources>

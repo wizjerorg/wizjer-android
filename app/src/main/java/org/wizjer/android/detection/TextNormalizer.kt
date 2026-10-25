@@ -15,6 +15,13 @@ object TextNormalizer {
 
     private val invisible = Regex("[\\u00AD\\u200B-\\u200F\\u202A-\\u202E\\u2060-\\u2064\\uFEFF]")
 
+    /**
+     * The tricks among them: zero-width characters splitting a word ("In\u200Bpost") and text-direction
+     * overrides. Newsletters pad their preview line with invisible characters between spaces; that's
+     * harmless, and soft hyphens inside words are ordinary hyphenation hints.
+     */
+    private val hiddenInWord = Regex("(?<=[\\p{L}\\p{N}])[\\u200B-\\u200D\\u2060\\uFEFF]+(?=[\\p{L}\\p{N}])|[\\u202A-\\u202E]")
+
     /** "d o p ł a t a" → "dopłata" (four or more single letters separated by single spaces). */
     private val spacedLetters = Regex("(?<!\\p{L})\\p{L}(?: \\p{L}){3,}(?!\\p{L})")
 
@@ -45,10 +52,8 @@ object TextNormalizer {
         // Full-width and stylised letters ("ｉｎｐｏｓｔ", "𝐢𝐧𝐩𝐨𝐬𝐭") become plain ones.
         var clean = Normalizer.normalize(text, Normalizer.Form.NFKC)
 
-        if (invisible.containsMatchIn(clean)) {
-            obfuscated = true
-            clean = invisible.replace(clean, "")
-        }
+        if (hiddenInWord.containsMatchIn(clean)) obfuscated = true
+        clean = invisible.replace(clean, "")
         clean = disguisedScheme.replace(clean) { "http${it.groupValues[1]}://" }
         clean = disguisedDots.replace(clean, ".")
         if (spacedLetters.containsMatchIn(clean)) {

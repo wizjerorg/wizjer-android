@@ -15,10 +15,14 @@ The app is available in **Polish**, **English** and **Ukrainian**.
   your messages and notifications does not leave the phone.
 - Lists of dangerous sites (including CERT Polska's warning list) are downloaded whole and
   checked on the phone, so the server never learns which links you received.
+- Messages that raised an alert (only the last 5) are kept in the app's private storage on the
+  phone, excluded from backups, so you can look at them again; they're deleted when you sign out.
 - Once a day the app asks GitHub whether a newer version of the open AI model has been released
   and downloads it if so. Nothing about you or your messages is sent.
-- The AI assistant runs in the cloud and needs an account. What you send to it is processed on
-  Wizjer's servers.
+- The AI assistant runs in the cloud and needs an account. What you send to it (text and photos)
+  is processed and kept on Wizjer's servers as your chat history, until you delete the chat or it
+  goes 90 days unused. A flagged message only goes to the assistant when you tap "Ask Wizjer" on it.
+  Photos from your chats are cached on the phone and deleted when you sign out.
 - The session token is stored encrypted with a key from the Android Keystore, and app data is
   excluded from backups and device transfers.
 - Release builds only connect over HTTPS.
@@ -30,7 +34,9 @@ confirmation, sign-in), the chat home screen, voice-call and settings screens, b
 protection (checking incoming SMS and notifications on the phone and alerting about dangerous
 ones), and the on-device detector: text clean-up, extraction of links and numbers, threat lists,
 rules and an AI model, also testable in a debug-only sandbox. An alert opens the flagged message
-with the reasons and what to do. The assistant's replies are not connected yet.
+with the reasons, and one tap sends it to the assistant for an in-depth analysis. The assistant chat
+streams its replies live (with the checks it runs along the way), takes photos, can be stopped,
+picks a reply up again after a lost connection, and reads replies aloud on the phone.
 
 ### The AI model
 
@@ -77,6 +83,7 @@ Debug builds allow plain HTTP for this; release builds never do.
 app/src/main/java/org/wizjer/android/
 ├── MainActivity.kt          Entry point: theme, edge-to-edge, splash
 ├── data/
+│   ├── ai/                  AI assistant: API client, reply stream, chats, photos
 │   ├── api/                 Small HTTPS/JSON client
 │   ├── account/             AccountSession (sign-up, sign-in, profile sync), stores
 │   ├── lists/               Threat-list download and background refresh

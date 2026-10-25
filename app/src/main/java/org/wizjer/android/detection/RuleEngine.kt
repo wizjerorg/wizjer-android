@@ -34,7 +34,7 @@ object RuleEngine {
         val categories = extraction.brands.map { it.category }.toSet()
         if (Lexicon.urgency.matches(text)) add(Signal.Urgency)
         if (Lexicon.payment.matches(text)) add(Signal.Payment)
-        if (Lexicon.credentials.matches(text)) add(Signal.Credentials)
+        if (Lexicon.credentials.matches(text) || Lexicon.login.matches(text) && links.isNotEmpty()) add(Signal.Credentials)
         if (Lexicon.threat.matches(text)) add(Signal.Threat)
         if (Lexicon.authority.matches(text) || BrandCategory.Bank in categories || BrandCategory.Government in categories) {
             add(Signal.Authority)
@@ -49,6 +49,9 @@ object RuleEngine {
         if (Lexicon.clickPrompt.matches(text) && links.isNotEmpty()) add(Signal.ClickPrompt)
         if (Lexicon.parcel.matches(text) || BrandCategory.Parcel in categories) add(Signal.Parcel)
         if (Lexicon.utility.matches(text) || BrandCategory.Utility in categories) add(Signal.Utility)
+        // A few złoty "to release your parcel" or "to avoid disconnection": real couriers and suppliers don't ask.
+        val parcelOrBill = reasons.any { it.signal == Signal.Parcel || it.signal == Signal.Utility }
+        if (parcelOrBill && Lexicon.feeRequest.matches(text) && extraction.amounts.any(::isSmallFee)) add(Signal.SmallFee)
 
         // Other details
         if (extraction.amounts.isNotEmpty()) add(Signal.Money)
@@ -62,4 +65,13 @@ object RuleEngine {
 
         return reasons
     }
+
+    /** Under 10 zł (or €/$), or under 50 hryvnias. */
+    private fun isSmallFee(amount: String): Boolean {
+        val value = NUMBER.find(amount)?.value?.replace(Regex("[  ]"), "")?.replace(',', '.')?.toDoubleOrNull() ?: return false
+        val hryvnia = amount.contains("грн") || amount.contains("uah", ignoreCase = true)
+        return value > 0 && value < if (hryvnia) 50.0 else 10.0
+    }
+
+    private val NUMBER = Regex("""\d{1,3}(?:[  ]\d{3})*(?:[.,]\d{1,2})?""")
 }

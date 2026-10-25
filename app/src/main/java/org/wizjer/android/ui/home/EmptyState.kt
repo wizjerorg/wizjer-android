@@ -38,7 +38,7 @@ import org.wizjer.android.ui.components.LifebuoyDuoIcon
 import org.wizjer.android.ui.components.LinkDuoIcon
 import org.wizjer.android.ui.components.MessageDuoIcon
 import org.wizjer.android.ui.components.PhoneCheckDuoIcon
-import org.wizjer.android.ui.components.ShieldIcon
+import org.wizjer.android.ui.components.ProtectionDuoIcon
 import org.wizjer.android.ui.components.TwoToneHeading
 import org.wizjer.android.ui.components.rememberWizjerMarkState
 import org.wizjer.android.ui.components.staggered
@@ -97,8 +97,9 @@ fun EmptyState(
             modifier = Modifier.staggered(reveal, 1, count),
         )
         Spacer(Modifier.height(28.dp))
-        // Only shown when something is wrong; when protection works, nothing nags.
-        if (protectionStatus == ProtectionStatus.Paused || protectionStatus == ProtectionStatus.MissingPermissions) {
+        // Only shown when permissions are missing: protection working, or switched off by the user's
+        // own choice, needs no nagging.
+        if (protectionStatus == ProtectionStatus.MissingPermissions) {
             ProtectionOffCard(protectionStatus, onFixProtection, Modifier.staggered(reveal, 1, count))
             Spacer(Modifier.height(16.dp))
         }
@@ -123,7 +124,7 @@ private fun ProtectionOffCard(status: ProtectionStatus, onFix: () -> Unit, modif
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ShieldIcon(colors.onBackground)
+        ProtectionDuoIcon()
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
             Text(stringResource(status.title), style = MaterialTheme.typography.titleSmall, color = colors.onBackground)

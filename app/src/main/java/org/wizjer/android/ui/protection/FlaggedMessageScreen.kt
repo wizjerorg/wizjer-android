@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import org.wizjer.android.R
+import org.wizjer.android.data.ai.Assistant
 import org.wizjer.android.detection.Reason
+import org.wizjer.android.detection.RiskLevel
 import org.wizjer.android.detection.Signal
 import org.wizjer.android.protection.FlaggedMessage
 import org.wizjer.android.protection.IncomingMessage
@@ -57,7 +59,8 @@ fun FlaggedMessageScreen(
     flagged: FlaggedMessage?,
     senior: Boolean,
     onBack: () -> Unit,
-    onAskWizjer: (FlaggedMessage) -> Unit,
+    /** Opens a new chat with Wizjer that sends it this prompt: the message and what protection noticed. */
+    onAskWizjer: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = MaterialTheme.colorScheme
@@ -77,7 +80,7 @@ fun FlaggedMessageScreen(
             IconCircleButton(onBack, stringResource(R.string.action_back)) { ChevronLeftIcon(colors.onBackground) }
             Spacer(Modifier.width(4.dp))
             Text(
-                stringResource(R.string.flagged_title),
+                stringResource(if (flagged != null && flagged.analysis.level != RiskLevel.Dangerous) R.string.flagged_careful_title else R.string.flagged_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = colors.onBackground,
                 modifier = Modifier.semantics { heading() },
@@ -100,9 +103,10 @@ fun FlaggedMessageScreen(
         }
 
         if (flagged != null) {
+            val prompt = analysisPrompt(flagged)
             PrimaryButton(
                 text = stringResource(R.string.flagged_analyze),
-                onClick = { onAskWizjer(flagged) },
+                onClick = { onAskWizjer(prompt) },
                 modifier = Modifier.padding(horizontal = 24.dp),
             )
             Spacer(Modifier.height(16.dp))
@@ -116,17 +120,28 @@ private fun Details(flagged: FlaggedMessage, senior: Boolean) {
     val message = flagged.message
     val analysis = flagged.analysis
 
-    // In ink, like the sandbox's high-risk card: the one thing on the screen to read first.
+    // A warning is in ink, like the sandbox's high-risk card: the one thing on the screen to read
+    // first. A "be careful" note is calmer, on the usual light card.
+    val warning = analysis.level == RiskLevel.Dangerous
+    val (card, ink) = if (warning) colors.onBackground to colors.background else colors.surfaceContainer to colors.onBackground
     Column(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(28.dp))
-            .background(colors.onBackground)
+            .background(card)
             .padding(22.dp),
     ) {
-        Text(stringResource(R.string.flagged_headline), style = MaterialTheme.typography.headlineSmall, color = colors.background)
+        Text(
+            stringResource(if (warning) R.string.flagged_headline else R.string.flagged_careful_headline),
+            style = MaterialTheme.typography.headlineSmall,
+            color = ink,
+        )
         Spacer(Modifier.height(6.dp))
-        Text(stringResource(R.string.flagged_body), style = MaterialTheme.typography.bodyMedium, color = colors.background.copy(alpha = 0.75f))
+        Text(
+            stringResource(if (warning) R.string.flagged_body else R.string.flagged_careful_body),
+            style = MaterialTheme.typography.bodyMedium,
+            color = ink.copy(alpha = 0.75f),
+        )
     }
 
     SectionLabel(stringResource(R.string.flagged_message))
@@ -152,11 +167,14 @@ private fun Details(flagged: FlaggedMessage, senior: Boolean) {
         }
         Spacer(Modifier.height(12.dp))
         SelectionContainer {
-            Text(message.text, style = MaterialTheme.typography.bodyLarge, color = colors.onBackground)
+            Column {
+                message.subject?.let { Text(it, style = MaterialTheme.typography.titleSmall, color = colors.onBackground) }
+                Text(message.text, style = MaterialTheme.typography.bodyLarge, color = colors.onBackground)
+            }
         }
     }
 
-    SectionLabel(stringResource(R.string.flagged_why))
+    SectionLabel(stringResource(if (warning) R.string.flagged_why else R.string.flagged_careful_why))
     shownReasons(analysis.reasons, senior).forEach { reason ->
         Bullet(stringResource(if (senior) reason.signal.simpleLabel else reason.signal.label, reason.detail.orEmpty()))
     }
@@ -179,7 +197,7 @@ internal fun sourceLabel(message: IncomingMessage, senior: Boolean): String {
     val context = LocalContext.current
     return when (message.source) {
         MessageSource.Sms -> stringResource(R.string.flagged_via_sms)
-        MessageSource.Notification -> {
+        MessageSource.Notification, MessageSource.Email -> {
             val app = remember(message.appPackage) { message.appPackage?.let { appLabel(context, it) } }
             when {
                 app == null -> stringResource(R.string.flagged_via_notification)
@@ -189,6 +207,44 @@ internal fun sourceLabel(message: IncomingMessage, senior: Boolean): String {
         }
     }
 }
+
+/**
+ * What "Ask Wizjer" sends, in the app's language: the message as it arrived, where it came from and the
+ * warning signs protection noticed (without the on-device model's opinion, which says nothing specific).
+ * Sending it is the user's choice; until then the message stays on the phone.
+ */
+@Composable
+internal fun analysisPrompt(flagged: FlaggedMessage): String {
+    val context = LocalContext.current
+    val message = flagged.message
+    val app = remember(message.appPackage) { message.appPackage?.let { appLabel(context, it) } }
+    val sender = message.sender?.trim()?.takeIf { it.isNotEmpty() }
+    val origin = when (message.source) {
+        MessageSource.Sms -> if (sender != null) stringResource(R.string.ai_ask_sms_from, sender) else stringResource(R.string.ai_ask_sms)
+        MessageSource.Notification -> when {
+            app != null && sender != null && sender != app -> stringResource(R.string.ai_ask_app_from, app, sender)
+            app != null -> stringResource(R.string.ai_ask_app, app)
+            sender != null -> stringResource(R.string.ai_ask_notification_from, sender)
+            else -> stringResource(R.string.ai_ask_notification)
+        }
+        MessageSource.Email -> if (sender != null) stringResource(R.string.ai_ask_email_from, sender) else stringResource(R.string.ai_ask_email)
+    }
+    val signs = flagged.analysis.reasons
+        .filter { it.contribution > 0 && it.signal != Signal.ModelScam && it.signal != Signal.ModelSuspicious }
+        .distinctBy { it.signal }
+        .take(5)
+        .map { "- " + stringResource(it.signal.label, it.detail.orEmpty()) }
+    return buildString {
+        append(stringResource(R.string.ai_ask_intro))
+        append("\n\n").append(origin)
+        message.subject?.trim()?.takeIf { it.isNotEmpty() }?.let { append("\n").append(stringResource(R.string.ai_ask_subject, it)) }
+        append("\n").append(stringResource(R.string.ai_ask_text, message.text.trim().take(MAX_QUOTED)))
+        if (signs.isNotEmpty()) append("\n\n").append(stringResource(R.string.ai_ask_signs)).append("\n").append(signs.joinToString("\n"))
+    }.take(Assistant.MAX_TEXT)
+}
+
+/** Room for the rest of the prompt within one message. */
+private const val MAX_QUOTED = 3_000
 
 private fun appLabel(context: Context, packageName: String): String? = runCatching {
     context.packageManager.run { getApplicationLabel(getApplicationInfo(packageName, 0)).toString() }
@@ -202,7 +258,7 @@ internal fun rememberSourceIcon(message: IncomingMessage, size: Dp): ImageBitmap
     return remember(message.source, message.appPackage, pixels) {
         val app = when (message.source) {
             MessageSource.Sms -> Telephony.Sms.getDefaultSmsPackage(context)
-            MessageSource.Notification -> message.appPackage
+            MessageSource.Notification, MessageSource.Email -> message.appPackage
         }
         app?.let { runCatching { context.packageManager.getApplicationIcon(it).toBitmap(pixels, pixels).asImageBitmap() }.getOrNull() }
     }

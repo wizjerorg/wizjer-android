@@ -16,6 +16,12 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
+        <!-- Finds the default browser, so links in the assistant's replies open there. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
     </queries>
 
     <!-- SMS permissions imply telephony; don't hide the app from devices without it. -->
@@ -78,6 +84,16 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
+        <!-- Hands the camera app a file to save a photo for the chat into. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.camera"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/camera_paths" />
+        </provider>
     </application>
 
 </manifest>

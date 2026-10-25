@@ -34,11 +34,21 @@ internal object Lexicon {
         "prześlij kod", "prześlij mi kod", "przesłać kod", "przesłać mi kod", "wyślij kod", "wyślij mi kod",
         "podeślij kod", "podeślij mi kod", "kod, który przyszedł", "kod który przyszedł", "kod co przyszedł",
         "hasło", "pin", "cvv", "dane karty", "numer karty", "dane płatności", "dane do płatności", "dane logowania",
-        "dane do logowania", "zaloguj się", "zweryfikuj", "potwierdź dane", "weryfikacja konta", "weryfikacji konta",
+        "dane do logowania",
         "password", "verification code", "card details", "card number", "payment details", "login details",
-        "verify your", "log in to", "send me the code", "the code you received",
-        "пароль", "код з смс", "дані картки", "номер картки", "підтвердіть дані", "увійдіть", "надішли код",
-        "скинь код", "перешли код",
+        "send me the code", "the code you received",
+        "пароль", "код з смс", "дані картки", "номер картки", "надішли код", "скинь код", "перешли код",
+    )
+
+    /** Demanding a fee; with a tiny amount for a parcel or a bill it's the classic parcel scam. */
+    val feeRequest = phrases(
+        "dopłat", "dopłać", "niedopłat", "opłać", "zapłać", "uregul", "pay the", "pay a", "доплат", "оплатіть", "сплатіть", "несплат",
+    )
+
+    /** Asking to log in or verify: a red flag only next to a link ("zaloguj się na Allegro" alone is everyday). */
+    val login = phrases(
+        "zaloguj się", "zweryfikuj", "potwierdź dane", "weryfikacja konta", "weryfikacji konta",
+        "verify your", "log in to", "підтвердіть дані", "увійдіть",
     )
 
     val threat = phrases(
@@ -60,9 +70,9 @@ internal object Lexicon {
         "safe account", "безпечний рахунок", "безпечного рахунку",
     )
 
-    /** Prizes, freebies and money said to be waiting (e.g. a tax refund). */
+    /** Prizes and money said to be waiting (e.g. a tax refund); "darmowa dostawa" is everyday shopping. */
     val prize = phrases(
-        "wygrał", "wygrana", "wygraną", "nagrod", "gratulacje", "voucher", "bon o wartości", "za darmo", "darmow",
+        "wygrał", "wygrana", "wygraną", "nagrod", "gratulacje", "voucher", "bon o wartości", "nitro za darmo",
         "losowani", "zwrot podatku", "nadpłat", "przysługuje ci zwrot", "przysługuje zwrot", "otrzymasz zwrot",
         "you won", "winner", "prize", "congratulations", "free gift", "free nitro", "tax refund", "eligible for a refund",
         "виграш", "вітаємо", "приз", "безкоштовн", "повернення податку", "повернення коштів",

@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import org.wizjer.android.R
+import org.wizjer.android.ui.components.Avatar
 import org.wizjer.android.data.account.ProfileStore
 import org.wizjer.android.ui.components.MailIcon
 import org.wizjer.android.ui.components.OnboardingStepLayout
@@ -86,9 +87,6 @@ fun AccountScreen(
 @Composable
 private fun AccountPreview(firstName: String, lastName: String) {
     val colors = MaterialTheme.colorScheme
-    val initials = listOf(firstName, lastName)
-        .mapNotNull { it.trim().firstOrNull()?.uppercaseChar() }
-        .joinToString("")
     Row(
         Modifier
             .fillMaxWidth()
@@ -97,15 +95,8 @@ private fun AccountPreview(firstName: String, lastName: String) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(colors.onBackground),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(initials, style = MaterialTheme.typography.titleSmall, color = colors.background)
-        }
+        // The same face the account will have everywhere else in the app.
+        Avatar(firstName, lastName, size = 48.dp)
         Spacer(Modifier.width(14.dp))
         Column {
             Text(

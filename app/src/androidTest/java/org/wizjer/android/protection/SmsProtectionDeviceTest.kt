@@ -70,6 +70,19 @@ class SmsProtectionDeviceTest {
     }
 
     @Test
+    fun aParcelFeeWithNothingToActOnGetsAGentleNote() {
+        val before = store.state.value.stats
+        // Unique without digits: a long number would read as a phone number, something to act on.
+        check("Pilne! Dopłać 2 zł do przesyłki, inaczej wróci do nadawcy. #" + SystemClock.elapsedRealtime().toString(36).filter(Char::isLetter))
+        val note = waitForAlert()
+        assertNotNull("no note was shown", note)
+        assertEquals(CAREFUL_CHANNEL, note!!.channelId)
+        assertEquals(context.getString(org.wizjer.android.R.string.alert_careful_title), note.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString())
+        // A note isn't counted among potential threats.
+        assertEquals(before.threatsFound, store.state.value.stats.threatsFound)
+    }
+
+    @Test
     fun ordinarySmsIsCountedQuietly() {
         val before = store.state.value.stats
         check("Cześć, będę o 18. Kupić chleb? " + SystemClock.elapsedRealtime())
@@ -114,7 +127,8 @@ class SmsProtectionDeviceTest {
         assertTrue("the check didn't finish", done.await(20, TimeUnit.SECONDS))
     }
 
-    private fun alerts() = notifications.activeNotifications.filter { it.notification.channelId == ALERT_CHANNEL }
+    /** Wizjer's warnings and gentle notes. */
+    private fun alerts() = notifications.activeNotifications.filter { it.notification.channelId in setOf(ALERT_CHANNEL, CAREFUL_CHANNEL) }
 
     /** The alert this test raised, if one appears in time. */
     private fun waitForAlert(timeoutMillis: Long = 3_000): Notification? {
@@ -155,6 +169,7 @@ class SmsProtectionDeviceTest {
 
     private companion object {
         const val ALERT_CHANNEL = "scam_alerts"
+        const val CAREFUL_CHANNEL = "careful_notes"
         const val SENDER = "+48512345678"
         const val SCAM = "InPost: Twoja przesyłka została wstrzymana z powodu niedopłaty 1,99 zł. Dopłać w ciągu 24h: https://inpost-dostawa.top/pl"
         /** 134 bytes of text after the 6-byte concatenation header. */

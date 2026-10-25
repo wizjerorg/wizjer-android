@@ -81,6 +81,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.junit)
+    // Android's org.json is only a stub in JVM tests; the AI client's tests parse real JSON.
+    testImplementation(libs.org.json)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -164,12 +164,13 @@ fun ProtectionScreen(senior: Boolean, onBack: () -> Unit, onOpenAlert: (Int) -> 
             SectionLabel(stringResource(R.string.protection_stats))
             StatsGrid(state, now)
 
-            if (flagged.isNotEmpty()) {
-                SectionLabel(stringResource(R.string.protection_recent))
-                flagged.forEachIndexed { i, item ->
-                    if (i > 0) HorizontalDivider(color = colors.outlineVariant)
-                    FlaggedRow(item, now, senior, onClick = { onOpenAlert(item.id) })
-                }
+            SectionLabel(stringResource(R.string.protection_recent))
+            if (flagged.isEmpty()) {
+                Text(stringResource(R.string.protection_recent_none), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            }
+            flagged.forEachIndexed { i, item ->
+                if (i > 0) HorizontalDivider(color = colors.outlineVariant)
+                FlaggedRow(item, now, senior, onClick = { onOpenAlert(item.id) })
             }
 
             SectionLabel(stringResource(R.string.protection_sources))

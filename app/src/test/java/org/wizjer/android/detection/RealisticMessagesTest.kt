@@ -4,6 +4,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.wizjer.android.detection.RealisticMessages.Expect
 import org.wizjer.android.detection.model.ScamModel
+import org.wizjer.android.protection.ProtectionPipeline
+import org.wizjer.android.protection.ProtectionPipeline.AlertLevel
 import java.io.File
 
 /** Everyday messages stay quiet and scams raise alerts, with the rules and the AI model together. */
@@ -13,15 +15,17 @@ class RealisticMessagesTest {
     private val detector = LocalScamDetector(model = { model })
 
     @Test
-    fun `genuine messages never alert and scams always do`() {
+    fun `genuine messages never get a warning and scams are always flagged`() {
         val wrong = (RealisticMessages.genuine + RealisticMessages.scams).mapNotNull { case ->
-            val analysis = detector.analyzeNow(DetectorInput(case.text, case.source, case.sender))
+            val analysis = detector.analyzeNow(DetectorInput(case.text, case.source, case.sender, case.subject))
+            val alert = ProtectionPipeline.alertLevel(analysis)
             val right = when (case.expect) {
-                Expect.Quiet -> analysis.level == RiskLevel.Safe
-                Expect.Careful -> analysis.level != RiskLevel.Dangerous
-                Expect.Alert -> analysis.level == RiskLevel.Dangerous
+                Expect.Quiet -> alert == AlertLevel.None
+                Expect.Careful -> alert != AlertLevel.Warning
+                Expect.Note -> alert != AlertLevel.None
+                Expect.Alert -> alert == AlertLevel.Warning
             }
-            if (right) null else "${case.expect} → ${analysis.level} (${analysis.risk}) ${analysis.reasons.map { it.signal }}: ${case.text}"
+            if (right) null else "${case.expect} → $alert (${analysis.level} ${analysis.risk}) ${analysis.reasons.map { it.signal }}: ${case.text}"
         }
         assertTrue(wrong.joinToString("\n", prefix = "\n"), wrong.isEmpty())
     }
@@ -42,7 +46,7 @@ class RealisticMessagesTest {
         assertTrue("${paypal.primaryType}", paypal.primaryType == null)
         val marketplace = RealisticMessages.scams.filter { "olx" in it.text.lowercase() || "vinted" in it.text.lowercase() }
         marketplace.forEach { case ->
-            val analysis = detector.analyzeNow(DetectorInput(case.text, case.source, case.sender))
+            val analysis = detector.analyzeNow(DetectorInput(case.text, case.source, case.sender, case.subject))
             assertTrue("${analysis.primaryType}: ${case.text}", analysis.primaryType == ScamType.Marketplace)
         }
     }

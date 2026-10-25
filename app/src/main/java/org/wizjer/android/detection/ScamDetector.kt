@@ -35,7 +35,7 @@ class LocalScamDetector(
         }
 
         // The sender (e.g. "InPost" as an SMS sender name) is analysed together with the text.
-        val fullText = listOfNotNull(input.sender?.takeIf { it.isNotBlank() }, input.text).joinToString("\n")
+        val fullText = listOfNotNull(input.sender?.takeIf { it.isNotBlank() }, input.subject?.takeIf { it.isNotBlank() }, input.text).joinToString("\n")
         val normalized = timed(Stage.Normalize) { TextNormalizer.normalize(fullText) }
         val indexes = sites()
         val extraction = timed(Stage.Extract) { EntityExtractor.extract(normalized) { host -> indexes.any { it.listsFor(host).isNotEmpty() } } }
@@ -45,7 +45,7 @@ class LocalScamDetector(
         val reasons = timed(Stage.Rules) { RuleEngine.evaluate(normalized, extraction) } +
             listOfNotNull(scorer?.let { timed(Stage.Model) { modelReason(it, input, language, extraction) } })
         val verdict = timed(Stage.Fusion) {
-            RiskFusion.combine(reasons, extraction, normalized.clean.length, language)
+            RiskFusion.combine(reasons, extraction, normalized.clean.length, language, actionable(input, extraction, reasons))
         }
 
         return Analysis(
@@ -75,9 +75,10 @@ class LocalScamDetector(
         // The model was trained on the message and its sender separately, not joined.
         val source = when (input.source) {
             MessageSource.Notification -> "notification"
+            MessageSource.Email -> "email"
             MessageSource.Sms, null -> "sms"
         }
-        val score = model.score(input.text, source, input.sender.orEmpty())
+        val score = model.score(input.text, source, input.sender.orEmpty(), input.subject.orEmpty())
         val thresholds = model.thresholds(language, source) ?: return null
         val detail = "${(score * 100).roundToInt()}%"
         return when {
@@ -87,6 +88,22 @@ class LocalScamDetector(
                 Reason(Signal.ModelOrdinary, detail)
             else -> null
         }
+    }
+
+    /**
+     * Whether the message gives its reader something to act on: a link, a number to call or pay
+     * (other than the sender's own), a request for a code or password, an app to install, a "safe
+     * account", a fake buyer's lure or the "new number" story. A mail app's notification shows only
+     * the start of an e-mail, hiding its links and real sender, so there a red flag the rules can
+     * name (a tiny parcel fee, disguised text) counts too; without one, an alarming preview is
+     * worth a "be careful", not a scam warning.
+     */
+    private fun actionable(input: DetectorInput, extraction: Extraction, reasons: List<Reason>): Boolean {
+        if (extraction.links.isNotEmpty() || extraction.bankAccounts.isNotEmpty()) return true
+        val sender = input.sender.orEmpty().filter(Char::isDigit).takeLast(9)
+        if (extraction.phones.any { sender.length < 9 || !it.display.filter(Char::isDigit).endsWith(sender) }) return true
+        val actions = if (input.source == MessageSource.Email) ACTIONS + PREVIEW_RED_FLAGS else ACTIONS
+        return reasons.any { it.signal in actions }
     }
 
     /** Marks each link with the lists it's on; a listed link shortener counts as a short link. */
@@ -147,6 +164,14 @@ class LocalScamDetector(
         const val VERSION = "rules-0.2"
 
         private const val POLISH_LETTERS = "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ"
+
+        /** Signals that are themselves something to act on (see [actionable]). */
+        private val ACTIONS = setOf(
+            Signal.Credentials, Signal.SafeAccount, Signal.RemoteApp, Signal.Family, Signal.Marketplace, Signal.PremiumNumber,
+        )
+
+        /** In an e-mail preview, where the link can't be seen, these are enough for a warning. */
+        private val PREVIEW_RED_FLAGS = setOf(Signal.SmallFee, Signal.Obfuscation)
 
         /** Fewer letters than this outside links isn't enough to tell the language. */
         private const val MIN_LETTERS = 8

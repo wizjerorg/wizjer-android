@@ -43,13 +43,14 @@ class WizjerNotificationListener : NotificationListenerService() {
         if (flags and (Notification.FLAG_GROUP_SUMMARY or Notification.FLAG_FOREGROUND_SERVICE) != 0) return null
 
         val text = readableText(notification) ?: return null
-        return IncomingMessage(
-            source = MessageSource.Notification,
-            sender = notification.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
-            text = text,
-            appPackage = sbn.packageName,
-            receivedAt = sbn.postTime,
-        )
+        val sender = notification.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()
+        if (sbn.packageName in MAIL_APPS) {
+            // Mail apps show the subject, then the start of the e-mail.
+            val subject = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()?.trim()?.takeIf { it.isNotEmpty() }
+            val body = subject?.let { text.removePrefix(it).trim() }?.takeIf { it.isNotEmpty() && it != text.trim() }
+            return IncomingMessage(MessageSource.Email, sender, body ?: text, sbn.packageName, sbn.postTime, subject = subject.takeIf { body != null })
+        }
+        return IncomingMessage(MessageSource.Notification, sender, text, sbn.packageName, sbn.postTime)
     }
 
     /** The message a notification shows: the latest chat message, the expanded text, or its lines. */
@@ -65,5 +66,12 @@ class WizjerNotificationListener : NotificationListenerService() {
 
     private companion object {
         const val RECENT_LIMIT = 200
+
+        /** Mail apps: their notifications are e-mails (sender, subject, start of the text), judged as such. */
+        val MAIL_APPS = setOf(
+            "com.google.android.gm", "com.microsoft.office.outlook", "com.yahoo.mobile.client.android.mail",
+            "ch.protonmail.android", "com.readdle.spark", "com.samsung.android.email.provider", "com.android.email",
+            "com.fsck.k9", "net.thunderbird.android",
+        )
     }
 }

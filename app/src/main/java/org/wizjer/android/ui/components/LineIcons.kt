@@ -226,16 +226,6 @@ fun LogoutIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 20.dp) =
         moveTo(w * 0.68f, h * 0.34f); lineTo(w * 0.84f, h * 0.5f); lineTo(w * 0.68f, h * 0.66f)
     }
 
-@Composable
-fun ShieldIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
-    LineIcon(color, modifier.size(size)) { w, h ->
-        moveTo(w * 0.5f, h * 0.12f); lineTo(w * 0.8f, h * 0.24f); lineTo(w * 0.8f, h * 0.48f)
-        quadraticTo(w * 0.8f, h * 0.74f, w * 0.5f, h * 0.88f)
-        quadraticTo(w * 0.2f, h * 0.74f, w * 0.2f, h * 0.48f)
-        lineTo(w * 0.2f, h * 0.24f); close()
-        moveTo(w * 0.38f, h * 0.5f); lineTo(w * 0.47f, h * 0.59f); lineTo(w * 0.63f, h * 0.42f)
-    }
-
 /** Sandbox: a lab flask. */
 @Composable
 fun FlaskIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
@@ -248,6 +238,123 @@ fun FlaskIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
         quadraticTo(w * 0.84f, h * 0.86f, w * 0.8f, h * 0.78f)
         lineTo(w * 0.58f, h * 0.4f); lineTo(w * 0.58f, h * 0.14f)
         moveTo(w * 0.3f, h * 0.62f); lineTo(w * 0.7f, h * 0.62f)
+    }
+
+/** Attach a photo: a frame with a hill and the sun. */
+@Composable
+fun ImageIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        addRoundRect(RoundRect(w * 0.14f, h * 0.18f, w * 0.86f, h * 0.82f, CornerRadius(w * 0.12f)))
+        moveTo(w * 0.16f, h * 0.7f)
+        lineTo(w * 0.38f, h * 0.5f)
+        lineTo(w * 0.56f, h * 0.66f)
+        lineTo(w * 0.66f, h * 0.58f)
+        lineTo(w * 0.84f, h * 0.72f)
+        addOval(Rect(w * 0.58f, h * 0.3f, w * 0.7f, h * 0.42f))
+    }
+
+/** Take a photo: a camera body with its lens. */
+@Composable
+fun CameraIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 22.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.24f, h * 0.3f)
+        lineTo(w * 0.34f, h * 0.3f)
+        lineTo(w * 0.4f, h * 0.2f)
+        lineTo(w * 0.6f, h * 0.2f)
+        lineTo(w * 0.66f, h * 0.3f)
+        lineTo(w * 0.76f, h * 0.3f)
+        quadraticTo(w * 0.86f, h * 0.3f, w * 0.86f, h * 0.4f)
+        lineTo(w * 0.86f, h * 0.72f)
+        quadraticTo(w * 0.86f, h * 0.82f, w * 0.76f, h * 0.82f)
+        lineTo(w * 0.24f, h * 0.82f)
+        quadraticTo(w * 0.14f, h * 0.82f, w * 0.14f, h * 0.72f)
+        lineTo(w * 0.14f, h * 0.4f)
+        quadraticTo(w * 0.14f, h * 0.3f, w * 0.24f, h * 0.3f)
+        close()
+        addOval(Rect(w * 0.37f, h * 0.41f, w * 0.63f, h * 0.67f))
+    }
+
+/** Try again: an open circle with an arrowhead. */
+@Composable
+fun RetryIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        arcTo(Rect(w * 0.18f, h * 0.18f, w * 0.82f, h * 0.82f), -60f, 300f, forceMoveTo = true)
+        moveTo(w * 0.72f, h * 0.14f); lineTo(w * 0.68f, h * 0.27f); lineTo(w * 0.81f, h * 0.31f)
+    }
+
+@Composable
+fun ArrowDownIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 20.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.5f, h * 0.2f); lineTo(w * 0.5f, h * 0.8f)
+        moveTo(w * 0.26f, h * 0.56f); lineTo(w * 0.5f, h * 0.8f); lineTo(w * 0.74f, h * 0.56f)
+    }
+
+/** A handset, for checking a phone number. */
+@Composable
+fun PhoneIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.3f, h * 0.16f)
+        lineTo(w * 0.4f, h * 0.36f)
+        lineTo(w * 0.32f, h * 0.44f)
+        quadraticTo(w * 0.42f, h * 0.6f, w * 0.56f, h * 0.68f)
+        lineTo(w * 0.64f, h * 0.6f)
+        lineTo(w * 0.84f, h * 0.7f)
+        lineTo(w * 0.78f, h * 0.82f)
+        quadraticTo(w * 0.42f, h * 0.84f, w * 0.18f, h * 0.24f)
+        close()
+    }
+
+/** A globe, for checking a website. */
+@Composable
+fun GlobeIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        addOval(Rect(w * 0.14f, h * 0.14f, w * 0.86f, h * 0.86f))
+        addOval(Rect(w * 0.34f, h * 0.14f, w * 0.66f, h * 0.86f))
+        moveTo(w * 0.16f, h * 0.5f); lineTo(w * 0.84f, h * 0.5f)
+    }
+
+/** A magnifying glass, for a web search. */
+@Composable
+fun SearchIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        addOval(Rect(w * 0.16f, h * 0.16f, w * 0.64f, h * 0.64f))
+        moveTo(w * 0.58f, h * 0.58f); lineTo(w * 0.84f, h * 0.84f)
+    }
+
+/** An open book, for one of Wizjer's guides. */
+@Composable
+fun BookIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.5f, h * 0.3f)
+        quadraticTo(w * 0.34f, h * 0.2f, w * 0.14f, h * 0.24f)
+        lineTo(w * 0.14f, h * 0.76f)
+        quadraticTo(w * 0.34f, h * 0.72f, w * 0.5f, h * 0.82f)
+        quadraticTo(w * 0.66f, h * 0.72f, w * 0.86f, h * 0.76f)
+        lineTo(w * 0.86f, h * 0.24f)
+        quadraticTo(w * 0.66f, h * 0.2f, w * 0.5f, h * 0.3f)
+        lineTo(w * 0.5f, h * 0.82f)
+    }
+
+/** A person, for the user's account. */
+@Composable
+fun PersonIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        addOval(Rect(w * 0.34f, h * 0.14f, w * 0.66f, h * 0.46f))
+        moveTo(w * 0.18f, h * 0.86f)
+        quadraticTo(w * 0.2f, h * 0.58f, w * 0.5f, h * 0.58f)
+        quadraticTo(w * 0.8f, h * 0.58f, w * 0.82f, h * 0.86f)
+    }
+
+/** Something went wrong: a rounded triangle with an exclamation mark. */
+@Composable
+fun AlertIcon(color: Color, modifier: Modifier = Modifier, size: Dp = 18.dp) =
+    LineIcon(color, modifier.size(size)) { w, h ->
+        moveTo(w * 0.5f, h * 0.14f)
+        lineTo(w * 0.88f, h * 0.82f)
+        lineTo(w * 0.12f, h * 0.82f)
+        close()
+        moveTo(w * 0.5f, h * 0.4f); lineTo(w * 0.5f, h * 0.58f)
+        moveTo(w * 0.5f, h * 0.69f); lineTo(w * 0.5f, h * 0.7f)
     }
 
 @Composable

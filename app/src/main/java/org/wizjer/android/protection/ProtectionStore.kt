@@ -51,7 +51,7 @@ class ProtectionStore private constructor(context: Context) {
     fun isActive(source: MessageSource): Boolean = with(_state.value) {
         enabled && when (source) {
             MessageSource.Sms -> smsEnabled
-            MessageSource.Notification -> notificationsEnabled
+            MessageSource.Notification, MessageSource.Email -> notificationsEnabled
         }
     }
 
@@ -66,7 +66,7 @@ class ProtectionStore private constructor(context: Context) {
             putInt(KEY_TOTAL, prefs.getInt(KEY_TOTAL, 0) + 1)
             when (source) {
                 MessageSource.Sms -> putInt(KEY_SMS_COUNT, prefs.getInt(KEY_SMS_COUNT, 0) + 1)
-                MessageSource.Notification -> putInt(KEY_NOTIFICATION_COUNT, prefs.getInt(KEY_NOTIFICATION_COUNT, 0) + 1)
+                MessageSource.Notification, MessageSource.Email -> putInt(KEY_NOTIFICATION_COUNT, prefs.getInt(KEY_NOTIFICATION_COUNT, 0) + 1)
             }
             if (threat) putInt(KEY_THREATS, prefs.getInt(KEY_THREATS, 0) + 1)
             putLong(KEY_LAST, at)

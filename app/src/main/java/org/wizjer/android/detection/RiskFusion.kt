@@ -22,9 +22,13 @@ object RiskFusion {
         val types: List<TypeScore>,
     )
 
-    fun combine(reasons: List<Reason>, extraction: Extraction, textLength: Int, language: String): Verdict {
+    /**
+     * [actionable]: whether the message gives its reader something a scam needs them to act on. Without
+     * that, however alarming its wording, it can't do harm by itself and stays below "dangerous".
+     */
+    fun combine(reasons: List<Reason>, extraction: Extraction, textLength: Int, language: String, actionable: Boolean = true): Verdict {
         val logit = BIAS + reasons.sumOf { it.contribution }
-        val risk = (100 / (1 + exp(-logit))).roundToInt()
+        val risk = (100 / (1 + exp(-logit))).roundToInt().let { if (actionable) it else minOf(it, DANGEROUS_FROM - 1) }
         val level = when {
             risk >= DANGEROUS_FROM -> RiskLevel.Dangerous
             risk >= SUSPICIOUS_FROM -> RiskLevel.Suspicious

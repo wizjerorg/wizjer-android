@@ -10,13 +10,19 @@ import org.wizjer.android.protection.MessageSource.Sms
  */
 object RealisticMessages {
 
-    /** What protection should do: stay quiet, at most say "be careful" (no alert), or alert. */
-    enum class Expect { Quiet, Careful, Alert }
+    /**
+     * What protection should do: no notification at all ([Quiet]), at most a gentle "be careful" note
+     * ([Careful]), at least such a note ([Note]: alarming, but the rules can't be sure), or a warning ([Alert]).
+     */
+    enum class Expect { Quiet, Careful, Note, Alert }
 
-    data class Case(val text: String, val source: MessageSource, val sender: String?, val expect: Expect)
+    data class Case(val text: String, val source: MessageSource, val sender: String?, val expect: Expect, val subject: String? = null)
 
     private fun chat(sender: String, text: String, expect: Expect = Expect.Quiet) = Case(text, Notification, sender, expect)
     private fun sms(sender: String, text: String, expect: Expect = Expect.Quiet) = Case(text, Sms, sender, expect)
+    /** A mail app's notification: "subject\npreview" is split as the listener does. */
+    private fun email(sender: String, text: String, expect: Expect = Expect.Quiet) =
+        Case(text.substringAfter('\n'), MessageSource.Email, sender, expect, subject = text.substringBefore('\n'))
 
     /** Genuine messages: none of these may raise an alert. */
     val genuine = listOf(
@@ -101,6 +107,27 @@ object RealisticMessages {
         chat("Оля", "Дякую за переказ! Все дійшло"),
         chat("Uber", "Your driver is arriving now. Look for a grey Toyota Corolla."),
         chat("Amazon", "Your order has shipped. Track it at https://www.amazon.pl/gp/your-orders"),
+        // Genuine marketing: coupons, deadlines and "gratulacje" are everyday shopping, at most "be careful"
+        sms("Allegro", "Allegro: Masz kupon -15 zł na zakupy w kategorii Supermarket. Aktywuj go w aplikacji do 25.10."),
+        sms("Zabka", "Żabka: Twój kupon na darmową kawę czeka w aplikacji Żappka. Ważny do niedzieli."),
+        sms("Orange", "Orange: Odbierz 20 GB internetu na weekend w aplikacji Mój Orange. Oferta ważna tylko dziś!"),
+        sms("PKO BP", "PKO BP: Załóż konto i odbierz do 300 zł premii. Szczegóły na pkobp.pl/promocje"),
+        chat("Allegro", "Masz kupon -15 zł 🎁 Odbierz go w aplikacji, ważny tylko do niedzieli", Expect.Careful),
+        chat("Temu", "🎉 Gratulacje! Twój pakiet kuponów o wartości 300 zł czeka. Odbierz przed północą!", Expect.Careful),
+        chat("Żappka", "Zgarnij darmowe hot-dogi tylko dziś! 🌭"),
+        chat("Revolut", "Zaproś znajomych i odbierz 200 zł za każdą osobę 💸", Expect.Careful),
+        email("Allegro", "Twój jesienny kupon na zakupy wciąż czeka na odbiór\nOdbierz swój kupon już teraz » \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C \u200C", Expect.Careful),
+        email("Allegro", "Twój kupon rabatowy czeka! Odbierz 15 zł na zakupy\nZaloguj się na Allegro i aktywuj kupon w zakładce Moje Allegro.", Expect.Careful),
+        email("Allegro", "Kupon -20 zł z Allegro Pay\nZapłać z Allegro Pay za zakupy powyżej 100 zł, a kupon trafi na Twoje konto w ciągu 24 h.", Expect.Careful),
+        email("Allegro", "Gratulacje! Masz kupon na 30 zł 🎉\nWykorzystaj go do końca dnia na zakupy z kategorii Elektronika. Kliknij, aby odebrać.", Expect.Careful),
+        email("Allegro", "Prezent dla Ciebie 🎁 Darmowa dostawa z Allegro Smart!\nAktywuj Smart! na 30 dni za darmo i odbieraj paczki bez kosztów dostawy.", Expect.Careful),
+        email("Allegro", "Allegro Days: rabaty do -50% tylko dziś!\nNie przegap okazji, to ostatnia szansa na najniższe ceny w tym roku.", Expect.Careful),
+        email("Rossmann", "Twój kupon -49% czeka w aplikacji\nOdbierz go do 31.10, tylko dla członków Rossmann Club."),
+        email("Zalando", "-20% na nową kolekcję tylko dziś\nUżyj kodu JESIEN20 przy zamówieniu. Darmowa dostawa i zwrot.", Expect.Careful),
+        email("Netflix", "Nowości w tym tygodniu\nZobacz, co dodaliśmy do Netflixa: nowe seriale i filmy czekają na Ciebie."),
+        email("LinkedIn", "Masz 3 nowe zaproszenia do sieci kontaktów\nZobacz, kto chce się z Tobą połączyć."),
+        email("mBank", "Wyciąg z rachunku za wrzesień\nTwój wyciąg jest dostępny w serwisie transakcyjnym mBanku."),
+        email("Allegro", "Twoja przesyłka jest w drodze\nŚledź paczkę w aplikacji Allegro. Przewidywana dostawa: jutro."),
     )
 
     /** Scams: every one should raise an alert. */
@@ -141,5 +168,15 @@ object RealisticMessages {
         sms("+48 512 345 678", "Twoja przesyłka DHL czeka na potwierdzenie adresu: https://dhl-pl.delivery-check.top", Expect.Alert),
         sms("+48 512 345 678", "Orange: faktura nie została opłacona, usługa zostanie zawieszona. Zapłać: https://orange-platnosci.site", Expect.Alert),
         sms("+48 512 345 678", "Niedopłata za energię 4,99 zł. Opłać, aby uniknąć odłączenia: https://e-ebok.pl-energia.xyz", Expect.Alert),
+        // Scams dressed as coupons, vouchers and lotteries
+        sms("+48 512 345 678", "Allegro: Twój kupon 500 zł wygasa dziś! Odbierz go: https://allegro-kupony.shop/odbierz", Expect.Alert),
+        sms("+48 512 345 678", "Gratulacje! Zostałeś wybrany do odbioru nagrody od Biedronki. Odbierz voucher 1000 zł: https://bit.ly/biedronka-voucher", Expect.Alert),
+        chat("Lidl Polska", "🎁 Lidl rozdaje bony po 500 zł z okazji rocznicy! Wypełnij ankietę: https://lidl-bon.top/ankieta", Expect.Alert),
+        chat("Temu Nagrody", "Gratulacje! Wygrałeś iPhone 15 w loterii Temu 🎉 Odbierz nagrodę w ciągu 24h: https://temu-nagrody.top", Expect.Alert),
+        // E-mail previews hide the link and the real sender: a warning needs a red flag the rules can
+        // name (the tiny parcel fee); an alarming preview without one still gets a "be careful" note.
+        email("Allegro", "Twoje konto zostało zawieszone\nZ powodu podejrzanej aktywności Twoje konto zostanie usunięte w ciągu 24h. Zaloguj się, aby potwierdzić dane.", Expect.Note),
+        email("InPost", "Twoja paczka czeka na dopłatę 1,99 zł\nPrzesyłka zostanie zwrócona do nadawcy, jeśli nie opłacisz jej w ciągu 48h.", Expect.Alert),
+        email("PKO BP", "Pilne: blokada konta\nWykryliśmy nieautoryzowane logowanie. Twoje konto zostanie zablokowane, jeśli nie potwierdzisz danych w ciągu 24 godzin.", Expect.Note),
     )
 }

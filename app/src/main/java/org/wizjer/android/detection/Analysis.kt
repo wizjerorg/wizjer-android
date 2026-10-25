@@ -4,11 +4,12 @@ import androidx.annotation.StringRes
 import org.wizjer.android.R
 import org.wizjer.android.protection.MessageSource
 
-/** What to check: the message text and, if known, where it came from and who sent it. */
+/** What to check: the message text and, if known, where it came from, who sent it and (e-mail) its subject. */
 data class DetectorInput(
     val text: String,
     val source: MessageSource? = null,
     val sender: String? = null,
+    val subject: String? = null,
 )
 
 enum class RiskLevel(@StringRes val label: Int) {
@@ -76,6 +77,7 @@ enum class Signal(val weight: Double, @StringRes val label: Int, @StringRes val 
     Money(0.5, R.string.sig_money, R.string.sig_money_simple),
     BankAccount(0.8, R.string.sig_bank_account, R.string.sig_bank_account_simple),
     PremiumNumber(1.5, R.string.sig_premium_number, R.string.sig_premium_number_simple),
+    SmallFee(1.5, R.string.sig_small_fee, R.string.sig_small_fee_simple),
     Obfuscation(2.0, R.string.sig_obfuscation, R.string.sig_obfuscation_simple),
 
     // Reassuring: typical of genuine messages

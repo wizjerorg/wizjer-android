@@ -27,19 +27,28 @@ class StreamedResponse(val status: Int, val etag: String?, val body: InputStream
 class ApiClient(private val baseUrl: String = BuildConfig.API_BASE_URL) {
 
     @Throws(IOException::class)
-    suspend fun get(path: String, token: String? = null): ApiResponse = send("GET", path, null, token)
+    suspend fun get(path: String, token: String? = null): ApiResponse = send("GET", path, null, null, token)
 
     @Throws(IOException::class)
-    suspend fun post(path: String, body: JSONObject, token: String? = null): ApiResponse = send("POST", path, body, token)
+    suspend fun post(path: String, body: JSONObject, token: String? = null): ApiResponse =
+        send("POST", path, body.toString().toByteArray(Charsets.UTF_8), JSON, token)
+
+    @Throws(IOException::class)
+    suspend fun delete(path: String, token: String? = null): ApiResponse = send("DELETE", path, null, null, token)
+
+    /** POST of a file (e.g. an image) as the raw body. */
+    @Throws(IOException::class)
+    suspend fun upload(path: String, body: ByteArray, contentType: String, token: String? = null): ApiResponse =
+        send("POST", path, body, contentType, token)
 
     /**
      * GET for large downloads: [read] consumes the body as it arrives (gzip is decoded
      * transparently). With [etag], an unchanged resource answers 304 and no body.
      */
     @Throws(IOException::class)
-    suspend fun <T> stream(path: String, etag: String? = null, read: (StreamedResponse) -> T): T =
+    suspend fun <T> stream(path: String, etag: String? = null, token: String? = null, read: (StreamedResponse) -> T): T =
         withContext(Dispatchers.IO) {
-            val connection = open(path)
+            val connection = connect(path, token)
             try {
                 if (etag != null) connection.setRequestProperty("If-None-Match", etag)
                 val status = connection.responseCode
@@ -50,23 +59,28 @@ class ApiClient(private val baseUrl: String = BuildConfig.API_BASE_URL) {
             }
         }
 
-    private fun open(path: String): HttpURLConnection =
+    /**
+     * A connection the caller drives and disconnects itself, for responses that stay open
+     * (an event stream); [readTimeoutMillis] must outlast the longest quiet moment.
+     */
+    internal fun connect(path: String, token: String?, readTimeoutMillis: Int = TIMEOUT_MILLIS): HttpURLConnection =
         (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
             connectTimeout = TIMEOUT_MILLIS
-            readTimeout = TIMEOUT_MILLIS
+            readTimeout = readTimeoutMillis
             setRequestProperty("Accept", "application/json")
+            if (token != null) setRequestProperty("Authorization", "Bearer $token")
         }
 
-    private suspend fun send(method: String, path: String, body: JSONObject?, token: String?): ApiResponse =
+    private suspend fun send(method: String, path: String, body: ByteArray?, contentType: String?, token: String?): ApiResponse =
         withContext(Dispatchers.IO) {
-            val connection = open(path)
+            val connection = connect(path, token)
             try {
                 connection.requestMethod = method
-                if (token != null) connection.setRequestProperty("Authorization", "Bearer $token")
                 if (body != null) {
                     connection.doOutput = true
-                    connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
-                    connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+                    connection.setRequestProperty("Content-Type", contentType)
+                    connection.setFixedLengthStreamingMode(body.size)
+                    connection.outputStream.use { it.write(body) }
                 }
                 val status = connection.responseCode
                 val stream = if (status >= 400) connection.errorStream else connection.inputStream
@@ -78,5 +92,6 @@ class ApiClient(private val baseUrl: String = BuildConfig.API_BASE_URL) {
 
     private companion object {
         const val TIMEOUT_MILLIS = 15_000
+        const val JSON = "application/json; charset=utf-8"
     }
 }

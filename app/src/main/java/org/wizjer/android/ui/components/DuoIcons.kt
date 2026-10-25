@@ -95,6 +95,64 @@ private fun DrawScope.checkBadge(center: Offset, line: Color, accent: Color, pap
     drawPath(check, line, style = stroke())
 }
 
+/**
+ * Background protection: an umbrella with a mint middle panel, open while Wizjer shelters the user
+ * and folded (strapped, no mint) when protection is off or can't work.
+ */
+@Composable
+fun ProtectionDuoIcon(modifier: Modifier = Modifier, size: Dp = 24.dp, on: Boolean = true) = DuoIcon(modifier, size) { line, accent, _ ->
+    val w = this.size.width
+    // Drawn smaller than the other duo icons, so the line is a share of the size, not a fixed width.
+    val stroke = Stroke(width = w * 0.065f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+    // The shaft and its hooked handle, continuing from the point the path is at.
+    val handle: Path.() -> Unit = {
+        lineTo(w * 0.5f, w * 0.80f)
+        cubicTo(w * 0.5f, w * 0.90f, w * 0.38f, w * 0.90f, w * 0.38f, w * 0.81f)
+    }
+    if (on) {
+        val top = w * 0.20f
+        val edge = w * 0.56f
+        val dip = w * 0.06f
+        val middle = Path().apply {
+            moveTo(w * 0.5f, top)
+            cubicTo(w * 0.40f, top + w * 0.06f, w * 0.36f, top + w * 0.20f, w * 0.36f, edge)
+            quadraticTo(w * 0.43f, edge - dip, w * 0.5f, edge)
+            quadraticTo(w * 0.57f, edge - dip, w * 0.64f, edge)
+            cubicTo(w * 0.64f, top + w * 0.20f, w * 0.60f, top + w * 0.06f, w * 0.5f, top)
+            close()
+        }
+        drawPath(middle, accent)
+        val umbrella = Path().apply {
+            // The canopy, with a scalloped hem.
+            moveTo(w * 0.08f, edge)
+            cubicTo(w * 0.08f, top + w * 0.08f, w * 0.30f, top, w * 0.5f, top)
+            cubicTo(w * 0.70f, top, w * 0.92f, top + w * 0.08f, w * 0.92f, edge)
+            for (x in listOf(0.78f, 0.64f, 0.5f, 0.36f, 0.22f, 0.08f)) quadraticTo(w * (x + 0.07f), edge - dip, w * x, edge)
+            close()
+            // Ribs, the tip and the shaft.
+            moveTo(w * 0.5f, top); cubicTo(w * 0.40f, top + w * 0.06f, w * 0.36f, top + w * 0.20f, w * 0.36f, edge)
+            moveTo(w * 0.5f, top); cubicTo(w * 0.60f, top + w * 0.06f, w * 0.64f, top + w * 0.20f, w * 0.64f, edge)
+            moveTo(w * 0.5f, top); lineTo(w * 0.5f, top - w * 0.05f)
+            moveTo(w * 0.5f, edge)
+            handle()
+        }
+        drawPath(umbrella, line, style = stroke)
+    } else {
+        val folded = Path().apply {
+            moveTo(w * 0.5f, w * 0.08f)
+            cubicTo(w * 0.60f, w * 0.30f, w * 0.60f, w * 0.52f, w * 0.56f, w * 0.64f)
+            lineTo(w * 0.44f, w * 0.64f)
+            cubicTo(w * 0.40f, w * 0.52f, w * 0.40f, w * 0.30f, w * 0.5f, w * 0.08f)
+            close()
+            // The strap holding it shut.
+            moveTo(w * 0.425f, w * 0.44f); lineTo(w * 0.575f, w * 0.44f)
+            moveTo(w * 0.5f, w * 0.64f)
+            handle()
+        }
+        drawPath(folded, line, style = stroke)
+    }
+}
+
 /** A lifebuoy with mint stripes, like the real thing. */
 @Composable
 fun LifebuoyDuoIcon(modifier: Modifier = Modifier, size: Dp = 30.dp) = DuoIcon(modifier, size) { line, accent, _ ->

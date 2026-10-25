@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }
+        AlertLog.restore(this)
         if (savedInstanceState == null) openAlertFrom(intent)
         setContent {
             // In-app text size (Settings). Not persisted yet.

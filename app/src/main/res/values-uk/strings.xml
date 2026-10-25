@@ -138,7 +138,7 @@
     <string name="protection_status_starting_body">Це займе лише мить.</string>
     <string name="protection_status_missing">Захист неповний</string>
     <string name="protection_status_missing_body">Бракує дозволів. Надай їх, щоб завершити налаштування.</string>
-    <string name="protection_status_paused">Захист призупинено</string>
+    <string name="protection_status_paused">Фоновий захист вимкнено</string>
     <string name="protection_status_paused_body">Увімкни його, щоб Wizjer знову перевіряв повідомлення.</string>
     <string name="protection_stats">Статистика</string>
     <string name="stat_today">Перевірено сьогодні</string>
@@ -177,6 +177,10 @@
     <string name="alert_channel_body">Попередження про підозрілі SMS і повідомлення</string>
     <string name="alert_title">Виявлено підозріле повідомлення</string>
     <string name="alert_body">Перш ніж щось робити, перевір його в застосунку Wizjer.</string>
+    <string name="alert_careful_channel">Обережно</string>
+    <string name="alert_careful_channel_body">М’які підказки про повідомлення, на які варто звернути увагу</string>
+    <string name="alert_careful_title">Зверни увагу на це повідомлення</string>
+    <string name="alert_careful_body">Wizjer помітив щось, що варто перевірити. Зазирни в застосунок, перш ніж натискати чи платити.</string>
     <!-- The screen an alert opens -->
     <string name="flagged_title">Підозріле повідомлення</string>
     <string name="flagged_headline">Це повідомлення може бути шахрайством</string>
@@ -186,10 +190,14 @@
     <string name="flagged_via_notification">Сповіщення</string>
     <string name="flagged_message">Повідомлення</string>
     <string name="flagged_why">Чому це виглядає підозріло</string>
+    <string name="flagged_careful_title">Повідомлення для перевірки</string>
+    <string name="flagged_careful_headline">Зверни увагу на це повідомлення</string>
+    <string name="flagged_careful_body">Wizjer помітив у ньому кілька речей, які варто перевірити. Переглянь їх, перш ніж щось робити.</string>
+    <string name="flagged_careful_why">На що звернути увагу</string>
     <string name="flagged_analyze">Попроси Wizjer про глибокий аналіз</string>
-    <string name="flagged_analyze_soon">Глибокий аналіз скоро буде доступний.</string>
-    <string name="flagged_gone">Подробиці цього повідомлення вже недоступні: Wizjer зберігає їх, лише поки працює. Знайди повідомлення в застосунку, з якого воно прийшло, і нічого не роби, доки не переконаєшся.</string>
+    <string name="flagged_gone">Подробиці цього повідомлення вже недоступні: Wizjer пам’ятає лише 5 останніх попереджень. Знайди повідомлення в застосунку, з якого воно прийшло, і нічого не роби, доки не переконаєшся.</string>
     <string name="protection_recent">Останні попередження</string>
+    <string name="protection_recent_none">Поки що попереджень немає.</string>
     <!-- Scam detection -->
     <string name="type_parcel_fee">Фальшива доплата за посилку</string>
     <string name="type_bank">Видавання себе за банк</string>
@@ -229,6 +237,7 @@
     <string name="sig_money">Містить суму грошей</string>
     <string name="sig_bank_account">Містить номер банківського рахунку</string>
     <string name="sig_premium_number">Містить платний номер</string>
+    <string name="sig_small_fee">Вимагає дрібну доплату за посилку чи рахунок</string>
     <string name="sig_obfuscation">Текст навмисно спотворено</string>
     <string name="sig_safety_warning">Містить типове попередження «нікому не повідомляйте»</string>
     <string name="sig_cert_list">Сайт є в списку попереджень CERT Polska</string>
@@ -265,6 +274,7 @@
     <string name="sig_money_simple">Згадує суму грошей</string>
     <string name="sig_bank_account_simple">Дає номер рахунку для переказу</string>
     <string name="sig_premium_number_simple">Дає дорогий платний номер телефону</string>
+    <string name="sig_small_fee_simple">Просить невелику доплату за посилку чи рахунок – частий трюк шахраїв</string>
     <string name="sig_obfuscation_simple">Текст навмисно дивно написаний, щоб приховати шахрайство</string>
     <string name="sig_safety_warning_simple">Попереджає нікому не повідомляти код</string>
     <string name="sig_cert_list_simple">Цей сайт є у списку відомих шахрайських сайтів</string>
@@ -338,7 +348,7 @@
     <string name="drawer_protection">Захист у фоні</string>
     <string name="drawer_protection_on">Увімкнено</string>
     <string name="drawer_protection_off">Потребує уваги</string>
-    <string name="drawer_protection_paused">Призупинено</string>
+    <string name="drawer_protection_paused">Вимкнено</string>
     <string name="drawer_settings">Налаштування</string>
     <string name="chat_deleted">Розмову видалено</string>
     <string name="action_undo">Повернути</string>
@@ -365,19 +375,160 @@
     <string name="settings_version">Версія %1$s</string>
     <string name="settings_logout">Вийти</string>
     <string name="logout_title">Вийти з акаунта?</string>
-    <string name="logout_body">Розмови, збережені на цьому телефоні, буде видалено.</string>
+    <string name="logout_body">Розмови залишаться у твоєму обліковому записі. Попередження, збережені на цьому телефоні, буде видалено.</string>
 
-    <!-- Sample conversations shown until the assistant is connected -->
-    <string name="sample_parcel_title">SMS про доплату за посилку</string>
-    <string name="sample_parcel_user">Перевір це повідомлення:\nInPost: Вашу посилку затримано. Доплатіть 1,99 зл протягом 24 год: inpost-dostawa.top/pl</string>
-    <string name="sample_parcel_reply">Обережно — це схоже на шахрайство. Не натискай на посилання й не вводь дані картки. InPost не просить доплат через SMS із посиланням. Якщо чекаєш на посилку, перевір її статус в офіційному застосунку. Підозрілий SMS можна переслати на номер 8080 (CERT Polska).</string>
-    <string name="sample_parcel_reason_link">Посилання веде на сайт, що не належить InPost.</string>
-    <string name="sample_parcel_reason_payment">Прохання про доплату — поширений трюк шахраїв.</string>
-    <string name="sample_parcel_reason_urgency">Повідомлення змушує поспішати.</string>
-    <string name="sample_bank_title">Дзвінок «з банку»</string>
-    <string name="sample_bank_user">Мені дзвонить людина й каже, що вона з банку. Що робити?</string>
-    <string name="sample_bank_reply">Найкраще одразу завершити дзвінок. Банк ніколи не попросить переказати гроші на «безпечний рахунок», повідомити код чи встановити застосунок. Якщо маєш сумніви, зателефонуй до банку самостійно — за номером на звороті картки.</string>
 
     <string name="language_title">Мова</string>
+
+    <!-- The AI assistant's chat -->
+    <string name="action_close">Закрити</string>
+    <string name="composer_attach">Додати фото</string>
+    <string name="composer_take_photo">Зробити фото</string>
+    <string name="composer_choose_photo">Вибрати зі своїх фото</string>
+    <string name="ai_notice_no_camera">На цьому телефоні не знайдено застосунку камери.</string>
+    <string name="composer_stop">Зупинити відповідь</string>
+    <string name="composer_photo">Фото %1$d</string>
+    <string name="composer_photo_failed">Фото не завантажено. Торкнися, щоб спробувати ще раз</string>
+    <string name="composer_remove_photo">Видалити фото</string>
+    <string name="message_stop_reading">Зупинити читання</string>
+    <string name="ai_read_unavailable">Читання вголос цією мовою недоступне на цьому телефоні.</string>
+    <string name="ai_photo">Фото</string>
+    <string name="ai_scroll_down">Перейти до найновішого повідомлення</string>
+    <string name="ai_reconnecting">Повторне з’єднання…</string>
+    <string name="ai_interrupted">З’єднання перервалося. Можливо, відповідь уже готова.</string>
+    <string name="ai_reload">Завантажити знову</string>
+    <string name="ai_load_failed">Не вдалося завантажити розмову</string>
+    <string name="ai_chats_failed">Не вдалося завантажити розмови.</string>
+    <string name="ai_chat_photo_title">Перевірка фото</string>
+    <string name="ai_chat_replying">Wizjer відповідає</string>
+    <string name="ai_status_stopped">Зупинено</string>
+    <string name="ai_status_too_long">Відповідь була задовгою, тому обірвалася.</string>
+    <string name="ai_status_incomplete">Wizjer не встиг завершити цей аналіз.</string>
+    <string name="ai_link_title">Відкрити %1$s?</string>
+    <string name="ai_link_body">%1$s</string>
+    <string name="ai_link_open">Відкрити</string>
+    <string name="ai_code">Код</string>
+    <string name="ai_code_copy">Копіювати код</string>
+    <string name="ai_sources">Джерела</string>
+    <string name="ai_text_shortened">Скорочено до %1$d символів – стільки вміщує одне повідомлення.</string>
+    <plurals name="ai_usage_left">
+        <item quantity="one">На сьогодні залишилося %d повідомлення</item>
+        <item quantity="few">На сьогодні залишилося %d повідомлення</item>
+        <item quantity="many">На сьогодні залишилося %d повідомлень</item>
+        <item quantity="other">На сьогодні залишилося %d повідомлення</item>
+    </plurals>
+    <string name="ai_usage_none">Сьогоднішній ліміт повідомлень вичерпано. Нові – з %1$s.</string>
+
+    <!-- What Wizjer checked while writing a reply -->
+    <plurals name="ai_steps_count">
+        <item quantity="one">%d крок аналізу</item>
+        <item quantity="few">%d кроки аналізу</item>
+        <item quantity="many">%d кроків аналізу</item>
+        <item quantity="other">%d кроку аналізу</item>
+    </plurals>
+    <string name="ai_step_phone_running">Перевірка номера %1$s</string>
+    <string name="ai_step_phone_failed">Не вдалося перевірити номер %1$s</string>
+    <string name="ai_step_phone_invalid">Це не номер телефону</string>
+    <string name="ai_step_phone_unknown">%1$s – немає скарг у базі Wizjer</string>
+    <string name="ai_step_phone_found">%1$s – %2$s (%3$s)</string>
+    <string name="ai_step_phone_found_plain">%1$s – %2$s</string>
+    <string name="ai_phone_verdict_scam">позначений як шахрайський</string>
+    <string name="ai_phone_verdict_spam">позначений як спам</string>
+    <string name="ai_phone_verdict_safe">оцінений як безпечний</string>
+    <string name="ai_phone_verdict_unclear">без однозначної оцінки</string>
+    <plurals name="ai_phone_reports">
+        <item quantity="one">%d скарга</item>
+        <item quantity="few">%d скарги</item>
+        <item quantity="many">%d скарг</item>
+        <item quantity="other">%d скарги</item>
+    </plurals>
+    <string name="ai_step_site_running">Перевірка сайту %1$s</string>
+    <string name="ai_step_site_failed">Не вдалося перевірити сайт %1$s</string>
+    <string name="ai_step_site_invalid">Це не адреса сайту</string>
+    <string name="ai_step_site_clean">%1$s – немає в жодному списку попереджень</string>
+    <string name="ai_step_site_flagged">%1$s – %2$s</string>
+    <string name="ai_list_cert">у списку попереджень CERT Polska</string>
+    <string name="ai_list_shortener">скорочувач посилань, що приховує справжню адресу</string>
+    <string name="ai_list_gambling">сайт азартних ігор</string>
+    <string name="ai_list_piracy">піратський сайт</string>
+    <string name="ai_list_adult">сайт для дорослих</string>
+    <string name="ai_list_other">у списку попереджень</string>
+    <string name="ai_step_search_running">Пошук в інтернеті: «%1$s»</string>
+    <string name="ai_step_search_done">Пошук в інтернеті завершено: «%1$s»</string>
+    <string name="ai_step_search_failed">Пошук в інтернеті не вдався</string>
+    <string name="ai_step_guide_running">Читання посібника Wizjer</string>
+    <string name="ai_step_guide_done">Прочитано посібник: %1$s</string>
+    <string name="ai_step_guide_done_plain">Прочитано посібник Wizjer</string>
+    <string name="ai_step_guide_failed">Не вдалося відкрити посібник</string>
+    <string name="ai_guide_bank">видавання себе за банк чи поліцію</string>
+    <string name="ai_guide_payments">фальшиві запити на оплату</string>
+    <string name="ai_guide_investments">фальшиві інвестиції</string>
+    <string name="ai_guide_marketplace">шахрайство під час купівлі й продажу в інтернеті</string>
+    <string name="ai_guide_report">що робити після шахрайства</string>
+    <string name="ai_step_account_running">Перегляд даних твого облікового запису</string>
+    <string name="ai_step_account_done">Переглянуто дані твого облікового запису</string>
+    <string name="ai_step_account_failed">Не вдалося переглянути дані облікового запису</string>
+    <string name="ai_step_other_running">Перевірка…</string>
+    <string name="ai_step_other_done">Додаткову перевірку виконано</string>
+    <string name="ai_step_other_failed">Перевірка не вдалася</string>
+
+    <!-- A message that wasn't sent, and what to do -->
+    <string name="ai_action_retry">Спробувати ще раз</string>
+    <string name="ai_action_edit">Редагувати</string>
+    <string name="ai_action_sign_in">Увійти</string>
+    <string name="ai_error_offline">Немає з’єднання з інтернетом</string>
+    <string name="ai_error_offline_body">Перевір з’єднання і спробуй ще раз.</string>
+    <string name="ai_error_ai_busy">Wizjer зараз дуже зайнятий</string>
+    <string name="ai_error_ai_busy_body">Спробуй ще раз за мить.</string>
+    <string name="ai_error_generic">Щось пішло не так</string>
+    <string name="ai_error_generic_body">Wizjer не зміг відповісти цього разу. Спробуй ще раз.</string>
+    <string name="ai_error_refused">Wizjer не може відповісти на це повідомлення</string>
+    <string name="ai_error_refused_body">Спробуй описати, що сталося, іншими словами.</string>
+    <string name="ai_error_unfinished">Wizjer не завершив відповідь</string>
+    <string name="ai_error_unfinished_body">Спробуй надіслати повідомлення ще раз.</string>
+    <string name="ai_error_daily_limit">Сьогоднішній ліміт повідомлень вичерпано</string>
+    <string name="ai_error_daily_limit_body">Наступні можна надіслати з %1$s.</string>
+    <string name="ai_error_daily_limit_tomorrow">Наступні можна надіслати завтра.</string>
+    <string name="ai_error_too_many_replies">Wizjer уже відповідає в інших розмовах</string>
+    <string name="ai_error_wait_body">Зачекай, поки він закінчить, і спробуй ще раз.</string>
+    <string name="ai_error_busy">Wizjer ще відповідає в цій розмові</string>
+    <string name="ai_error_too_many_requests">Забагато повідомлень одночасно</string>
+    <string name="ai_error_too_many_requests_body">Зачекай хвилину і спробуй ще раз.</string>
+    <string name="ai_error_chat_full">Ця розмова вже заповнена</string>
+    <string name="ai_error_chat_full_body">Почни нову, і Wizjer перенесе туди це повідомлення.</string>
+    <string name="ai_error_too_many_images">Забагато фото в цій розмові</string>
+    <string name="ai_error_too_many_images_body">Одна розмова вміщує щонайбільше 10 фото. Почни нову, щоб надіслати ці.</string>
+    <string name="ai_error_invalid_images">Не вдалося додати фото</string>
+    <string name="ai_error_invalid_images_body">Відредагуй повідомлення й додай їх ще раз.</string>
+    <string name="ai_error_invalid">Це повідомлення не можна надіслати</string>
+    <string name="ai_error_invalid_body">Можливо, воно порожнє або задовге.</string>
+    <string name="ai_error_not_found">Цієї розмови більше немає</string>
+    <string name="ai_error_not_found_body">Надішли повідомлення ще раз, і Wizjer почне нову розмову.</string>
+    <string name="ai_error_signed_out">Сеанс завершився</string>
+    <string name="ai_error_signed_out_body">Увійди знову, щоб розмовляти з Wizjer.</string>
+    <string name="ai_error_not_confirmed">Підтверди адресу електронної пошти</string>
+    <string name="ai_error_not_confirmed_body">Увійди знову й введи код, який ми надіслали.</string>
+    <string name="ai_error_stopped">Зупинено до відповіді Wizjer</string>
+    <string name="ai_error_stopped_body">Нічого не збережено. Можна надіслати ще раз.</string>
+    <string name="ai_notice_delete_failed">Не вдалося видалити розмову. Перевір з’єднання.</string>
+    <string name="ai_notice_stop_failed">Не вдалося зупинити відповідь. Перевір з’єднання.</string>
+    <string name="ai_notice_chat_gone">Цю розмову видалено.</string>
+    <string name="ai_notice_photos_per_message">Одне повідомлення може мати щонайбільше %1$d фото.</string>
+    <string name="ai_notice_photos_per_chat">Одна розмова вміщує щонайбільше %1$d фото.</string>
+    <string name="ai_notice_photo_unreadable">Не вдалося відкрити фото.</string>
+
+    <!-- What "Ask Wizjer for an in-depth analysis" sends to the assistant -->
+    <string name="ai_ask_intro">Детально проаналізуй це повідомлення – захист Wizjer позначив його як підозріле. Це шахрайство і що мені робити?</string>
+    <string name="ai_ask_sms">SMS</string>
+    <string name="ai_ask_sms_from">SMS від: %1$s</string>
+    <string name="ai_ask_app">Сповіщення із застосунку %1$s</string>
+    <string name="ai_ask_app_from">Сповіщення із застосунку %1$s, від: %2$s</string>
+    <string name="ai_ask_notification">Сповіщення</string>
+    <string name="ai_ask_notification_from">Сповіщення від: %1$s</string>
+    <string name="ai_ask_email">Електронний лист</string>
+    <string name="ai_ask_email_from">Електронний лист від: %1$s</string>
+    <string name="ai_ask_subject">Тема: %1$s</string>
+    <string name="ai_ask_text">Текст: «%1$s»</string>
+    <string name="ai_ask_signs">Захист Wizjer звернув увагу на:</string>
 
 </resources>

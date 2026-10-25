@@ -1,6 +1,5 @@
 package org.wizjer.android.ui
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
@@ -24,9 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.wizjer.android.BuildConfig
-import org.wizjer.android.R
 import org.wizjer.android.data.account.AccountSession
 import org.wizjer.android.data.account.RefreshResult
+import org.wizjer.android.data.ai.Assistant
 import org.wizjer.android.data.lists.ThreatListsWorker
 import org.wizjer.android.data.model.ModelUpdateWorker
 import org.wizjer.android.protection.AlertLog
@@ -37,7 +36,7 @@ import org.wizjer.android.ui.account.LoginScreen
 import org.wizjer.android.ui.call.CallScreen
 import org.wizjer.android.ui.components.EmphasizedEasing
 import org.wizjer.android.ui.home.HomeScreen
-import org.wizjer.android.ui.home.rememberHomeUiState
+import org.wizjer.android.ui.language.currentAppLanguage
 import org.wizjer.android.ui.onboarding.WelcomeScreen
 import org.wizjer.android.ui.permissions.PermissionsScreen
 import org.wizjer.android.ui.profile.BirthDateScreen
@@ -72,6 +71,8 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
 
     fun signOut() {
         session.signOut()
+        AlertLog.clear(context)
+        Assistant.signOut(context)
         returning = false
         step = Step.Welcome
     }
@@ -139,6 +140,9 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
     }
 }
 
+/** Whether debug builds list the detector sandbox in the menu. */
+private const val SHOW_SANDBOX = false
+
 private enum class MainScreen { Chat, Call, Protection, Flagged, Sandbox, Settings }
 
 /**
@@ -156,9 +160,10 @@ private fun MainShell(
     // The flagged message on show, and where Back from it leads.
     var flaggedId by rememberSaveable { mutableIntStateOf(0) }
     var flaggedFrom by rememberSaveable { mutableStateOf(MainScreen.Chat) }
-    val homeState = rememberHomeUiState()
     val screens = rememberSaveableStateHolder()
     val context = LocalContext.current
+    val assistant = remember { Assistant.get(context) }
+    val language = currentAppLanguage().tag
 
     // Threat lists start downloading once onboarding is done, then refresh in the background;
     // newer AI models come from the wizjer-model releases.
@@ -203,12 +208,15 @@ private fun MainShell(
             when (current) {
                 MainScreen.Chat -> HomeScreen(
                     profile = session.profile,
-                    state = homeState,
+                    assistant = assistant,
                     onOpenSettings = { screen = MainScreen.Settings },
                     onOpenProtection = { screen = MainScreen.Protection },
                     onStartCall = { screen = MainScreen.Call },
-                    // A developer tool for testing the detector; not shown in release builds.
-                    onOpenSandbox = if (BuildConfig.DEBUG) ({ screen = MainScreen.Sandbox }) else null,
+                    // An expired session or an unconfirmed e-mail: start over at sign-in.
+                    onSignIn = onSignOut,
+                    // A developer tool for testing the detector, hidden from the menu for now; set
+                    // SHOW_SANDBOX to bring it back (debug builds only).
+                    onOpenSandbox = if (BuildConfig.DEBUG && SHOW_SANDBOX) ({ screen = MainScreen.Sandbox }) else null,
                 )
                 MainScreen.Call -> CallScreen(onEnd = { screen = MainScreen.Chat })
                 MainScreen.Protection -> ProtectionScreen(
@@ -220,8 +228,11 @@ private fun MainShell(
                     AlertLog.find(flaggedId),
                     senior = session.profile.isSenior,
                     onBack = { screen = flaggedFrom },
-                    // The AI chat isn't connected yet; it will take the message for an in-depth analysis.
-                    onAskWizjer = { Toast.makeText(context, R.string.flagged_analyze_soon, Toast.LENGTH_SHORT).show() },
+                    // A new chat that sends the message for an in-depth analysis, in the app's language.
+                    onAskWizjer = { prompt ->
+                        assistant.ask(prompt, language)
+                        screen = MainScreen.Chat
+                    },
                 )
                 MainScreen.Sandbox -> SandboxScreen(onBack = { screen = MainScreen.Chat })
                 MainScreen.Settings -> SettingsScreen(
