@@ -42,7 +42,10 @@ sealed interface AiResult<out T> {
 
 /** How following a reply stream ended. */
 sealed interface StreamEnd {
-    /** The stream's final `done` or `error` event arrived (and was handed over). */
+    /**
+     * The stream's final `done` or `error` event arrived (and was handed over). The stream is read on to
+     * its close after that, as a new chat's title can still follow.
+     */
     data object Finished : StreamEnd
 
     /** The connection broke before the end; follow again after [lastEventId]. */
@@ -162,10 +165,11 @@ internal class AiApi(
     private suspend fun readEvents(connection: HttpURLConnection, after: Long, onEvent: suspend (ReplyEvent) -> Unit): StreamEnd {
         val parser = SseParser()
         var lastId = after
+        var ended = false
         try {
             connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
                 while (true) {
-                    val line = reader.readLine() ?: return StreamEnd.Gone
+                    val line = reader.readLine() ?: return if (ended) StreamEnd.Finished else StreamEnd.Gone
                     val sse = parser.line(line) ?: continue
                     sse.id?.toLongOrNull()?.let { lastId = it }
                     // A malformed event is skipped rather than ending the reply.
@@ -175,11 +179,12 @@ internal class AiApi(
                         null
                     } ?: continue
                     onEvent(event)
-                    if (event is ReplyEvent.Done || event is ReplyEvent.Failed) return StreamEnd.Finished
+                    if (event is ReplyEvent.Done || event is ReplyEvent.Failed) ended = true
                 }
             }
         } catch (_: IOException) {
-            return StreamEnd.Dropped(lastId)
+            // After the end, a lost connection only costs the title; the chat list has it next time.
+            return if (ended) StreamEnd.Finished else StreamEnd.Dropped(lastId)
         }
     }
 

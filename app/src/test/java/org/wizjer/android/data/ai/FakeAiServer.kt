@@ -151,6 +151,8 @@ object Events {
             .also { if (discarded) it.put("discarded", true) }.toString(),
     )
 
+    fun title(id: Int, title: String) = Ev(id, "title", JSONObject().put("title", title).toString())
+
     fun error(id: Int, code: String) = Ev(id, "error", JSONObject().put("error", code).toString())
 
     fun user(id: Long, text: String, images: List<String> = emptyList()) = JSONObject()

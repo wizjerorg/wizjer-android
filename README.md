@@ -16,7 +16,7 @@ The app is available in **Polish**, **English** and **Ukrainian**.
 - Lists of dangerous sites (including CERT Polska's warning list) are downloaded whole and
   checked on the phone, so the server never learns which links you received.
 - Messages that raised an alert (only the last 5) are kept in the app's private storage on the
-  phone, excluded from backups, so you can look at them again; they're deleted when you sign out.
+  phone, excluded from backups, so you can look at them again; they're deleted when you log out.
 - Once a day the app asks GitHub whether a newer version of the open AI model has been released
   and downloads it if so. Nothing about you or your messages is sent.
 - The AI assistant runs in the cloud and needs an account. What you send to it (text and photos)

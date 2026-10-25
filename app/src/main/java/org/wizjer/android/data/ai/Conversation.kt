@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 
 /** A row of a chat. [key] stays the same while the row changes (e.g. while a reply is written). */
@@ -53,7 +54,7 @@ data class ReplyItem(
 
     /** This reply with [event] added. */
     fun apply(event: ReplyEvent): ReplyItem = when (event) {
-        is ReplyEvent.Start, is ReplyEvent.Failed -> this
+        is ReplyEvent.Start, is ReplyEvent.Failed, is ReplyEvent.Title -> this
         ReplyEvent.Thinking -> copy(thinking = true, reconnecting = false)
         is ReplyEvent.Tool -> copy(thinking = false, reconnecting = false, tools = tools.upsert(event.step))
         is ReplyEvent.Text -> copy(thinking = false, reconnecting = false, text = text + event.delta)
@@ -106,6 +107,9 @@ class Conversation internal constructor(private val assistant: Assistant, chatId
     val imageCount: Int get() = items.sumOf { if (it is UserItem && it.failure == null) it.images.size else 0 }
 
     private var job: Job? = null
+
+    /** A finished reply's stream, still open for the new chat's title. */
+    private var tail: Job? = null
     private var stopRequested = false
 
     /** Keys of the user message whose reply is being written, and of that reply. */
@@ -114,6 +118,11 @@ class Conversation internal constructor(private val assistant: Assistant, chatId
 
     /** Sends [user] and follows the reply. */
     internal fun start(user: UserItem, language: String) {
+        // The last reply is over but its stream may still be waiting for the chat's title: let it be.
+        if (items.none { it is ReplyItem && it.writing }) {
+            tail = job?.takeIf { it.isActive }
+            job = null
+        }
         val sent = user.copy(id = null, failure = null)
         val reply = ReplyItem(newKey())
         items += sent
@@ -124,6 +133,9 @@ class Conversation internal constructor(private val assistant: Assistant, chatId
         stopping = false
         assistant.spendOne()
         launchJob {
+            // Until the title is in, the server counts the chat as busy; it usually is by now.
+            tail?.let { previous -> withTimeoutOrNull(TITLE_WAIT_MILLIS) { previous.join() } ?: previous.cancel() }
+            tail = null
             when (val end = assistant.api.send(chatId, Outgoing(sent.text, sent.images, language), ::onEvent)) {
                 StreamEnd.Finished -> Unit
                 is StreamEnd.Dropped -> if (chatId != null) follow(end.lastEventId) else fail(AiError(AiError.NO_CONNECTION), sent.key)
@@ -199,6 +211,7 @@ class Conversation internal constructor(private val assistant: Assistant, chatId
         when (event) {
             is ReplyEvent.Start -> started(event)
             is ReplyEvent.Failed -> return fail(AiError(event.error), liveUser)
+            is ReplyEvent.Title -> return chatId?.let { assistant.retitle(it, event.title) } ?: Unit
             else -> Unit
         }
         updateReply { it.apply(event) }
@@ -394,6 +407,7 @@ class Conversation internal constructor(private val assistant: Assistant, chatId
         private const val BUSY = "busy"
         private const val TOO_MANY_REQUESTS = "too_many_requests"
         private const val MAX_RELOADS = 3
+        private const val TITLE_WAIT_MILLIS = 15_000L
 
         /** Pauses between reconnection attempts; after the last one the reply is marked interrupted. */
         private val RECONNECT_DELAYS = longArrayOf(1_000, 2_000, 3_000, 5_000, 8_000, 10_000, 15_000)

@@ -38,6 +38,24 @@ class AiApiTest {
     }
 
     @Test
+    fun aTitleAfterTheEndIsStillRead() = runBlocking {
+        server.on("POST", "/ai/chats") {
+            it.stream(listOf(Events.start(1, "c1", 41), Events.text(2, "Hej"), Events.done(3), Events.title(4, "Paczka InPost"))) { event ->
+                if (event.id == 4) Thread.sleep(200)
+            }
+        }
+        val events = mutableListOf<ReplyEvent>()
+        assertEquals(StreamEnd.Finished, api.send(null, Outgoing("x", emptyList(), "pl")) { events += it })
+        assertEquals(ReplyEvent.Title("Paczka InPost"), events.last())
+    }
+
+    @Test
+    fun aConnectionLostAfterTheEndStillCountsAsTheEnd() = runBlocking {
+        server.on("POST", "/ai/chats") { it.stream(listOf(Events.start(1, "c1", 41), Events.done(2), Events.title(3, "x")), dropAfter = 2) }
+        assertEquals(StreamEnd.Finished, api.send(null, Outgoing("x", emptyList(), "pl")) {})
+    }
+
+    @Test
     fun aMessageToAnExistingChatGoesToItsMessages() = runBlocking {
         server.on("POST", "/ai/chats/c1/messages") { it.stream(listOf(Events.start(1, "c1", 43), Events.done(2, messageId = 44))) }
         assertEquals(StreamEnd.Finished, api.send("c1", Outgoing("Dalej", emptyList(), "en")) {})

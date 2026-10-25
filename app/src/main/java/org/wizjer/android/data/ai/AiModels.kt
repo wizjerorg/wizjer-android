@@ -75,6 +75,9 @@ sealed interface ReplyEvent {
 
     /** The reply failed and nothing was saved. */
     data class Failed(val error: String) : ReplyEvent
+
+    /** A new chat's AI-written title, replacing the start of the first message; may come after [Done]. */
+    data class Title(val title: String) : ReplyEvent
 }
 
 /** Reads the API's JSON. Unknown event types and fields are skipped, so newer servers don't break the app. */
@@ -120,6 +123,7 @@ internal object AiJson {
                 discarded = json.optBoolean("discarded"),
             )
             "error" -> ReplyEvent.Failed(json.optString("error").ifEmpty { "ai_error" })
+            "title" -> json.optString("title").trim().takeIf { it.isNotEmpty() }?.let(ReplyEvent::Title)
             else -> null
         }
     }

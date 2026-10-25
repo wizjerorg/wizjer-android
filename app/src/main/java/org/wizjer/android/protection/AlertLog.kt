@@ -21,7 +21,7 @@ data class FlaggedMessage(val id: Int, val message: IncomingMessage, val analysi
 /**
  * The last [LIMIT] messages that raised an alert, newest first, so the alert (and the protection
  * screen) can open them again. Kept in the app's private storage on this phone, excluded from
- * backups, and deleted on sign-out; checked messages that raised no alert are never stored.
+ * backups, and deleted when the user logs out; checked messages that raised no alert are never stored.
  */
 object AlertLog {
     const val LIMIT = 5
@@ -53,13 +53,24 @@ object AlertLog {
         restore(context)
         val flagged = FlaggedMessage(Random.nextInt(1, Int.MAX_VALUE), message, analysis)
         _flagged.value = (listOf(flagged) + _flagged.value).take(LIMIT)
-        runCatching { fileOf(context).writeText(write(_flagged.value)) }
+        runCatching { save(context, write(_flagged.value)) }
         flagged
+    }
+
+    /** Written aside, then swapped in: a phone switched off mid-write never leaves a broken list. */
+    private fun save(context: Context, json: String) {
+        val file = fileOf(context)
+        val temp = File(file.parentFile, "$FILE.tmp")
+        temp.writeText(json)
+        if (!temp.renameTo(file)) {
+            file.writeText(json)
+            temp.delete()
+        }
     }
 
     fun find(id: Int): FlaggedMessage? = _flagged.value.firstOrNull { it.id == id }
 
-    /** Forgets every saved alert (on sign-out). */
+    /** Forgets every saved alert (when the user logs out). */
     fun clear(context: Context) = synchronized(this) {
         _flagged.value = emptyList()
         fileOf(context).delete()

@@ -310,6 +310,13 @@ class Assistant internal constructor(
         if (index >= 0) chats[index] = chat
     }
 
+    /** A new chat's AI-written title arrived (the server has saved it too). */
+    internal fun retitle(chatId: String, title: String) {
+        val index = chats.indexOfFirst { it.id == chatId }
+        if (index >= 0) chats[index] = chats[index].copy(title = title)
+        pendingDeletes[chatId]?.let { pendingDeletes[chatId] = PendingDelete(it.index, it.chat.copy(title = title), it.wasOpen, it.job) }
+    }
+
     internal fun chatFinished(chatId: String) {
         val index = chats.indexOfFirst { it.id == chatId }
         if (index >= 0 && chats[index].running) chats[index] = chats[index].copy(running = false)

@@ -63,6 +63,12 @@ class AiJsonTest {
     }
 
     @Test
+    fun readsANewChatsTitle() {
+        assertEquals(ReplyEvent.Title("SMS o dopłacie do paczki InPost"), AiJson.event("title", """{"title":"SMS o dopłacie do paczki InPost"}"""))
+        assertNull(AiJson.event("title", """{"title":"  "}"""))
+    }
+
+    @Test
     fun unknownEventsAndFieldsDoNotBreakAnything() {
         assertNull(AiJson.event("something_new", """{"x":1}"""))
         val step = (AiJson.event("tool", """{"id":"t1","name":"check_iban","input":{"iban":"PL1"},"status":"error","summary":null,"extra":true}""") as ReplyEvent.Tool).step

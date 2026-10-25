@@ -81,6 +81,7 @@ class AssistantTest {
                     Events.text(5, "**To oszustwo.** "),
                     Events.text(6, "Nie oddzwaniaj."),
                     Events.done(7, sources = JSONArray().put(JSONObject().put("title", "CERT").put("url", "https://cert.pl"))),
+                    Events.title(8, "Telefon z nieznanego numeru"),
                 ),
             )
         }
@@ -100,8 +101,31 @@ class AssistantTest {
         assertEquals("c1", onMain { assistant.current.chatId })
         assertFalse(onMain { assistant.current.replying })
         await("the chat to stop running in the list") { assistant.chats.singleOrNull()?.let { it.id == "c1" && !it.running } == true }
+        await("the AI-written title") { assistant.chats.single().title == "Telefon z nieznanego numeru" }
         await("today's allowance") { assistant.usage?.remaining == 40 }
         assertEquals("  Czy to oszustwo?  ".trim(), server.requestsTo("POST", "/ai/chats").single().json().getString("text"))
+    }
+
+    @Test
+    fun aMessageSentBeforeTheTitleWaitsForIt() {
+        val titleSent = java.util.concurrent.atomic.AtomicBoolean(false)
+        server.on("POST", "/ai/chats") { call ->
+            call.stream(listOf(Events.start(1, "c1", 41), Events.done(2), Events.title(3, "Tytuł"))) { event ->
+                if (event.id == 3) Thread.sleep(700)
+            }
+            titleSent.set(true)
+        }
+        server.on("POST", "/ai/chats/c1/messages") { call ->
+            // The real server answers "busy" until the title is out.
+            if (!titleSent.get()) call.json(409, """{"error":"busy"}""") else call.stream(listOf(Events.start(1, "c1", 43, title = "Tytuł"), Events.done(2, messageId = 44)))
+        }
+        onMain { assistant.send("Pierwsza", "pl") }
+        await("the first reply", condition = ::replyDone)
+        assertFalse("the composer is free once the reply is done", onMain { assistant.current.replying })
+        onMain { assistant.send("Druga", "pl") }
+        await("the second reply") { assistant.current.items.size == 4 && replyDone() }
+        assertTrue(items.filterIsInstance<UserItem>().all { it.failure == null })
+        assertEquals("Tytuł", onMain { assistant.chats.single().title })
     }
 
     @Test

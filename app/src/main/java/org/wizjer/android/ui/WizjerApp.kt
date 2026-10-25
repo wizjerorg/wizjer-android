@@ -69,9 +69,13 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
         step = Step.Home
     }
 
-    fun signOut() {
+    /**
+     * Back to the start. The saved warnings belong to the phone's protection, not the account, so only
+     * logging out on purpose ([forgetAlerts]) deletes them; an expired session keeps them.
+     */
+    fun signOut(forgetAlerts: Boolean) {
         session.signOut()
-        AlertLog.clear(context)
+        if (forgetAlerts) AlertLog.clear(context)
         Assistant.signOut(context)
         returning = false
         step = Step.Welcome
@@ -93,7 +97,7 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
     // when offline, keep using the saved profile.
     LaunchedEffect(Unit) {
         if (!profile.onboardingComplete) return@LaunchedEffect
-        if (session.refresh() == RefreshResult.SignedOut) signOut()
+        if (session.refresh() == RefreshResult.SignedOut) signOut(forgetAlerts = false)
     }
 
     BackHandler(enabled = step != Step.Welcome && step != Step.Home, onBack = back)
@@ -134,7 +138,11 @@ fun WizjerApp(textScale: Float, onTextScaleChange: (Float) -> Unit) {
                     onBack = back,
                     onConfirmed = { if (returning) step = Step.Permissions else finishOnboarding() },
                 )
-                Step.Home -> MainShell(session, textScale, onTextScaleChange, onSignOut = ::signOut)
+                Step.Home -> MainShell(
+                    session, textScale, onTextScaleChange,
+                    onLogOut = { signOut(forgetAlerts = true) },
+                    onSessionExpired = { signOut(forgetAlerts = false) },
+                )
             }
         }
     }
@@ -154,7 +162,8 @@ private fun MainShell(
     session: AccountSession,
     textScale: Float,
     onTextScaleChange: (Float) -> Unit,
-    onSignOut: () -> Unit,
+    onLogOut: () -> Unit,
+    onSessionExpired: () -> Unit,
 ) {
     var screen by rememberSaveable { mutableStateOf(MainScreen.Chat) }
     // The flagged message on show, and where Back from it leads.
@@ -213,7 +222,7 @@ private fun MainShell(
                     onOpenProtection = { screen = MainScreen.Protection },
                     onStartCall = { screen = MainScreen.Call },
                     // An expired session or an unconfirmed e-mail: start over at sign-in.
-                    onSignIn = onSignOut,
+                    onSignIn = onSessionExpired,
                     // A developer tool for testing the detector, hidden from the menu for now; set
                     // SHOW_SANDBOX to bring it back (debug builds only).
                     onOpenSandbox = if (BuildConfig.DEBUG && SHOW_SANDBOX) ({ screen = MainScreen.Sandbox }) else null,
@@ -240,7 +249,7 @@ private fun MainShell(
                     textScale = textScale,
                     onTextScaleChange = onTextScaleChange,
                     onBack = { screen = MainScreen.Chat },
-                    onLogout = onSignOut,
+                    onLogout = onLogOut,
                 )
             }
         }
